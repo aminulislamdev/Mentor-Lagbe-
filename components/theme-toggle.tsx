@@ -1,0 +1,113 @@
+"use client"
+
+import * as React from "react"
+import { Sun, Moon } from "lucide-react"
+
+function themeSubscribe(callback: () => void) {
+  if (typeof window === "undefined") return () => {}
+
+  window.addEventListener("storage", callback)
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.attributeName === "class") {
+        callback()
+      }
+    }
+  })
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  })
+
+  return () => {
+    window.removeEventListener("storage", callback)
+    observer.disconnect()
+  }
+}
+
+function getThemeSnapshot() {
+  if (typeof document === "undefined") return false
+  return document.documentElement.classList.contains("dark")
+}
+
+function getServerSnapshot() {
+  return false
+}
+
+const emptySubscribe = () => () => {}
+
+export function ThemeToggle() {
+  const isMounted = React.useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  )
+
+  const isDark = React.useSyncExternalStore(
+    themeSubscribe,
+    getThemeSnapshot,
+    getServerSnapshot
+  )
+
+  React.useEffect(() => {
+    const storedTheme = localStorage.getItem("theme")
+    const systemPrefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches
+
+    if (storedTheme === "dark" || (!storedTheme && systemPrefersDark)) {
+      document.documentElement.classList.add("dark")
+    } else if (storedTheme === "light") {
+      document.documentElement.classList.remove("dark")
+    }
+  }, [])
+
+  const toggleTheme = () => {
+    const nextIsDark = !document.documentElement.classList.contains("dark")
+    if (nextIsDark) {
+      document.documentElement.classList.add("dark")
+      localStorage.setItem("theme", "dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+      localStorage.setItem("theme", "light")
+    }
+  }
+
+  if (!isMounted) {
+    return (
+      <button
+        type="button"
+        aria-label="Toggle visual theme"
+        className="relative size-9 flex items-center justify-center rounded-xl border border-border bg-card/60 text-foreground/80 opacity-60 cursor-default"
+      >
+        <span className="size-4 block rounded-full bg-foreground/20" />
+      </button>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      title={isDark ? "Switch to light theme" : "Switch to dark theme"}
+      className="relative size-9 flex items-center justify-center rounded-xl border border-border bg-card/80 hover:bg-card text-foreground transition-all duration-200 hover:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-2xs active:scale-95 group cursor-pointer"
+    >
+      <Sun
+        className={`size-4 transition-all duration-300 absolute ${
+          isDark
+            ? "rotate-0 scale-100 text-[#B87959] dark:text-[#C98B6D]"
+            : "-rotate-90 scale-0 opacity-0"
+        }`}
+      />
+      <Moon
+        className={`size-4 transition-all duration-300 absolute ${
+          isDark
+            ? "rotate-90 scale-0 opacity-0"
+            : "rotate-0 scale-100 text-[#344C43] dark:text-[#EFE7DC]"
+        }`}
+      />
+      <span className="sr-only">Toggle theme</span>
+    </button>
+  )
+}
