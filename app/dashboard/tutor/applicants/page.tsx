@@ -24,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { EmptyState, Colophon } from "@/components/dashboard/shared"
+import { EmptyState, Colophon, StickyRail } from "@/components/dashboard/shared"
 
 // ─── Static applicant data ───────────────────────────────────────────────────
 
@@ -754,7 +754,7 @@ export default function ApplicantsPage() {
 
           {/* ── Right — the selection sheet (sticky) ── */}
           {selected && (
-            <aside aria-labelledby="selection-heading" className="lg:col-span-5 lg:sticky lg:top-[136px]">
+            <StickyRail ariaLabelledby="selection-heading" className="lg:col-span-5">
               <div className="flex items-baseline justify-between gap-4">
                 <h2 id="selection-heading" className="font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[9px]">
                   The Selection Sheet
@@ -900,7 +900,7 @@ export default function ApplicantsPage() {
                   )}
                 </div>
               </figure>
-            </aside>
+            </StickyRail>
           )}
         </div>
 

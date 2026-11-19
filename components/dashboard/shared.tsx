@@ -236,9 +236,17 @@ export function Colophon({ backHref, backLabel, children, className, tone = "war
 // ─── StickyRail ──────────────────────────────────────────────────────────────
 // Right-hand sheet wrapper with the shared sticky offset used across dashboards.
 
-export function StickyRail({ children, className }: { children: React.ReactNode; className?: string }) {
+export function StickyRail({
+  children,
+  className,
+  ariaLabelledby,
+}: {
+  children: React.ReactNode
+  className?: string
+  ariaLabelledby?: string
+}) {
   return (
-    <aside className={cn("lg:sticky lg:top-[136px]", className)}>
+    <aside aria-labelledby={ariaLabelledby} className={cn("lg:sticky lg:top-[136px]", className)}>
       {children}
     </aside>
   )

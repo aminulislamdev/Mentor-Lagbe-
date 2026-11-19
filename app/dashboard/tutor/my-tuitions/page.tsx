@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { Colophon } from "@/components/dashboard/shared"
+import { Colophon, StickyRail } from "@/components/dashboard/shared"
 
 // ─── Static portfolio data ───────────────────────────────────────────────────
 
@@ -745,7 +745,7 @@ export default function MyTuitionsPage() {
 
           {/* ── Right — the proof sheet (sticky) ── */}
           {selected ? (
-            <aside aria-labelledby="proof-heading" className="lg:col-span-5 lg:sticky lg:top-[136px]">
+            <StickyRail ariaLabelledby="proof-heading" className="lg:col-span-5">
               <div className="flex items-baseline justify-between gap-4">
                 <h2 id="proof-heading" className="font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[9px]">
                   The Proof Sheet
@@ -872,9 +872,9 @@ export default function MyTuitionsPage() {
                   )}
                 </div>
               </figure>
-            </aside>
+            </StickyRail>
           ) : (
-            <aside aria-labelledby="proof-empty-heading" className="lg:col-span-5 lg:sticky lg:top-[136px]">
+            <StickyRail ariaLabelledby="proof-empty-heading" className="lg:col-span-5">
               <div className="flex h-full min-h-64 flex-col items-center justify-center border border-dashed border-[#344C43]/35 bg-[#EFE7DC]/50 p-8 text-center">
                 <Archive aria-hidden="true" className="size-9 text-[#344C43]/40" strokeWidth={1.5} />
                 <h3 id="proof-empty-heading" className="portfolio-serif mt-3 text-xl font-black tracking-tight text-[#344C43]">
@@ -891,7 +891,7 @@ export default function MyTuitionsPage() {
                   <ArrowRight aria-hidden="true" className="size-4" strokeWidth={2.5} />
                 </Link>
               </div>
-            </aside>
+            </StickyRail>
           )}
         </div>
 
