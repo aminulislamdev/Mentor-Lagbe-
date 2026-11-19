@@ -10,7 +10,6 @@ import {
   ChevronRight,
   ChevronDown,
   User,
-  Settings,
   LogOut,
 } from "lucide-react"
 import { ROLE_CONFIG, getRouteMeta, type DashboardRole } from "@/components/dashboard/nav-config"
@@ -199,14 +198,6 @@ export function Topbar({ role, collapsed, onToggleCollapse, onOpenMobile }: Topb
                 >
                   <User aria-hidden="true" className="size-4 text-[#668B78]" strokeWidth={1.75} />
                   My Profile
-                </Link>
-                <Link
-                  href="/dashboard/student/settings"
-                  role="menuitem"
-                  className="flex items-center gap-2.5 rounded-sm px-3 py-2 text-[12px] font-medium text-[#344C43] transition-colors hover:bg-[#EFE7DC] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#668B78]"
-                >
-                  <Settings aria-hidden="true" className="size-4 text-[#668B78]" strokeWidth={1.75} />
-                  Settings
                 </Link>
               </div>
               <div className="border-t border-[#344C43]/15 p-1.5">

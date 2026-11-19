@@ -41,8 +41,33 @@ function NavItems({
   return (
     <ul className="space-y-1">
       {cfg.nav.map((item, i) => {
-        const active = item.href === bestHref
         const Icon = item.icon
+        if (item.soon) {
+          return (
+            <li key={item.href}>
+              <span
+                aria-disabled="true"
+                title={collapsed ? `${item.label} — coming soon` : "Coming soon — the page is not built yet"}
+                className="group relative flex h-11 cursor-not-allowed items-center gap-3 rounded-sm border-l-2 border-transparent px-3 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[#EFE7DC]/28"
+              >
+                <Icon
+                  aria-hidden="true"
+                  strokeWidth={1.75}
+                  className="size-[18px] shrink-0 text-[#EFE7DC]/22"
+                />
+                {!collapsed && (
+                  <>
+                    <span className="min-w-0 truncate">{item.label}</span>
+                    <span className="ml-auto inline-flex items-center rounded-sm border border-[#C98B6D]/40 bg-[#C98B6D]/10 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#C98B6D]/85">
+                      Soon
+                    </span>
+                  </>
+                )}
+              </span>
+            </li>
+          )
+        }
+        const active = item.href === bestHref
         return (
           <li key={item.href}>
             <Link

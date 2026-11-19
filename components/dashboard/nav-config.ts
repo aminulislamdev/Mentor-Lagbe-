@@ -20,6 +20,8 @@ export interface NavItem {
   label: string
   href: string
   icon: LucideIcon
+  /** Mark spec'd but unbuilt destinations — rendered disabled, never navigates */
+  soon?: boolean
 }
 
 export interface RoleConfig {
@@ -50,7 +52,6 @@ export const ROLE_CONFIG: Record<DashboardRole, RoleConfig> = {
       { label: "My Applications", href: "/dashboard/student/my-applications", icon: Inbox },
       { label: "Browse Tuitions", href: "/tuitions", icon: BookOpen },
       { label: "My Profile", href: "/dashboard/profile", icon: User },
-      { label: "Settings", href: "/dashboard/student/settings", icon: Settings },
     ],
   },
   tutor: {
@@ -80,7 +81,7 @@ export const ROLE_CONFIG: Record<DashboardRole, RoleConfig> = {
       { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
       { label: "Manage Users", href: "/dashboard/admin/users", icon: UsersRound },
       { label: "Manage Tuitions", href: "/dashboard/admin/tuitions", icon: ShieldCheck },
-      { label: "Transactions", href: "/dashboard/admin/transactions", icon: Landmark },
+      { label: "Transactions", href: "/dashboard/admin/transactions", icon: Landmark, soon: true },
       { label: "Back to Website", href: "/", icon: Home },
     ],
   },

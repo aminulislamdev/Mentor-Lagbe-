@@ -56,10 +56,12 @@ matching. Never duplicate a nav list in a page — read it from here.
 **Adding a route:** add the `NavItem` in the right role's `nav` array.
 Title, breadcrumb and sidebar link all update from one edit.
 
-**Known gaps (intentional, UI-only for now):** the registry links to
-`/dashboard/student/settings` and `/dashboard/admin/transactions`, neither of
-which has a page yet. They render the app's `not-found` view if clicked.
-Wire the pages or drop the items when backend integration lands.
+**Known gaps (intentional, UI-only for now):** the admin sidebar lists
+`/dashboard/admin/transactions` (in the assignment spec) as a disabled
+`soon: true` item — it renders a `SOON` chip instead of navigating to the
+unbuilt route. The out-of-spec student Settings item was removed entirely.
+Wire the transactions page and flip `soon` off (or leave the item disabled)
+when the backend lands.
 
 ### `components/dashboard/sidebar.tsx`
 Desktop sticky rail (`collapse` toggle) + mobile off-canvas drawer.
