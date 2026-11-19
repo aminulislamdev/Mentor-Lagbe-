@@ -217,10 +217,10 @@ function PostageStamp({ status }: { status: AppStatus }) {
       aria-label={`Status: ${meta.label}`}
     >
       <meta.Icon aria-hidden="true" className="size-5 sm:size-6" strokeWidth={1.75} />
-      <span className="mt-1 font-mono text-[8px] font-bold uppercase leading-none tracking-[0.24em] sm:text-[9px]">
+      <span className="mt-1 font-mono text-[10px] font-bold uppercase leading-none tracking-[0.24em] sm:text-[10px]">
         {meta.label}
       </span>
-      <span className="mt-1 font-mono text-[6px] uppercase leading-none tracking-[0.2em] opacity-75">
+      <span className="mt-1 font-mono text-[10px] uppercase leading-none tracking-[0.2em] opacity-75">
         {meta.sub}
       </span>
     </div>
@@ -235,7 +235,7 @@ function Postmark({ date }: { date: string }) {
       aria-hidden="true"
       className="pointer-events-none absolute right-16 top-1/2 hidden size-24 -translate-y-1/2 rotate-[-16deg] flex-col items-center justify-center rounded-full border-2 border-dashed border-[#344C43]/35 text-center md:flex"
     >
-      <span className="font-mono text-[6px] font-bold uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/50">
+      <span className="font-mono text-[10px] font-bold uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/50">
         Dhaka Post
         <br />
         {date}
@@ -280,30 +280,30 @@ function Envelope({
       <div className="grid grid-cols-[3.25rem_1fr_auto] items-stretch sm:grid-cols-[4.5rem_1fr_auto]">
         {/* Ref strip */}
         <div className="flex flex-col items-center justify-center gap-1 border-r border-dashed border-[#344C43]/30 px-1 py-4">
-          <span className="font-mono text-[8px] font-bold tracking-[0.14em] text-[#344C43]/70 sm:text-[9px]">
+          <span className="font-mono text-[10px] font-bold tracking-[0.14em] text-[#344C43]/70 sm:text-[10px]">
             {app.ref.replace("#", "")}
           </span>
           <span
             aria-hidden="true"
             className="size-1.5 rounded-full bg-[#B87959]"
           />
-          <span className="font-mono text-[6px] uppercase leading-tight tracking-[0.14em] text-[#344C43]/45 sm:text-[7px]">
+          <span className="font-mono text-[10px] uppercase leading-tight tracking-[0.14em] text-[#344C43]/45 sm:text-[10px]">
             {app.applied}
           </span>
         </div>
 
         {/* Address zone */}
         <div className="min-w-0 px-3 py-4 sm:px-5">
-          <p className="font-mono text-[6.5px] uppercase tracking-[0.3em] text-[#344C43]/45 sm:text-[7px]">
+          <p className="font-mono text-[9px] uppercase tracking-[0.3em] text-[#344C43]/45 sm:text-[10px]">
             To the Desk of — {app.subject}
           </p>
           <h3 className="postroom-serif mt-1 truncate text-base font-black leading-tight tracking-tight text-[#344C43] sm:text-lg">
             {app.title}
           </h3>
-          <p className="mt-1 truncate font-mono text-[7px] uppercase tracking-[0.18em] text-[#B87959] sm:text-[8px]">
+          <p className="mt-1 truncate font-mono text-[9px] uppercase tracking-[0.18em] text-[#B87959] sm:text-[10px]">
             {app.tutor} · <span className="text-[#344C43]/55">{app.tutorMeta}</span>
           </p>
-          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[7px] uppercase tracking-[0.14em] text-[#344C43]/60 sm:text-[7.5px]">
+          <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[9px] uppercase tracking-[0.14em] text-[#344C43]/60 sm:text-[10px]">
             <span className="inline-flex items-center gap-1.5"><MapPin aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />{app.place}</span>
             <span className="inline-flex items-center gap-1.5"><CalendarDays aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />{app.schedule}</span>
             <span className="inline-flex items-center gap-1.5"><Wallet aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} /><span className="font-bold text-[#344C43]">{fmtFee(app.fee)}<span className="font-normal opacity-70"> / mo</span></span></span>
@@ -318,8 +318,8 @@ function Envelope({
               role="img"
               aria-label="Status: withdrawn"
             >
-              <span className="font-mono text-[8px] font-bold uppercase leading-none tracking-[0.24em]">Withdrawn</span>
-              <span className="mt-1 font-mono text-[6px] uppercase tracking-[0.2em] opacity-75">Torn up</span>
+              <span className="font-mono text-[10px] font-bold uppercase leading-none tracking-[0.24em]">Withdrawn</span>
+              <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] opacity-75">Torn up</span>
             </div>
           ) : (
             <PostageStamp status={app.status} />
@@ -329,7 +329,7 @@ function Envelope({
             onClick={onToggle}
             aria-expanded={expanded}
             aria-controls={`panel-${app.ref.replace("#", "")}`}
-            className="inline-flex items-center gap-1 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#344C43]/60 underline decoration-[#B87959]/50 decoration-2 underline-offset-4 transition-colors hover:text-[#B87959] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:text-[8px]"
+            className="inline-flex items-center gap-1 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#344C43]/60 underline decoration-[#B87959]/50 decoration-2 underline-offset-4 transition-colors hover:text-[#B87959] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:text-[10px]"
           >
             {expanded ? "Close" : "Details"}
             <ChevronRight aria-hidden="true" className={cn("size-3 transition-transform duration-200", expanded && "rotate-90")} strokeWidth={2.5} />
@@ -345,7 +345,7 @@ function Envelope({
         >
           {/* Your note */}
           <div>
-            <p className="flex items-center gap-1.5 font-mono text-[7px] font-bold uppercase tracking-[0.26em] text-[#B87959]">
+            <p className="flex items-center gap-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.26em] text-[#B87959]">
               <Feather aria-hidden="true" className="size-3" strokeWidth={2} />
               Your Envelope
             </p>
@@ -356,14 +356,14 @@ function Envelope({
 
           {/* Their reply */}
           <div>
-            <p className="flex items-center gap-1.5 font-mono text-[7px] font-bold uppercase tracking-[0.26em] text-[#668B78]">
+            <p className="flex items-center gap-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.26em] text-[#668B78]">
               <Mail aria-hidden="true" className="size-3" strokeWidth={2} />
               The Reply
             </p>
             <p className="postroom-serif mt-1.5 text-[12px] italic leading-snug text-[#344C43]/90">
               {app.theirReply}
             </p>
-            <p className="mt-1.5 inline-flex items-center gap-1.5 font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#344C43]/50">
+            <p className="mt-1.5 inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/50">
               <Phone aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />
               {app.phone}
             </p>
@@ -371,7 +371,7 @@ function Envelope({
 
           {/* Actions */}
           <div className="flex flex-col items-start gap-2 border-t border-[#344C43]/15 pt-3 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
-            <p className="font-mono text-[7px] font-bold uppercase tracking-[0.26em] text-[#344C43]/55">
+            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.26em] text-[#344C43]/55">
               Actions
             </p>
             <Link
@@ -387,14 +387,14 @@ function Envelope({
                 type="button"
                 variant="ghost"
                 onClick={onRestore}
-                className="h-auto px-2 py-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-[#668B78] hover:bg-[#668B78]/10 hover:text-[#4A695C]"
+                className="h-auto px-2 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#668B78] hover:bg-[#668B78]/10 hover:text-[#4A695C]"
               >
                 Restore letter
               </Button>
             ) : app.status === "pending" ? (
               confirming ? (
                 <div className="w-full border border-[#A34343]/40 bg-[#A34343]/5 p-2">
-                  <p className="font-mono text-[7px] font-bold uppercase leading-snug tracking-[0.18em] text-[#A34343]">
+                  <p className="font-mono text-[9px] font-bold uppercase leading-snug tracking-[0.18em] text-[#A34343]">
                     Tear up this letter?
                   </p>
                   <div className="mt-1.5 flex gap-1.5">
@@ -405,7 +405,7 @@ function Envelope({
                         onWithdraw()
                         setConfirming(false)
                       }}
-                      className="h-7 rounded-sm border border-[#A34343]/50 bg-[#A34343] px-2 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#EFE7DC] hover:bg-[#8f3838]"
+                      className="h-7 rounded-sm border border-[#A34343]/50 bg-[#A34343] px-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#EFE7DC] hover:bg-[#8f3838]"
                     >
                       Yes, tear it
                     </Button>
@@ -414,7 +414,7 @@ function Envelope({
                       size="sm"
                       variant="ghost"
                       onClick={() => setConfirming(false)}
-                      className="h-7 rounded-sm px-2 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#344C43]/70 hover:text-[#344C43]"
+                      className="h-7 rounded-sm px-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#344C43]/70 hover:text-[#344C43]"
                     >
                       Keep
                     </Button>
@@ -425,13 +425,13 @@ function Envelope({
                   type="button"
                   variant="ghost"
                   onClick={() => setConfirming(true)}
-                  className="h-auto px-2 py-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-[#A34343] hover:bg-[#A34343]/10"
+                  className="h-auto px-2 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#A34343] hover:bg-[#A34343]/10"
                 >
                   Withdraw
                 </Button>
               )
             ) : (
-              <span className="font-mono text-[6.5px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/45">
+              <span className="font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/45">
                 {app.status === "accepted" ? "Enrolled — see your Almanac" : "Returned — but the ledger remembers"}
               </span>
             )}
@@ -571,7 +571,7 @@ export default function MyApplicationsPage() {
             <div className="relative border border-[#344C43]/25 bg-[#EFE7DC] p-4 sm:p-5">
               <span aria-hidden="true" className="absolute -left-2 top-1/2 size-4 -translate-y-1/2 rounded-full border border-[#344C43]/25 bg-[#F2ECDF]" />
               <span aria-hidden="true" className="absolute -right-2 top-1/2 size-4 -translate-y-1/2 rounded-full border border-[#344C43]/25 bg-[#F2ECDF]" />
-              <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-[#344C43]/55">
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#344C43]/55">
                 The Tally — Live Count
               </p>
               <div className="mt-3 grid grid-cols-3 divide-x divide-[#344C43]/15">
@@ -584,13 +584,13 @@ export default function MyApplicationsPage() {
                     <span className={cn("postroom-serif text-5xl font-black leading-none tracking-tight sm:text-6xl", s.tone)}>
                       {s.n}
                     </span>
-                    <span className="mt-1.5 font-mono text-[7px] uppercase tracking-[0.24em] text-[#344C43]/55 sm:text-[8px]">
+                    <span className="mt-1.5 font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55 sm:text-[10px]">
                       {s.label}
                     </span>
                   </div>
                 ))}
               </div>
-              <p className="mt-3 border-t border-dashed border-[#344C43]/25 pt-2 text-center font-mono text-[6.5px] uppercase tracking-[0.26em] text-[#344C43]/45">
+              <p className="mt-3 border-t border-dashed border-[#344C43]/25 pt-2 text-center font-mono text-[9px] uppercase tracking-[0.26em] text-[#344C43]/45">
                 6 letters sent · 2 yeses · Avg. reply 4.2 days
               </p>
             </div>
@@ -610,7 +610,7 @@ export default function MyApplicationsPage() {
                   onClick={() => setFilter(f.key)}
                   aria-pressed={active}
                   className={cn(
-                    "flex h-10 items-baseline gap-2 border px-3 font-mono text-[8px] font-bold uppercase tracking-[0.2em] transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:text-[9px]",
+                    "flex h-10 items-baseline gap-2 border px-3 font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:text-[10px]",
                     active
                       ? "border-[#344C43] bg-[#344C43] text-[#EFE7DC] shadow-[3px_3px_0_#B87959]"
                       : "border-[#344C43]/25 bg-transparent text-[#344C43]/65 hover:border-[#344C43]/55 hover:text-[#344C43]"
@@ -652,7 +652,7 @@ export default function MyApplicationsPage() {
                 id="postroom-sort"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="h-11 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-9 pr-8 font-mono text-[8px] font-bold uppercase tracking-[0.16em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[9px]"
+                className="h-11 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-9 pr-8 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[10px]"
               >
                 {SORTS.map((s) => (
                   <option key={s.key} value={s.key}>
@@ -666,7 +666,7 @@ export default function MyApplicationsPage() {
         </div>
 
         {/* ══ THE REGISTRY — envelopes ═══════════════════════════════════ */}
-        <p aria-live="polite" className="mt-4 font-mono text-[8px] uppercase tracking-[0.26em] text-[#344C43]/55">
+        <p aria-live="polite" className="mt-4 font-mono text-[10px] uppercase tracking-[0.26em] text-[#344C43]/55">
           {visible.length} {visible.length === 1 ? "letter" : "letters"} on the table
           {filter !== "all" && ` · filed under ${filter}`}
         </p>

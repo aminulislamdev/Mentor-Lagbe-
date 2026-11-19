@@ -231,13 +231,13 @@ export default function AdminUsersPage() {
 
             {/* Total members indicator */}
             <div className="lg:col-span-4">
-              <p className="font-mono text-[7px] uppercase tracking-[0.32em] text-[#F2EDDF]/40">
+              <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[#F2EDDF]/40">
                 Registered Members
               </p>
               <p className="registry-serif mt-1 text-5xl font-black leading-none tracking-tight text-[#F2EDDF] sm:text-6xl">
                 12,<span className="text-[#C9A25E]">847</span>
               </p>
-              <p className="mt-1.5 font-mono text-[6.5px] uppercase leading-snug tracking-[0.2em] text-[#F2EDDF]/45">
+              <p className="mt-1.5 font-mono text-[9px] uppercase leading-snug tracking-[0.2em] text-[#F2EDDF]/45">
                 +486 this quarter · 96.2% verification coverage
               </p>
             </div>
@@ -250,7 +250,7 @@ export default function AdminUsersPage() {
         <div className="mx-auto grid max-w-[1280px] grid-cols-2 divide-x divide-[#F2EDDF]/10 sm:grid-cols-5">
           {REGISTRY_STATS.map((s) => (
             <div key={s.label} className="flex flex-col items-center gap-1 px-3 py-4 text-center sm:py-5">
-              <p className="font-mono text-[6px] font-bold uppercase leading-snug tracking-[0.18em] text-[#D8C9A3]/75">
+              <p className="font-mono text-[10px] font-bold uppercase leading-snug tracking-[0.18em] text-[#D8C9A3]/75">
                 {s.label}
               </p>
               <p className="registry-serif text-2xl font-black leading-none tracking-tight text-[#F2EDDF] sm:text-3xl">
@@ -278,7 +278,7 @@ export default function AdminUsersPage() {
                     aria-pressed={active}
                     onClick={() => setRole(f.key)}
                     className={cn(
-                      "flex h-10 items-baseline gap-1.5 rounded-sm border px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A] sm:px-3 sm:text-[8px]",
+                      "flex h-10 items-baseline gap-1.5 rounded-sm border px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A] sm:px-3 sm:text-[10px]",
                       active
                         ? "border-[#D8C9A3] bg-[#10181A] text-[#D8C9A3]"
                         : "border-[#10181A]/30 text-[#10181A]/70 hover:border-[#10181A]/60 hover:text-[#10181A]"
@@ -303,7 +303,7 @@ export default function AdminUsersPage() {
                     aria-pressed={active}
                     onClick={() => setPlan(f.key)}
                     className={cn(
-                      "h-10 px-3 font-mono text-[7px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#10181A] sm:text-[8px]",
+                      "h-10 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#10181A] sm:text-[10px]",
                       active ? "bg-[#10181A] text-[#D8C9A3]" : "text-[#10181A]/60 hover:text-[#10181A]"
                     )}
                   >
@@ -335,7 +335,7 @@ export default function AdminUsersPage() {
                 id="registry-sort"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="h-10 appearance-none rounded-sm border border-[#10181A]/30 bg-[#FCFAF2] pl-9 pr-8 font-mono text-[8px] font-bold uppercase tracking-[0.16em] text-[#10181A] outline-none transition-all hover:border-[#10181A]/55 focus:border-[#C9A25E] focus:ring-2 focus:ring-[#C9A25E]/25 sm:text-[9px]"
+                className="h-10 appearance-none rounded-sm border border-[#10181A]/30 bg-[#FCFAF2] pl-9 pr-8 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#10181A] outline-none transition-all hover:border-[#10181A]/55 focus:border-[#C9A25E] focus:ring-2 focus:ring-[#C9A25E]/25 sm:text-[10px]"
               >
                 <option value="newest">Newest first</option>
                 <option value="oldest">Oldest first</option>
@@ -360,7 +360,7 @@ export default function AdminUsersPage() {
                 <h3 className="registry-serif mt-4 text-2xl font-black tracking-tight">
                   No souls match <span className="italic text-[#B87959]">that query.</span>
                 </h3>
-                <p className="mt-2 max-w-xs font-mono text-[8px] uppercase leading-relaxed tracking-[0.2em] text-[#10181A]/60">
+                <p className="mt-2 max-w-xs font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[#10181A]/60">
                   {query.trim() ? `Nothing in the register under “${query.trim()}”.` : "No members filed under these filters."}
                 </p>
                 <Button
@@ -402,10 +402,10 @@ export default function AdminUsersPage() {
                             <span className="truncate text-[12px] font-semibold leading-tight tracking-tight">{m.name}</span>
                             {m.verified && <BadgeCheck aria-hidden="true" className="size-3.5 shrink-0 text-[#668B78]" strokeWidth={2} />}
                           </span>
-                          <span className="mt-0.5 block truncate font-mono text-[6.5px] uppercase tracking-[0.14em] text-[#10181A]/55">
+                          <span className="mt-0.5 block truncate font-mono text-[9px] uppercase tracking-[0.14em] text-[#10181A]/55">
                             {m.email}
                           </span>
-                          <span className="mt-0.5 hidden truncate font-mono text-[6px] uppercase tracking-[0.16em] text-[#10181A]/40 sm:block">
+                          <span className="mt-0.5 hidden truncate font-mono text-[10px] uppercase tracking-[0.16em] text-[#10181A]/40 sm:block">
                             {m.phone} · {m.location} · Joined {m.joined}
                           </span>
                         </span>
@@ -457,7 +457,7 @@ export default function AdminUsersPage() {
                   ].map(({ Icon, k, v }) => (
                     <div key={k} className="flex items-baseline gap-2.5 py-2">
                       <Icon aria-hidden="true" className="size-3.5 shrink-0 translate-y-[2px] text-[#C9A25E]" strokeWidth={2} />
-                      <dt className="w-16 shrink-0 font-mono text-[7px] uppercase tracking-[0.18em] text-[#10181A]/50">{k}</dt>
+                      <dt className="w-16 shrink-0 font-mono text-[9px] uppercase tracking-[0.18em] text-[#10181A]/50">{k}</dt>
                       <dd className="truncate font-semibold leading-snug tracking-tight">{v}</dd>
                     </div>
                   ))}
@@ -465,7 +465,7 @@ export default function AdminUsersPage() {
 
                 {/* Activity strip */}
                 <div className="mt-3 flex items-center justify-between gap-3 border border-[#10181A]/20 bg-[#F2EDDF] px-3 py-2.5">
-                  <span className="font-mono text-[6.5px] uppercase leading-snug tracking-[0.2em] text-[#10181A]/60">
+                  <span className="font-mono text-[9px] uppercase leading-snug tracking-[0.2em] text-[#10181A]/60">
                     {selected.role === "tutor" ? "Batches hosted" : selected.role === "student" ? "Batches enrolled" : "Moderations"}
                   </span>
                   <span className="registry-serif text-xl font-black leading-none">
@@ -482,7 +482,7 @@ export default function AdminUsersPage() {
                   onClick={() => setDossierOpen((v) => !v)}
                   aria-expanded={dossierOpen}
                   aria-controls="member-dossier"
-                  className="mt-3 inline-flex items-center gap-2 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#10181A] underline decoration-[#C9A25E] decoration-2 underline-offset-4 transition-colors hover:text-[#7A6A35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
+                  className="mt-3 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#10181A] underline decoration-[#C9A25E] decoration-2 underline-offset-4 transition-colors hover:text-[#7A6A35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
                 >
                   <Eye aria-hidden="true" className="size-4" strokeWidth={1.75} />
                   {dossierOpen ? "Hide full dossier" : "View Profile"}
@@ -499,7 +499,7 @@ export default function AdminUsersPage() {
                       ["Session class", selected.plan === "pro" ? "Guild Member" : "Standard"],
                     ].map(([k, v]) => (
                       <div key={k}>
-                        <dt className="font-mono text-[6px] uppercase tracking-[0.2em] text-[#10181A]/50">{k}</dt>
+                        <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#10181A]/50">{k}</dt>
                         <dd className="mt-0.5 text-[10px] font-semibold leading-snug tracking-tight">{v}</dd>
                       </div>
                     ))}
@@ -511,7 +511,7 @@ export default function AdminUsersPage() {
                   <Button
                     type="button"
                     onClick={() => setRoleDialog(true)}
-                    className="h-11 rounded-sm border border-[#D8C9A3]/70 bg-[#10181A] px-4 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#D8C9A3] hover:bg-[#1E2A24] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A]"
+                    className="h-11 rounded-sm border border-[#D8C9A3]/70 bg-[#10181A] px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#D8C9A3] hover:bg-[#1E2A24] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A]"
                   >
                     <ShieldCheck aria-hidden="true" className="size-4" strokeWidth={2} />
                     Change Role
@@ -522,7 +522,7 @@ export default function AdminUsersPage() {
                     onClick={() => setManageOpen((v) => !v)}
                     aria-expanded={manageOpen}
                     aria-controls="manage-actions"
-                    className="h-11 rounded-sm border border-[#10181A]/25 px-4 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#10181A]/75 hover:border-[#10181A] hover:text-[#10181A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A]"
+                    className="h-11 rounded-sm border border-[#10181A]/25 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#10181A]/75 hover:border-[#10181A] hover:text-[#10181A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A]"
                   >
                     <KeyRound aria-hidden="true" className="size-4" strokeWidth={1.75} />
                     Manage Account
@@ -531,7 +531,7 @@ export default function AdminUsersPage() {
 
                 {manageOpen && (
                   <div id="manage-actions" className="mt-3 border border-[#A34343]/35 bg-[#A34343]/5 p-3">
-                    <p className="font-mono text-[7px] font-bold uppercase tracking-[0.28em] text-[#A34343]">
+                    <p className="font-mono text-[9px] font-bold uppercase tracking-[0.28em] text-[#A34343]">
                       Manage Account — Elevated Actions
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5">
@@ -543,14 +543,14 @@ export default function AdminUsersPage() {
                         <button
                           key={label}
                           type="button"
-                          className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#A34343]/35 bg-transparent px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#A34343] transition-colors hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
+                          className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#A34343]/35 bg-transparent px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#A34343] transition-colors hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
                         >
                           <Icon aria-hidden="true" className="size-3.5" strokeWidth={2} />
                           {label}
                         </button>
                       ))}
                     </div>
-                    <p className="mt-2 font-mono text-[6px] uppercase leading-snug tracking-[0.18em] text-[#A34343]/70">
+                    <p className="mt-2 font-mono text-[10px] uppercase leading-snug tracking-[0.18em] text-[#A34343]/70">
                       Elevated actions are logged to the Trust Office ledger
                     </p>
                   </div>
@@ -586,7 +586,7 @@ export default function AdminUsersPage() {
             className="registry-dialog relative w-full max-w-lg border border-[#D8C9A3]/35 bg-[#141E1B] p-6 shadow-2xl"
           >
             <span aria-hidden="true" className="absolute right-4 top-4 select-none font-mono text-xl leading-none text-[#C9A25E]/75">§</span>
-            <p className="font-mono text-[8px] uppercase tracking-[0.32em] text-[#C9A25E]">
+            <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[#C9A25E]">
               The Role Writ
             </p>
             <h3 className="registry-serif mt-1.5 text-2xl font-black leading-tight tracking-tight text-[#F2EDDF]">
@@ -634,12 +634,12 @@ export default function AdminUsersPage() {
                         <span className="flex items-center gap-2 text-[13px] font-bold tracking-tight text-[#F2EDDF]">
                           {meta.label}
                           {current && (
-                            <span className="rounded-sm border border-[#C9A25E]/55 bg-[#C9A25E]/15 px-1.5 py-0.5 font-mono text-[6px] font-bold uppercase tracking-[0.2em] text-[#C9A25E]">
+                            <span className="rounded-sm border border-[#C9A25E]/55 bg-[#C9A25E]/15 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A25E]">
                               Current
                             </span>
                           )}
                         </span>
-                        <span className="mt-0.5 block font-mono text-[6.5px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/45">
+                        <span className="mt-0.5 block font-mono text-[9px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/45">
                           {f.key === "student" && "Browses, applies, tracks applications"}
                           {f.key === "tutor" && "Posts batches, reviews applicants, earns"}
                           {f.key === "admin" && "Moderates, manages roles, audits revenue"}
@@ -655,7 +655,7 @@ export default function AdminUsersPage() {
               </div>
             </fieldset>
 
-            <p className="mt-4 flex items-center gap-2 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[6.5px] uppercase leading-relaxed tracking-[0.2em] text-[#F2EDDF]/45">
+            <p className="mt-4 flex items-center gap-2 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em] text-[#F2EDDF]/45">
               <ShieldCheck aria-hidden="true" className="size-3.5 text-[#C9A25E]" strokeWidth={2} />
               Role changes propagate instantly — logged to the Trust Office ledger
             </p>

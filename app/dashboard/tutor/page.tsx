@@ -94,11 +94,11 @@ function StudioBoard({
   return (
     <section className={cn("relative border border-[#344C43]/25 bg-[#EFE7DC] shadow-[5px_6px_0_rgba(52,76,67,0.13)]", className)}>
       {/* Folder tab */}
-      <span className="absolute -top-[13px] left-4 inline-flex h-[26px] items-center border border-[#344C43] bg-[#344C43] px-3 font-mono text-[7.5px] font-bold uppercase tracking-[0.3em] text-[#EFE7DC]">
+      <span className="absolute -top-[13px] left-4 inline-flex h-[26px] items-center border border-[#344C43] bg-[#344C43] px-3 font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#EFE7DC]">
         {tab}
       </span>
       {note && (
-        <p className="absolute -top-[11px] right-4 hidden font-mono text-[7px] uppercase tracking-[0.24em] text-[#344C43]/55 sm:block">
+        <p className="absolute -top-[11px] right-4 hidden font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55 sm:block">
           {note}
         </p>
       )}
@@ -128,7 +128,7 @@ function EarningsChart() {
       {[20, 30, 40, 50].map((v) => (
         <g key={v}>
           <line x1={PAD_L} y1={y(v)} x2={W - 4} y2={y(v)} stroke="#344C43" strokeOpacity="0.12" strokeDasharray="2 5" />
-          <text x={PAD_L - 6} y={y(v) + 3} textAnchor="end" fontSize="7.5" fill="#344C43" fillOpacity="0.5" className="font-mono">
+          <text x={PAD_L - 6} y={y(v) + 3} textAnchor="end" fontSize="9" fill="#344C43" fillOpacity="0.5" className="font-mono">
             {v}K
           </text>
         </g>
@@ -155,7 +155,7 @@ function EarningsChart() {
       </text>
       {/* Month labels */}
       {EARN_MONTHS.map((m, i) => (
-        <text key={m} x={x(i)} y={H - 6} textAnchor="middle" fontSize="7.5" fill="#344C43" fillOpacity={i === EARNINGS.length - 1 ? 0.9 : 0.5} fontWeight={i === EARNINGS.length - 1 ? 700 : 400} className="font-mono">
+        <text key={m} x={x(i)} y={H - 6} textAnchor="middle" fontSize="9" fill="#344C43" fillOpacity={i === EARNINGS.length - 1 ? 0.9 : 0.5} fontWeight={i === EARNINGS.length - 1 ? 700 : 400} className="font-mono">
           {m}
         </text>
       ))}
@@ -184,10 +184,10 @@ function ApplicationsChart() {
         return (
           <g key={i}>
             <rect x={x} y={y} width={bw} height={h} fill={last ? "#B87959" : "#344C43"} fillOpacity={last ? 1 : 0.82} rx="1.5" />
-            <text x={x + bw / 2} y={y - 4} textAnchor="middle" fontSize="8" fontWeight="700" fill={last ? "#B87959" : "#344C43"} fillOpacity={last ? 1 : 0.6} className="font-mono">
+            <text x={x + bw / 2} y={y - 4} textAnchor="middle" fontSize="10" fontWeight="700" fill={last ? "#B87959" : "#344C43"} fillOpacity={last ? 1 : 0.6} className="font-mono">
               {v}
             </text>
-            <text x={x + bw / 2} y={H - 5} textAnchor="middle" fontSize="7.5" fill="#344C43" fillOpacity="0.55" className="font-mono">
+            <text x={x + bw / 2} y={H - 5} textAnchor="middle" fontSize="9" fill="#344C43" fillOpacity="0.55" className="font-mono">
               {EARN_MONTHS[i]}
             </text>
           </g>
@@ -238,15 +238,15 @@ export default function TutorDashboardPage() {
 
               {/* Chip row */}
               <div className="studio-rise mt-5 flex flex-wrap items-center gap-2.5" style={{ "--rise-delay": "0.1s" } as React.CSSProperties}>
-                <span className="inline-flex items-center gap-1.5 border border-[#7AA890]/45 bg-[#668B78]/15 px-2 py-1 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#9DBFA9]">
+                <span className="inline-flex items-center gap-1.5 border border-[#7AA890]/45 bg-[#668B78]/15 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#9DBFA9]">
                   <BadgeCheck aria-hidden="true" className="size-3.5 text-[#C98B6D]" strokeWidth={2} />
                   Verified Mentor
                 </span>
-                <span className="inline-flex items-center gap-1.5 border border-[#C98B6D]/45 bg-[#B87959]/15 px-2 py-1 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#C98B6D]">
+                <span className="inline-flex items-center gap-1.5 border border-[#C98B6D]/45 bg-[#B87959]/15 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#C98B6D]">
                   <Crown aria-hidden="true" className="size-3.5" strokeWidth={2} />
                   Tutor Pro — Active
                 </span>
-                <span className="inline-flex items-center gap-1.5 border border-[#F2EDDF]/20 bg-[#F2EDDF]/5 px-2 py-1 font-mono text-[8px] font-semibold uppercase tracking-[0.22em] text-[#F2EDDF]/70">
+                <span className="inline-flex items-center gap-1.5 border border-[#F2EDDF]/20 bg-[#F2EDDF]/5 px-2 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-[#F2EDDF]/70">
                   <BookOpenCheck aria-hidden="true" className="size-3.5 text-[#9DBFA9]" strokeWidth={2} />
                   HSC Physics · 2 Batches
                 </span>
@@ -289,11 +289,11 @@ export default function TutorDashboardPage() {
                 <span aria-hidden="true" className="absolute right-4 top-4 font-mono text-[22px] leading-none text-[#C98B6D]/70">✦</span>
 
                 <div className="flex items-center justify-between gap-4">
-                  <span className="flex items-center gap-2 font-mono text-[8px] font-bold uppercase tracking-[0.34em] text-[#C98B6D]">
+                  <span className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[#C98B6D]">
                     <Crown aria-hidden="true" className="size-4" strokeWidth={1.75} />
                     Tutor Pro
                   </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#7AA890]/45 bg-[#668B78]/20 px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.26em] text-[#9DBFA9]">
+                  <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#7AA890]/45 bg-[#668B78]/20 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.26em] text-[#9DBFA9]">
                     <span aria-hidden="true" className="size-1.5 rounded-full bg-[#7AA890]" />
                     Active
                   </span>
@@ -302,11 +302,11 @@ export default function TutorDashboardPage() {
                 <p className="studio-serif mt-4 text-3xl font-black leading-none tracking-tight text-[#F2EDDF]">
                   ৳15<span className="text-base font-bold text-[#F2EDDF]/55"> / mo</span>
                 </p>
-                <p className="mt-1 font-mono text-[7px] uppercase tracking-[0.28em] text-[#F2EDDF]/45">
+                <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.28em] text-[#F2EDDF]/45">
                   Mentor&rsquo;s Guild Membership
                 </p>
 
-                <ul className="mt-4 space-y-1.5 border-t border-[#F2EDDF]/12 pt-4 font-mono text-[8px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/70">
+                <ul className="mt-4 space-y-1.5 border-t border-[#F2EDDF]/12 pt-4 font-mono text-[10px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/70">
                   {["Unlimited batch listings", "Verified mentor seal", "Featured index ranking", "Applicant ledger + analytics"].map((b) => (
                     <li key={b} className="flex items-center gap-2">
                       <CheckCircle2 aria-hidden="true" className="size-3.5 shrink-0 text-[#C98B6D]" strokeWidth={2} />
@@ -316,12 +316,12 @@ export default function TutorDashboardPage() {
                 </ul>
 
                 <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#F2EDDF]/12 pt-3">
-                  <span className="font-mono text-[7px] uppercase leading-relaxed tracking-[0.2em] text-[#F2EDDF]/45">
+                  <span className="font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em] text-[#F2EDDF]/45">
                     Renews 01 Dec &rsquo;26<br />Invoice ML-2042 · Stripe
                   </span>
                   <Link
                     href="/dashboard/tutor/settings"
-                    className="inline-flex items-center gap-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#C98B6D] transition-colors hover:text-[#E0A57E]"
+                    className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#C98B6D] transition-colors hover:text-[#E0A57E]"
                   >
                     Manage
                     <ArrowRight aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
@@ -339,7 +339,7 @@ export default function TutorDashboardPage() {
         className="group flex items-center justify-center gap-3 border-b border-[#8f5c23] bg-[#B87959] px-4 py-2.5 text-center transition-colors hover:bg-[#C98B6D]"
       >
         <Sparkles aria-hidden="true" className="size-4 shrink-0 text-[#1E3A2F]" strokeWidth={2} />
-        <span className="font-mono text-[8px] font-bold uppercase leading-snug tracking-[0.22em] text-[#1E3A2F] sm:text-[9px]">
+        <span className="font-mono text-[10px] font-bold uppercase leading-snug tracking-[0.22em] text-[#1E3A2F] sm:text-[10px]">
           Your students can pin their own queues — <span className="underline underline-offset-2">Scholar Pro, $10/mo</span> · Verified badge + priority review
         </span>
         <ArrowRight aria-hidden="true" className="size-4 shrink-0 text-[#1E3A2F] transition-transform duration-200 group-hover:translate-x-1.5" strokeWidth={2.5} />
@@ -358,7 +358,7 @@ export default function TutorDashboardPage() {
           >
             <div className="flex flex-wrap items-end justify-between gap-3 border-b border-[#344C43]/20 pb-3">
               <div>
-                <p className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.3em] text-[#344C43]/55">
+                <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-[#344C43]/55">
                   <Wallet aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
                   This Term · 6 Months
                 </p>
@@ -371,13 +371,13 @@ export default function TutorDashboardPage() {
                   <TrendingUp aria-hidden="true" className="size-4" strokeWidth={2.25} />
                   +18.4%
                 </p>
-                <p className="mt-1 font-mono text-[7px] uppercase tracking-[0.22em] text-[#344C43]/50">
+                <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/50">
                   vs. last term
                 </p>
               </div>
             </div>
             <EarningsChart />
-            <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#344C43]/20 pt-3 font-mono text-[7px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/55">
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#344C43]/20 pt-3 font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/55">
               <span>Next payout — <span className="font-bold text-[#344C43]">Fri 21 Nov · ৳18,900</span> · Stripe</span>
               <span>Lifetime taught — <span className="font-bold text-[#344C43]">৳8.4L</span> · 312 scholars</span>
             </div>
@@ -397,14 +397,14 @@ export default function TutorDashboardPage() {
               ].map((s) => (
                 <div key={s.label} className="flex flex-col items-center">
                   <span className={cn("studio-serif text-5xl font-black leading-none", s.tone)}>{s.n}</span>
-                  <span className="mt-1.5 font-mono text-[7px] uppercase tracking-[0.24em] text-[#344C43]/55">{s.label}</span>
+                  <span className="mt-1.5 font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">{s.label}</span>
                 </div>
               ))}
             </div>
 
             {/* Portfolio mix stacked bar */}
             <div className="mt-4">
-              <p className="mb-1.5 font-mono text-[7px] uppercase tracking-[0.28em] text-[#344C43]/55">
+              <p className="mb-1.5 font-mono text-[9px] uppercase tracking-[0.28em] text-[#344C43]/55">
                 Portfolio Mix
               </p>
               <div className="flex h-5 w-full overflow-hidden rounded-sm border border-[#344C43]/25" role="img" aria-label="Portfolio mix: 2 active listings (50%), 1 pending board approval (25%), 1 closed (25%)">
@@ -415,11 +415,11 @@ export default function TutorDashboardPage() {
                     style={{ width: `${m.pct}%`, backgroundColor: m.tone }}
                     title={`${m.label}: ${m.count}`}
                   >
-                    <span className="font-mono text-[8px] font-bold text-[#EFE7DC]">{m.count}</span>
+                    <span className="font-mono text-[10px] font-bold text-[#EFE7DC]">{m.count}</span>
                   </div>
                 ))}
               </div>
-              <ul className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#344C43]/60">
+              <ul className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/60">
                 {MIX.map((m) => (
                   <li key={m.label} className="inline-flex items-center gap-1.5">
                     <span aria-hidden="true" className="inline-block size-2.5" style={{ backgroundColor: m.tone }} />
@@ -430,7 +430,7 @@ export default function TutorDashboardPage() {
             </div>
 
             {/* Pro unlimited strip */}
-            <p className="mt-4 flex items-center gap-2 border border-[#C98B6D]/45 bg-[#B87959]/10 px-3 py-2 font-mono text-[7px] font-bold uppercase leading-snug tracking-[0.2em] text-[#B87959]">
+            <p className="mt-4 flex items-center gap-2 border border-[#C98B6D]/45 bg-[#B87959]/10 px-3 py-2 font-mono text-[9px] font-bold uppercase leading-snug tracking-[0.2em] text-[#B87959]">
               <Crown aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.75} />
               Pro · Unlimited listings — no cap on your craft
             </p>
@@ -448,7 +448,7 @@ export default function TutorDashboardPage() {
             <div className="grid gap-6 md:grid-cols-5">
               {/* Applications per month */}
               <div className="md:col-span-3">
-                <p className="flex items-center justify-between font-mono text-[7.5px] font-bold uppercase tracking-[0.26em] text-[#344C43]/60">
+                <p className="flex items-center justify-between font-mono text-[9px] font-bold uppercase tracking-[0.26em] text-[#344C43]/60">
                   Applications / mo
                   <span className="font-normal text-[#668B78]">rising</span>
                 </p>
@@ -456,7 +456,7 @@ export default function TutorDashboardPage() {
               </div>
               {/* Topic coverage + vitals */}
               <div className="md:col-span-2 md:border-l md:border-[#344C43]/20 md:pl-5">
-                <p className="font-mono text-[7.5px] font-bold uppercase tracking-[0.26em] text-[#344C43]/60">
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.26em] text-[#344C43]/60">
                   Topic Mastery
                 </p>
                 <ul className="mt-2.5 space-y-2.5">
@@ -466,7 +466,7 @@ export default function TutorDashboardPage() {
                         <span className="text-[10px] font-semibold leading-tight tracking-tight text-[#344C43]">
                           {t.topic}
                         </span>
-                        <span className="font-mono text-[8px] font-bold text-[#4A695C]">{t.pct}%</span>
+                        <span className="font-mono text-[10px] font-bold text-[#4A695C]">{t.pct}%</span>
                       </div>
                       <div className="mt-1 h-1.5 w-full bg-[#344C43]/10" role="img" aria-label={`${t.topic}: ${t.pct} percent mastered`}>
                         <div className="h-full bg-[#668B78]" style={{ width: `${t.pct}%` }} />
@@ -477,11 +477,11 @@ export default function TutorDashboardPage() {
                 <div className="mt-3.5 grid grid-cols-2 gap-2 border-t border-[#344C43]/20 pt-3">
                   <span className="text-center">
                     <span className="flex items-center justify-center gap-1 font-mono text-[11px] font-bold text-[#344C43]"><Star aria-hidden="true" className="size-3.5 fill-[#B87959] text-[#B87959]" />4.9</span>
-                    <span className="font-mono text-[6px] uppercase tracking-[0.2em] text-[#344C43]/50">238 ratings</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#344C43]/50">238 ratings</span>
                   </span>
                   <span className="text-center">
                     <span className="flex items-center justify-center gap-1 font-mono text-[11px] font-bold text-[#344C43]"><Flame aria-hidden="true" className="size-3.5 text-[#B87959]" strokeWidth={2} />34/36</span>
-                    <span className="font-mono text-[6px] uppercase tracking-[0.2em] text-[#344C43]/50">sessions held</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#344C43]/50">sessions held</span>
                   </span>
                 </div>
               </div>
@@ -508,15 +508,15 @@ export default function TutorDashboardPage() {
                       <span className="block truncate text-[12px] font-semibold leading-tight tracking-tight text-[#344C43]">
                         {a.name}
                       </span>
-                      <span className="mt-0.5 block truncate font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#344C43]/55">
+                      <span className="mt-0.5 block truncate font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/55">
                         {a.batch} · {a.ref}
                       </span>
                     </span>
                     <span className="flex shrink-0 flex-col items-end gap-1">
-                      <span className="font-mono text-[7px] uppercase tracking-[0.18em] text-[#344C43]/45">{a.when}</span>
+                      <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/45">{a.when}</span>
                       <span
                         className={cn(
-                          "rounded-sm border px-1.5 py-0.5 font-mono text-[6px] font-bold uppercase tracking-[0.2em]",
+                          "rounded-sm border px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em]",
                           a.status === "new" && "border-[#B87959]/55 bg-[#B87959]/10 text-[#B87959]",
                           a.status === "reviewed" && "border-[#668B78]/55 bg-[#668B78]/10 text-[#4A695C]",
                           a.status === "shortlisted" && "border-[#344C43]/45 bg-[#344C43]/5 text-[#344C43]"
@@ -531,7 +531,7 @@ export default function TutorDashboardPage() {
             </ul>
             <Link
               href="/dashboard/tutor/applicants"
-              className="group mt-2 inline-flex items-center gap-1.5 border-t border-[#344C43]/20 pt-3 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#B87959] transition-colors hover:text-[#96603F]"
+              className="group mt-2 inline-flex items-center gap-1.5 border-t border-[#344C43]/20 pt-3 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#B87959] transition-colors hover:text-[#96603F]"
             >
               Open the applicant ledger
               <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
@@ -546,7 +546,7 @@ export default function TutorDashboardPage() {
               <thead>
                 <tr className="border-b-2 border-[#344C43]">
                   {["Ref", "Batch", "Mode & Schedule", "Seats", "Fee / mo", "Status"].map((h) => (
-                    <th key={h} scope="col" className="px-4 py-2 font-mono text-[7px] font-bold uppercase tracking-[0.26em] text-[#344C43]/55 first:pl-4 last:pr-4 sm:first:pl-5 sm:last:pr-5">
+                    <th key={h} scope="col" className="px-4 py-2 font-mono text-[9px] font-bold uppercase tracking-[0.26em] text-[#344C43]/55 first:pl-4 last:pr-4 sm:first:pl-5 sm:last:pr-5">
                       {h}
                     </th>
                   ))}
@@ -561,7 +561,7 @@ export default function TutorDashboardPage() {
                     <td className="px-4 py-2.5">
                       <span className="text-[12px] font-semibold leading-tight tracking-tight text-[#344C43]">{l.title}</span>
                     </td>
-                    <td className="px-4 py-2.5 font-mono text-[7.5px] uppercase leading-relaxed tracking-[0.14em] text-[#344C43]/65">
+                    <td className="px-4 py-2.5 font-mono text-[9px] uppercase leading-relaxed tracking-[0.14em] text-[#344C43]/65">
                       {l.mode}
                     </td>
                     <td className="px-4 py-2.5 font-mono text-[10px] font-bold tabular-nums text-[#344C43]">{l.seats}</td>
@@ -569,7 +569,7 @@ export default function TutorDashboardPage() {
                     <td className="px-4 py-2.5 last:pr-4 sm:last:pr-5">
                       <span
                         className={cn(
-                          "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border px-2 py-0.5 font-mono text-[6.5px] font-bold uppercase tracking-[0.2em]",
+                          "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em]",
                           l.status === "enrolling" && "border-[#668B78]/55 bg-[#668B78]/10 text-[#4A695C]",
                           l.status === "pending" && "border-[#B87959]/55 bg-[#B87959]/10 text-[#B87959]",
                           l.status === "closed" && "border-[#344C43]/40 bg-[#344C43]/5 text-[#344C43]/55"
@@ -591,10 +591,10 @@ export default function TutorDashboardPage() {
         {/* ── SPRINT BOARD — quick studio actions ── */}
         <section aria-labelledby="sprint-heading" className="border border-[#344C43]/25 bg-[#344C43] text-[#EFE7DC]">
           <div className="flex items-center justify-between gap-4 border-b border-[#EFE7DC]/12 px-4 py-3 sm:px-5">
-            <h2 id="sprint-heading" className="font-mono text-[8px] font-bold uppercase tracking-[0.34em] text-[#C98B6D]">
+            <h2 id="sprint-heading" className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[#C98B6D]">
               The Sprint Board — Studio Tasks
             </h2>
-            <span className="hidden font-mono text-[7px] uppercase tracking-[0.24em] text-[#EFE7DC]/40 sm:inline">
+            <span className="hidden font-mono text-[9px] uppercase tracking-[0.24em] text-[#EFE7DC]/40 sm:inline">
               Friday, six o&rsquo;clock — doors open
             </span>
           </div>
@@ -617,10 +617,10 @@ export default function TutorDashboardPage() {
                     <span className="block text-[12px] font-semibold leading-snug tracking-tight text-[#EFE7DC] transition-colors group-hover:text-[#F2EDDF]">
                       {item.task}
                     </span>
-                    <span className="mt-1 block font-mono text-[6.5px] uppercase leading-relaxed tracking-[0.16em] text-[#EFE7DC]/45">
+                    <span className="mt-1 block font-mono text-[9px] uppercase leading-relaxed tracking-[0.16em] text-[#EFE7DC]/45">
                       {item.meta}
                     </span>
-                    <span className="mt-2 inline-flex items-center gap-1 font-mono text-[7px] font-bold uppercase tracking-[0.26em] text-[#C98B6D]">
+                    <span className="mt-2 inline-flex items-center gap-1 font-mono text-[9px] font-bold uppercase tracking-[0.26em] text-[#C98B6D]">
                       Go
                       <ArrowRight aria-hidden="true" className="size-3 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
                     </span>

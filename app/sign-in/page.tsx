@@ -149,7 +149,7 @@ function HangingBookmark() {
           boxShadow: "0 24px 44px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(239,231,220,0.25)",
         }}
       >
-        <span className="font-mono text-[8px] uppercase tracking-[0.34em] text-[#1A2823]/70">
+        <span className="font-mono text-[10px] uppercase tracking-[0.34em] text-[#1A2823]/70">
           ML
         </span>
         <span
@@ -238,13 +238,13 @@ export default function SignInPage() {
 
       {/* ══ Night ribbon — sibling strip to the charter ═══════════════════ */}
       <div className="relative border-b border-[#D9CBB5]/12">
-        <div className="mx-auto flex h-9 max-w-[1500px] items-center justify-between gap-4 px-4 font-mono text-[8px] uppercase tracking-[0.28em] text-[#EFE7DC]/55 sm:px-8 sm:text-[9px]">
+        <div className="mx-auto flex h-9 max-w-[1500px] items-center justify-between gap-4 px-4 font-mono text-[10px] uppercase tracking-[0.28em] text-[#EFE7DC]/55 sm:px-8 sm:text-[10px]">
           <span className="flex items-center gap-2 whitespace-nowrap">
             <MoonStar className="size-3 text-[#C98B6D]" strokeWidth={2} />
             MentorLagbe · The Night Study
           </span>
           <span className="hidden md:inline">Dhaka — Est. 2026</span>
-          <span className="whitespace-nowrap">Folio Nº ML-REG-002</span>
+          <span className="hidden whitespace-nowrap sm:inline">Folio Nº ML-REG-002</span>
         </div>
       </div>
 
@@ -258,7 +258,7 @@ export default function SignInPage() {
             {/* Vertical rail text */}
             <span
               aria-hidden="true"
-              className="pointer-events-none absolute left-2 top-1/2 hidden -translate-y-1/2 select-none font-mono text-[8px] uppercase tracking-[0.5em] text-[#EFE7DC]/22 xl:block"
+              className="pointer-events-none absolute left-2 top-1/2 hidden -translate-y-1/2 select-none font-mono text-[10px] uppercase tracking-[0.5em] text-[#EFE7DC]/22 xl:block"
               style={{ writingMode: "vertical-rl", transform: "translateY(-50%) rotate(180deg)" }}
             >
               Est. MMXXVI — The Reading Room for Returning Minds
@@ -290,7 +290,7 @@ export default function SignInPage() {
                   <path d="M2 10C10 4 20 2 31 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="0.5 3.5" />
                   <path d="M27 1.5 32.5 5 27 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <p className="font-mono text-[8px] uppercase leading-relaxed tracking-[0.2em] text-[#EFE7DC]/50 sm:text-[9px]">
+                <p className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[#EFE7DC]/50 sm:text-[10px]">
                   and so are you, scholar
                 </p>
               </div>
@@ -305,10 +305,10 @@ export default function SignInPage() {
               {/* Dossier status ledger — "your place is held" */}
               <dl className="study-rise mt-8 max-w-md border border-[#D9CBB5]/12 bg-[#1E2E29]/45 backdrop-blur-[2px]" style={{ "--rise-delay": "0.3s" } as React.CSSProperties}>
                 <div className="flex items-center justify-between gap-4 border-b border-[#D9CBB5]/12 px-4 py-2.5">
-                  <span className="font-mono text-[8px] uppercase tracking-[0.28em] text-[#C98B6D]">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-[#C98B6D]">
                     Dossier — Standing
                   </span>
-                  <span className="flex items-center gap-1.5 font-mono text-[7px] uppercase tracking-[0.24em] text-[#EFE7DC]/40">
+                  <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.24em] text-[#EFE7DC]/40">
                     <span className="inline-block size-1.5 rounded-full bg-[#668B78]" />
                     Saved
                   </span>
@@ -318,7 +318,7 @@ export default function SignInPage() {
                     key={row.label}
                     className="grid grid-cols-[6.5rem_1fr] items-baseline gap-3 border-b border-[#D9CBB5]/10 px-4 py-2 last:border-b-0"
                   >
-                    <dt className="font-mono text-[8px] uppercase tracking-[0.22em] text-[#EFE7DC]/42">
+                    <dt className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#EFE7DC]/42">
                       {row.label}
                     </dt>
                     <dd className="text-[12px] font-medium tracking-tight text-[#EFE7DC]/90">
@@ -333,7 +333,7 @@ export default function SignInPage() {
                       style={{ width: "55%" }}
                     />
                   </div>
-                  <div className="mt-1.5 flex justify-between font-mono text-[7px] uppercase tracking-[0.22em] text-[#EFE7DC]/35">
+                  <div className="mt-1.5 flex justify-between font-mono text-[9px] uppercase tracking-[0.22em] text-[#EFE7DC]/35">
                     <span>Chapter — Integration by Parts</span>
                     <span>55%</span>
                   </div>
@@ -345,7 +345,7 @@ export default function SignInPage() {
                 <p className="study-serif text-[15px] italic leading-snug text-[#EFE7DC]/70">
                   “The pen remembers. The page keeps. The study waits.”
                 </p>
-                <cite className="mt-1.5 block font-mono text-[8px] uppercase not-italic tracking-[0.24em] text-[#EFE7DC]/38">
+                <cite className="mt-1.5 block font-mono text-[10px] uppercase not-italic tracking-[0.24em] text-[#EFE7DC]/38">
                   — The House Maxim, Night Study
                 </cite>
               </blockquote>
@@ -368,7 +368,7 @@ export default function SignInPage() {
               >
                 Welcome <span className="italic text-[#C98B6D]">back.</span>
               </h2>
-              <p className="mt-2 font-mono text-[8px] uppercase tracking-[0.28em] text-[#EFE7DC]/45 sm:text-[9px]">
+              <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.28em] text-[#EFE7DC]/45 sm:text-[10px]">
                 Enter your credentials to resume your seat
               </p>
 
@@ -390,7 +390,7 @@ export default function SignInPage() {
 
                 <div className="my-5 flex items-center gap-4" aria-hidden="true">
                   <span className="h-px flex-1 bg-[#D9CBB5]/12" />
-                  <span className="font-mono text-[8px] uppercase tracking-[0.3em] text-[#EFE7DC]/38">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-[#EFE7DC]/38">
                     or resume by hand
                   </span>
                   <span className="h-px flex-1 bg-[#D9CBB5]/12" />
@@ -458,7 +458,7 @@ export default function SignInPage() {
                         </span>
                       }
                     />
-                    <span className="hidden font-mono text-[7px] uppercase tracking-[0.24em] text-[#EFE7DC]/30 sm:inline">
+                    <span className="hidden font-mono text-[9px] uppercase tracking-[0.24em] text-[#EFE7DC]/30 sm:inline">
                       30 days
                     </span>
                   </div>
@@ -479,7 +479,7 @@ export default function SignInPage() {
                 </form>
 
                 {/* Trust line */}
-                <p className="mt-4 flex items-center justify-center gap-2 font-mono text-[7px] uppercase tracking-[0.24em] text-[#EFE7DC]/35 sm:text-[8px]">
+                <p className="mt-4 flex items-center justify-center gap-2 font-mono text-[9px] uppercase tracking-[0.24em] text-[#EFE7DC]/35 sm:text-[10px]">
                   <ShieldCheck className="size-3.5 text-[#7AA890]" strokeWidth={2} />
                   Private &amp; encrypted — MentorLagbe Trust Office
                 </p>
@@ -501,7 +501,7 @@ export default function SignInPage() {
         </div>
 
         {/* ══ Colophon ════════════════════════════════════════════════════ */}
-        <footer className="flex flex-col items-start justify-between gap-3 border-t border-[#D9CBB5]/12 px-4 py-5 font-mono text-[8px] uppercase leading-relaxed tracking-[0.26em] text-[#EFE7DC]/45 sm:flex-row sm:items-center sm:px-8 sm:text-[9px]">
+        <footer className="flex flex-col items-start justify-between gap-3 border-t border-[#D9CBB5]/12 px-4 py-5 font-mono text-[10px] uppercase leading-relaxed tracking-[0.26em] text-[#EFE7DC]/45 sm:flex-row sm:items-center sm:px-8 sm:text-[10px]">
           <p>
             {["Your notes, synced", "Your seat, saved", "Your batch, waiting"].map((feat) => (
               <span key={feat} className="mr-4 inline-flex items-center gap-1.5">

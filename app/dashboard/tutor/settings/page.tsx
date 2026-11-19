@@ -117,7 +117,7 @@ function Toggle({
         <span className="block text-[13px] font-semibold leading-snug tracking-tight text-[#344C43]">
           {label}
         </span>
-        <span className="mt-0.5 block font-mono text-[6.5px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/55">
+        <span className="mt-0.5 block font-mono text-[9px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/55">
           {desc}
         </span>
       </label>
@@ -218,7 +218,7 @@ function ThemePreview({
             <meta.Icon aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
             {meta.title}
           </span>
-          <span className="mt-0.5 block font-mono text-[6px] uppercase tracking-[0.2em] text-[#344C43]/50">
+          <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-[0.2em] text-[#344C43]/50">
             {meta.sub}
           </span>
         </span>
@@ -335,17 +335,17 @@ export default function TutorSettingsPage() {
               </p>
               {/* Unsaved changes indicator */}
               {dirty && !savedFlash ? (
-                <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#B87959]/50 bg-[#B87959]/10 px-2.5 py-1.5 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#B87959]">
+                <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#B87959]/50 bg-[#B87959]/10 px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#B87959]">
                   <span aria-hidden="true" className="settings-ping size-2 rounded-full bg-[#B87959]" />
                   Unsaved changes on the desk
                 </span>
               ) : savedFlash ? (
-                <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#668B78]/50 bg-[#668B78]/10 px-2.5 py-1.5 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#4A695C]">
+                <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#668B78]/50 bg-[#668B78]/10 px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#4A695C]">
                   <CheckCircle2 aria-hidden="true" className="size-3.5" strokeWidth={2} />
                   Saved to your desk
                 </span>
               ) : (
-                <span className="font-mono text-[7px] uppercase tracking-[0.22em] text-[#344C43]/45">
+                <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/45">
                   Everything as the board left it
                 </span>
               )}
@@ -358,7 +358,7 @@ export default function TutorSettingsPage() {
 
           {/* ── Settings navigation rail ── */}
           <nav aria-label="Settings sections" className="min-w-0 lg:col-span-4 xl:col-span-3">
-            <p className="px-1 font-mono text-[7px] uppercase tracking-[0.34em] text-[#344C43]/45">
+            <p className="px-1 font-mono text-[9px] uppercase tracking-[0.34em] text-[#344C43]/45">
               The Preferences Index
             </p>
             <ul
@@ -391,11 +391,11 @@ export default function TutorSettingsPage() {
                         <Icon className="size-4" strokeWidth={1.75} />
                       </span>
                       <span className="min-w-0">
-                        <span className={cn("block whitespace-nowrap font-mono text-[8px] font-bold uppercase tracking-[0.2em]", isActive ? "text-[#EFE7DC]" : "text-[#344C43]")}>
+                        <span className={cn("block whitespace-nowrap font-mono text-[10px] font-bold uppercase tracking-[0.2em]", isActive ? "text-[#EFE7DC]" : "text-[#344C43]")}>
                           <span className="mr-1.5 text-[#B87959]">{numeral}</span>
                           {label}
                         </span>
-                        <span className={cn("mt-0.5 hidden font-mono text-[6px] uppercase tracking-[0.18em] lg:block", isActive ? "text-[#EFE7DC]/55" : "text-[#344C43]/45")}>
+                        <span className={cn("mt-0.5 hidden font-mono text-[10px] uppercase tracking-[0.18em] lg:block", isActive ? "text-[#EFE7DC]/55" : "text-[#344C43]/45")}>
                           {hint}
                         </span>
                       </span>
@@ -434,7 +434,7 @@ export default function TutorSettingsPage() {
                           aria-pressed={on}
                           onClick={() => setMode(m)}
                           className={cn(
-                            "flex h-11 items-center justify-center gap-1.5 border font-mono text-[8px] font-bold uppercase tracking-[0.2em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
+                            "flex h-11 items-center justify-center gap-1.5 border font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
                             on
                               ? "border-[#344C43] bg-[#344C43] text-[#EFE7DC] shadow-[3px_3px_0_#B87959]"
                               : "border-[#344C43]/25 text-[#344C43]/60 hover:border-[#344C43]/55 hover:text-[#344C43]"
@@ -472,7 +472,7 @@ export default function TutorSettingsPage() {
                     })}
                   </div>
                   <div className="mt-3 flex items-center justify-between gap-4 border-t border-[#344C43]/15 pt-3">
-                    <span className="flex items-center gap-2 font-mono text-[8px] uppercase leading-snug tracking-[0.18em] text-[#344C43]/60">
+                    <span className="flex items-center gap-2 font-mono text-[10px] uppercase leading-snug tracking-[0.18em] text-[#344C43]/60">
                       <CalendarDays aria-hidden="true" className="size-4 text-[#668B78]" strokeWidth={2} />
                       Prefer evening batches
                     </span>
@@ -507,7 +507,7 @@ export default function TutorSettingsPage() {
                   <ThemePreview value="dark" selected={theme === "dark"} onSelect={() => setTheme("dark")} />
                   <ThemePreview value="system" selected={theme === "system"} onSelect={() => setTheme("system")} />
                 </div>
-                <p className="mt-4 flex items-center gap-2 border-t border-[#344C43]/15 pt-3 font-mono text-[7px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/55">
+                <p className="mt-4 flex items-center gap-2 border-t border-[#344C43]/15 pt-3 font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/55">
                   <Sparkles aria-hidden="true" className="size-3.5 text-[#B87959]" strokeWidth={2} />
                   UI only in this preview — your theme stays exactly as you set it
                 </p>
@@ -530,7 +530,7 @@ export default function TutorSettingsPage() {
                     />
                   ))}
                 </div>
-                <p className="mt-3 flex items-center gap-2 border-t border-[#344C43]/15 pt-3 font-mono text-[7px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/55">
+                <p className="mt-3 flex items-center gap-2 border-t border-[#344C43]/15 pt-3 font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/55">
                   <Bell aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
                   Delivery: in-app ribbons + email digest every Friday
                 </p>
@@ -561,7 +561,7 @@ export default function TutorSettingsPage() {
 
                 {/* Password management */}
                 <fieldset className="mt-5 border border-[#344C43]/20 bg-[#F2ECDF] p-4">
-                  <legend className="px-1 font-mono text-[8px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
+                  <legend className="px-1 font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
                     Password Management
                   </legend>
                   <div className="flex flex-wrap items-center justify-between gap-3">
@@ -571,14 +571,14 @@ export default function TutorSettingsPage() {
                         ••••••••••••••
                         <EyeOff aria-hidden="true" className="size-3.5 text-[#344C43]/45" strokeWidth={1.75} />
                       </p>
-                      <p className="mt-1 font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#344C43]/55">
+                      <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/55">
                         Last changed 12 Oct ’26 · 2-factor seal armed
                       </p>
                     </div>
                     <Link
                       href="/dashboard/tutor/settings"
                       aria-label="Change password (UI only)"
-                      className="inline-flex h-10 items-center gap-2 rounded-sm border border-[#344C43]/35 px-4 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                      className="inline-flex h-10 items-center gap-2 rounded-sm border border-[#344C43]/35 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                     >
                       Change Password
                       <ArrowRight aria-hidden="true" className="size-3.5" strokeWidth={2.25} />
@@ -599,15 +599,15 @@ export default function TutorSettingsPage() {
                         <Icon aria-hidden="true" className="size-5 shrink-0 text-[#668B78]" strokeWidth={1.75} />
                         <span className="min-w-0 flex-1">
                           <span className="block text-[12px] font-semibold tracking-tight text-[#344C43]">{device}</span>
-                          <span className="font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#344C43]/55">{place}{now ? " · Active now" : ` · ${label}`}</span>
+                          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/55">{place}{now ? " · Active now" : ` · ${label}`}</span>
                         </span>
                         {now ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#668B78]/55 bg-[#668B78]/10 px-2 py-0.5 font-mono text-[6.5px] font-bold uppercase tracking-[0.2em] text-[#4A695C]">
+                          <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#668B78]/55 bg-[#668B78]/10 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#4A695C]">
                             <span aria-hidden="true" className="size-1.5 rounded-full bg-[#668B78]" />
                             Live
                           </span>
                         ) : (
-                          <button type="button" className="font-mono text-[7px] font-bold uppercase tracking-[0.2em] text-[#A34343] underline decoration-[#A34343]/40 underline-offset-4 transition-colors hover:text-[#8f3838]">
+                          <button type="button" className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#A34343] underline decoration-[#A34343]/40 underline-offset-4 transition-colors hover:text-[#8f3838]">
                             Revoke
                           </button>
                         )}
@@ -616,7 +616,7 @@ export default function TutorSettingsPage() {
                   </ul>
                   <button
                     type="button"
-                    className="mt-2 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#344C43]/60 underline decoration-[#344C43]/30 underline-offset-4 transition-colors hover:text-[#A34343]"
+                    className="mt-2 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#344C43]/60 underline decoration-[#344C43]/30 underline-offset-4 transition-colors hover:text-[#A34343]"
                   >
                     Sign out all other sessions
                   </button>
@@ -633,11 +633,11 @@ export default function TutorSettingsPage() {
                 <div className="relative mt-5 border border-[#C98B6D]/50 bg-[#243630] p-4 text-[#F2EDDF] sm:p-5" style={{ backgroundImage: "linear-gradient(150deg, rgba(201,139,109,0.14) 0%, transparent 45%)" }}>
                   <span aria-hidden="true" className="absolute right-4 top-4 select-none text-xl leading-none text-[#C98B6D]/75">✦</span>
                   <div className="flex items-center justify-between gap-4">
-                    <span className="flex items-center gap-2 font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#C98B6D]">
+                    <span className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#C98B6D]">
                       <Crown aria-hidden="true" className="size-4" strokeWidth={1.75} />
                       Tutor Pro
                     </span>
-                    <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#7AA890]/45 bg-[#668B78]/20 px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#9DBFA9]">
+                    <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#7AA890]/45 bg-[#668B78]/20 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#9DBFA9]">
                       <span aria-hidden="true" className="size-1.5 rounded-full bg-[#7AA890]" />
                       Active
                     </span>
@@ -645,10 +645,10 @@ export default function TutorSettingsPage() {
                   <p className="settings-serif mt-3 text-3xl font-black leading-none tracking-tight">
                     $15<span className="text-base font-bold text-[#F2EDDF]/55"> / mo</span>
                   </p>
-                  <p className="mt-1 font-mono text-[7px] uppercase tracking-[0.26em] text-[#F2EDDF]/50">
+                  <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.26em] text-[#F2EDDF]/50">
                     Membership — renews 01 Dec ’26 · Invoice ML-2042 · Stripe
                   </p>
-                  <ul className="mt-3 grid grid-cols-1 gap-1.5 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[7px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/72 sm:grid-cols-2">
+                  <ul className="mt-3 grid grid-cols-1 gap-1.5 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[9px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/72 sm:grid-cols-2">
                     {["Unlimited batch listings", "Verified mentor seal", "Featured index ranking", "Applicant ledger + analytics"].map((b) => (
                       <li key={b} className="flex items-center gap-1.5">
                         <CheckCircle2 aria-hidden="true" className="size-3.5 shrink-0 text-[#C98B6D]" strokeWidth={2} />
@@ -661,7 +661,7 @@ export default function TutorSettingsPage() {
                 {/* Upgrade to Pro CTA (for the desk beside yours) */}
                 <div className="mt-4 flex flex-col items-start justify-between gap-4 border border-[#B87959]/50 bg-[#B87959]/10 p-4 sm:flex-row sm:items-center">
                   <div>
-                    <p className="flex items-center gap-2 font-mono text-[8px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
+                    <p className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
                       <Sparkles aria-hidden="true" className="size-4" strokeWidth={2} />
                       The Mentor&rsquo;s Guild · $15/mo
                     </p>
@@ -680,7 +680,7 @@ export default function TutorSettingsPage() {
 
                 {/* Manage subscription */}
                 <fieldset className="mt-5 border border-[#344C43]/20">
-                  <legend className="px-1 font-mono text-[8px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
+                  <legend className="px-1 font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
                     Manage Subscription
                   </legend>
                   <ul className="divide-y divide-[#344C43]/15">
@@ -689,30 +689,30 @@ export default function TutorSettingsPage() {
                         <CreditCard aria-hidden="true" className="size-4 text-[#668B78]" strokeWidth={2} />
                         <span>
                           <span className="block text-[12px] font-semibold tracking-tight text-[#344C43]">Visa •••• 2042</span>
-                          <span className="font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#344C43]/55">Billing — nasrin@mentorlagbe.com</span>
+                          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/55">Billing — nasrin@mentorlagbe.com</span>
                         </span>
                       </span>
-                      <button type="button" className="font-mono text-[7px] font-bold uppercase tracking-[0.2em] text-[#B87959] underline decoration-[#B87959]/40 underline-offset-4 hover:text-[#96603F]">Update</button>
+                      <button type="button" className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#B87959] underline decoration-[#B87959]/40 underline-offset-4 hover:text-[#96603F]">Update</button>
                     </li>
                     <li className="flex items-center justify-between gap-3 px-4 py-3">
                       <span className="flex items-center gap-2.5">
                         <FileText aria-hidden="true" className="size-4 text-[#668B78]" strokeWidth={2} />
                         <span>
                           <span className="block text-[12px] font-semibold tracking-tight text-[#344C43]">Invoice ML-2042</span>
-                          <span className="font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#344C43]/55">Oct ’26 · $15.00 · Paid</span>
+                          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/55">Oct ’26 · $15.00 · Paid</span>
                         </span>
                       </span>
-                      <button type="button" className="font-mono text-[7px] font-bold uppercase tracking-[0.2em] text-[#B87959] underline decoration-[#B87959]/40 underline-offset-4 hover:text-[#96603F]">Download</button>
+                      <button type="button" className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#B87959] underline decoration-[#B87959]/40 underline-offset-4 hover:text-[#96603F]">Download</button>
                     </li>
                     <li className="flex items-center justify-between gap-3 px-4 py-3">
                       <span className="flex items-center gap-2.5">
                         <BadgeCheck aria-hidden="true" className="size-4 text-[#668B78]" strokeWidth={2} />
                         <span>
                           <span className="block text-[12px] font-semibold tracking-tight text-[#344C43]">Pause or cancel</span>
-                          <span className="font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#344C43]/55">Seat holds through 01 Dec ’26</span>
+                          <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/55">Seat holds through 01 Dec ’26</span>
                         </span>
                       </span>
-                      <button type="button" className="font-mono text-[7px] font-bold uppercase tracking-[0.2em] text-[#A34343] underline decoration-[#A34343]/40 underline-offset-4 hover:text-[#8f3838]">Manage</button>
+                      <button type="button" className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#A34343] underline decoration-[#A34343]/40 underline-offset-4 hover:text-[#8f3838]">Manage</button>
                     </li>
                   </ul>
                 </fieldset>
@@ -724,7 +724,7 @@ export default function TutorSettingsPage() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-sm border border-[#344C43]/30 px-4 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-sm border border-[#344C43]/30 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
               >
                 <RotateCcw aria-hidden="true" className="size-4" strokeWidth={1.75} />
                 Reset Preferences
@@ -793,7 +793,7 @@ function PanelHeading({
           {title}
         </span>
       </h2>
-      <p className="font-mono text-[7px] uppercase tracking-[0.24em] text-[#344C43]/55">{note}</p>
+      <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">{note}</p>
     </div>
   )
 }

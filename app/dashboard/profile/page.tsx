@@ -121,7 +121,7 @@ function CompletionRing({ percent }: { percent: number }) {
       <text x="70" y="66" textAnchor="middle" fontSize="22" fontWeight="800" fill="#344C43" className="font-mono">
         {percent}
       </text>
-      <text x="70" y="84" textAnchor="middle" fontSize="8" fill="#344C43" fillOpacity="0.6" className="font-mono" letterSpacing="2">
+      <text x="70" y="84" textAnchor="middle" fontSize="10" fill="#344C43" fillOpacity="0.6" className="font-mono" letterSpacing="2">
         PERCENT
       </text>
     </svg>
@@ -147,7 +147,7 @@ function IdentityCard() {
 
       {/* Top strip */}
       <div className="relative flex items-center justify-between gap-3 border-b border-[#F2EDDF]/12 pb-3">
-        <span className="font-mono text-[8px] font-bold uppercase tracking-[0.36em] text-[#C98B6D]">
+        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.36em] text-[#C98B6D]">
           MentorLagbe · Identity
         </span>
         <ScanLine aria-hidden="true" className="size-4 text-[#C9A25E]/80" strokeWidth={1.75} />
@@ -167,15 +167,15 @@ function IdentityCard() {
           <p className="identity-serif text-xl font-black leading-tight tracking-tight text-[#F2EDDF] sm:text-2xl">
             {PERSONA.name}
           </p>
-          <p className="mt-0.5 font-mono text-[6.5px] uppercase leading-relaxed tracking-[0.22em] text-[#9DBFA9]">
+          <p className="mt-0.5 font-mono text-[9px] uppercase leading-relaxed tracking-[0.22em] text-[#9DBFA9]">
             {PERSONA.roleDetail} · {PERSONA.planDetail}
           </p>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            <span className="inline-flex items-center gap-1 rounded-sm border border-[#7AA890]/45 bg-[#668B78]/20 px-1.5 py-0.5 font-mono text-[6px] font-bold uppercase tracking-[0.2em] text-[#9DBFA9]">
+            <span className="inline-flex items-center gap-1 rounded-sm border border-[#7AA890]/45 bg-[#668B78]/20 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#9DBFA9]">
               <BadgeCheck aria-hidden="true" className="size-3" strokeWidth={2.5} />
               Verified
             </span>
-            <span className="inline-flex items-center gap-1 rounded-sm border border-[#C9A25E]/50 bg-[#C9A25E]/15 px-1.5 py-0.5 font-mono text-[6px] font-bold uppercase tracking-[0.2em] text-[#D8C9A3]">
+            <span className="inline-flex items-center gap-1 rounded-sm border border-[#C9A25E]/50 bg-[#C9A25E]/15 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#D8C9A3]">
               <Crown aria-hidden="true" className="size-3" strokeWidth={2} />
               Pro · Guild
             </span>
@@ -184,7 +184,7 @@ function IdentityCard() {
       </div>
 
       {/* ID rows */}
-      <dl className="relative mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-[#F2EDDF]/12 pt-4 font-mono text-[7px] uppercase leading-snug tracking-[0.18em]">
+      <dl className="relative mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-[#F2EDDF]/12 pt-4 font-mono text-[9px] uppercase leading-snug tracking-[0.18em]">
         {[
           ["Member ID", PERSONA.memberId],
           ["Joined", `${PERSONA.joined} · Founding`],
@@ -193,7 +193,7 @@ function IdentityCard() {
         ].map(([k, v]) => (
           <div key={k}>
             <dt className="text-[#F2EDDF]/40">{k}</dt>
-            <dd className="mt-0.5 flex items-center gap-1.5 text-[8px] font-bold text-[#EDE8DA]">
+            <dd className="mt-0.5 flex items-center gap-1.5 text-[10px] font-bold text-[#EDE8DA]">
               {k === "Member ID" && <Hash aria-hidden="true" className="size-3 text-[#C9A25E]" strokeWidth={2} />}
               {v}
             </dd>
@@ -203,7 +203,7 @@ function IdentityCard() {
 
       {/* Signature strip */}
       <div className="relative mt-4 flex items-center justify-between gap-3 border-t border-[#F2EDDF]/12 pt-3">
-        <span className="font-mono text-[8px] uppercase leading-snug tracking-[0.26em] text-[#F2EDDF]/55">
+        <span className="font-mono text-[10px] uppercase leading-snug tracking-[0.26em] text-[#F2EDDF]/55">
           Signed<br />
           <span className="text-[11px] normal-case tracking-normal text-[#C98B6D]" style={{ fontFamily: "Georgia, serif", fontStyle: "italic" }}>
             Nasrin
@@ -212,7 +212,7 @@ function IdentityCard() {
         {/* Holographic seal */}
         <div aria-hidden="true" className="identity-spin-slow relative flex size-12 items-center justify-center rounded-full border border-[#C9A25E]/50">
           <div className="absolute inset-1 rounded-full" style={{ background: "conic-gradient(from 0deg, rgba(216,201,163,0.6), rgba(184,121,89,0.15) 25%, rgba(102,139,120,0.35) 50%, rgba(216,201,163,0.6) 75%, rgba(184,121,89,0.15))" }} />
-          <span className="relative font-mono text-[7px] font-bold text-[#10181A]">ML</span>
+          <span className="relative font-mono text-[9px] font-bold text-[#10181A]">ML</span>
         </div>
       </div>
     </figure>
@@ -278,11 +278,11 @@ export default function ProfilePage() {
                 this page too.
               </p>
               <div className="mt-2.5 flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#7AA890]/45 bg-[#668B78]/10 px-2.5 py-1 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#4A695C]">
+                <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#7AA890]/45 bg-[#668B78]/10 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#4A695C]">
                   <BadgeCheck aria-hidden="true" className="size-3.5" strokeWidth={2} />
                   Tutor · Verified
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#C9A25E]/50 bg-[#C9A25E]/15 px-2.5 py-1 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#7A6A35]">
+                <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#C9A25E]/50 bg-[#C9A25E]/15 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#7A6A35]">
                   <Crown aria-hidden="true" className="size-3.5" strokeWidth={2} />
                   Pro · Guild Member
                 </span>
@@ -311,13 +311,13 @@ export default function ProfilePage() {
                       {item.done ? (
                         <CheckCircle2 aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-[#668B78]" strokeWidth={2} />
                       ) : (
-                        <span aria-hidden="true" className="mt-0.5 flex size-3.5 shrink-0 items-center justify-center rounded-full border border-[#B87959]/55 font-mono text-[6px] font-bold text-[#B87959]">
+                        <span aria-hidden="true" className="mt-0.5 flex size-3.5 shrink-0 items-center justify-center rounded-full border border-[#B87959]/55 font-mono text-[10px] font-bold text-[#B87959]">
                           +
                         </span>
                       )}
                       <span className={cn("tracking-tight", item.done ? "text-[#344C43]/80" : "font-semibold text-[#344C43]")}>
                         {item.label}
-                        {item.hint && <span className="ml-1 font-mono text-[7px] text-[#B87959]">{item.hint}</span>}
+                        {item.hint && <span className="ml-1 font-mono text-[9px] text-[#B87959]">{item.hint}</span>}
                       </span>
                     </li>
                   ))}
@@ -328,23 +328,23 @@ export default function ProfilePage() {
             {/* Subscription summary */}
             <section aria-labelledby="plan-heading" className="relative overflow-hidden border border-[#C98B6D]/50 bg-[#243630] p-5 text-[#F2EDDF]" style={{ backgroundImage: "linear-gradient(150deg, rgba(201,139,109,0.16) 0%, transparent 45%)" }}>
               <span aria-hidden="true" className="absolute right-4 top-4 select-none text-xl leading-none text-[#C98B6D]/75">✦</span>
-              <h2 id="plan-heading" className="flex items-center gap-2 font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#C98B6D]">
+              <h2 id="plan-heading" className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#C98B6D]">
                 <Crown aria-hidden="true" className="size-4" strokeWidth={1.75} />
                 Your Guild Seat
               </h2>
               <p className="settings-serif mt-2 text-3xl font-black leading-none tracking-tight text-[#F2EDDF]">
                 Tutor Pro<span className="text-base font-bold text-[#F2EDDF]/55"> · $15 / mo</span>
               </p>
-              <p className="mt-1 font-mono text-[7px] uppercase tracking-[0.22em] text-[#9DBFA9]">
+              <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.22em] text-[#9DBFA9]">
                 Active · Renews 01 Dec ’26 · Invoice ML-2042
               </p>
-              <ul className="mt-3 space-y-1 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[7px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/70">
+              <ul className="mt-3 space-y-1 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[9px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/70">
                 <li className="flex items-center gap-1.5"><CheckCircle2 aria-hidden="true" className="size-3.5 text-[#C98B6D]" strokeWidth={2} />Unlimited batch listings</li>
                 <li className="flex items-center gap-1.5"><CheckCircle2 aria-hidden="true" className="size-3.5 text-[#C98B6D]" strokeWidth={2} />Verified seal + featured index</li>
               </ul>
               <Link
                 href="/dashboard/tutor/settings"
-                className="group mt-3 inline-flex items-center gap-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#C98B6D] transition-colors hover:text-[#E0A57E]"
+                className="group mt-3 inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#C98B6D] transition-colors hover:text-[#E0A57E]"
               >
                 View Plan Details
                 <ChevronRight aria-hidden="true" className="size-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
@@ -366,7 +366,7 @@ export default function ProfilePage() {
                   <span aria-hidden="true" className="font-mono text-[10px] font-bold tracking-[0.2em] text-[#B87959]">01</span>
                   <span className="identity-serif text-2xl font-black tracking-tight text-[#344C43]">The Details</span>
                 </span>
-                <span className="font-mono text-[7px] uppercase tracking-[0.24em] text-[#344C43]/55">What the board reads</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">What the board reads</span>
               </h2>
 
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -399,7 +399,7 @@ export default function ProfilePage() {
                       tabIndex={0}
                       className="h-11 w-full cursor-not-allowed rounded-sm border border-[#344C43]/20 bg-[#344C43]/5 pl-9 pr-24 font-mono text-[12px] text-[#344C43]/65 outline-none"
                     />
-                    <span className="pointer-events-none absolute right-2 top-1/2 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-sm border border-[#668B78]/45 bg-[#668B78]/10 px-2 py-1 font-mono text-[6.5px] font-bold uppercase tracking-[0.2em] text-[#4A695C]">
+                    <span className="pointer-events-none absolute right-2 top-1/2 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-sm border border-[#668B78]/45 bg-[#668B78]/10 px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#4A695C]">
                       <BadgeCheck aria-hidden="true" className="size-3" strokeWidth={2.5} />
                       Verified
                     </span>
@@ -445,7 +445,7 @@ export default function ProfilePage() {
                     maxLength={220}
                     className="w-full resize-none rounded-sm border border-[#344C43]/25 bg-[#F2ECDF] px-3 py-2.5 text-[13px] leading-relaxed text-[#344C43] outline-none transition-all placeholder:text-[#344C43]/35 hover:border-[#344C43]/45 focus:border-[#668B78] focus:bg-[#EFE7DC] focus:ring-2 focus:ring-[#668B78]/20"
                   />
-                  <p className="mt-1.5 flex items-center justify-between font-mono text-[6.5px] uppercase tracking-[0.2em] text-[#344C43]/45">
+                  <p className="mt-1.5 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/45">
                     <span>Scholars read this before they apply</span>
                     <span className="tabular-nums">{form.bio.length} / 220</span>
                   </p>
@@ -460,7 +460,7 @@ export default function ProfilePage() {
                   <span aria-hidden="true" className="font-mono text-[10px] font-bold tracking-[0.2em] text-[#B87959]">02</span>
                   <span className="identity-serif text-2xl font-black tracking-tight text-[#344C43]">The Portrait</span>
                 </span>
-                <span className="font-mono text-[7px] uppercase tracking-[0.24em] text-[#344C43]/55">Your face, on record</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">Your face, on record</span>
               </h2>
 
               <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
@@ -469,7 +469,7 @@ export default function ProfilePage() {
                   {portraitRemoved ? (
                     <div className="flex size-32 flex-col items-center justify-center gap-1.5 rounded-full border-2 border-dashed border-[#A34343]/45 bg-[#A34343]/5 text-[#A34343] sm:size-36">
                       <ImageOff aria-hidden="true" className="size-6" strokeWidth={1.5} />
-                      <span className="font-mono text-[6px] font-bold uppercase tracking-[0.2em]">Portrait torn</span>
+                      <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em]">Portrait torn</span>
                     </div>
                   ) : (
                     <div className="flex size-32 items-center justify-center rounded-full border-4 border-[#C98B6D]/60 bg-[#243630] shadow-[0_10px_28px_rgba(0,0,0,0.3)] sm:size-36">
@@ -490,11 +490,11 @@ export default function ProfilePage() {
                     className="flex flex-col items-center justify-center gap-1.5 border-2 border-dashed border-[#344C43]/30 bg-[#F2ECDF] px-4 py-5 text-center transition-colors hover:border-[#668B78]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                   >
                     <Upload aria-hidden="true" className="size-6 text-[#668B78]" strokeWidth={1.75} />
-                    <p className="font-mono text-[8px] font-bold uppercase leading-relaxed tracking-[0.2em] text-[#344C43]">
+                    <p className="font-mono text-[10px] font-bold uppercase leading-relaxed tracking-[0.2em] text-[#344C43]">
                       Drag portrait here<br />
                       <span className="font-medium text-[#344C43]/55">or browse files</span>
                     </p>
-                    <p className="font-mono text-[6px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/45">
+                    <p className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/45">
                       PNG · JPG · ≤ 5 MB · even lighting, facing the lamp
                     </p>
                   </div>
@@ -502,7 +502,7 @@ export default function ProfilePage() {
                     <button
                       type="button"
                       onClick={() => setPortraitRemoved(false)}
-                      className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#344C43]/35 px-3 font-mono text-[7.5px] font-bold uppercase tracking-[0.2em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                      className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#344C43]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                     >
                       <Camera aria-hidden="true" className="size-4" strokeWidth={1.75} />
                       Change Photo
@@ -510,7 +510,7 @@ export default function ProfilePage() {
                     <button
                       type="button"
                       onClick={() => setPortraitRemoved(true)}
-                      className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#A34343]/35 px-3 font-mono text-[7.5px] font-bold uppercase tracking-[0.2em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
+                      className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#A34343]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
                     >
                       <ImageOff aria-hidden="true" className="size-4" strokeWidth={1.75} />
                       Remove
@@ -527,7 +527,7 @@ export default function ProfilePage() {
                   <span aria-hidden="true" className="font-mono text-[10px] font-bold tracking-[0.2em] text-[#B87959]">03</span>
                   <span className="identity-serif text-2xl font-black tracking-tight text-[#344C43]">How The Board Sees You</span>
                 </span>
-                <span className="font-mono text-[7px] uppercase tracking-[0.24em] text-[#344C43]/55">Live preview</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">Live preview</span>
               </h2>
               <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="flex min-w-0 flex-1 items-center gap-3 rounded-sm border border-[#344C43]/20 bg-[#F2ECDF] p-3">
@@ -542,7 +542,7 @@ export default function ProfilePage() {
                       <span className="truncate text-[13px] font-bold tracking-tight text-[#344C43]">{form.name || "Unnamed Mentor"}</span>
                       <BadgeCheck aria-hidden="true" className="size-3.5 shrink-0 text-[#668B78]" strokeWidth={2} />
                     </span>
-                    <span className="mt-0.5 block truncate font-mono text-[6px] uppercase tracking-[0.18em] text-[#B87959]">
+                    <span className="mt-0.5 block truncate font-mono text-[10px] uppercase tracking-[0.18em] text-[#B87959]">
                       HSC Physics · Verified · Tutor Pro
                     </span>
                     <span className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-[#344C43]/70">
@@ -551,12 +551,12 @@ export default function ProfilePage() {
                   </span>
                 </div>
                 <div className="shrink-0 border-l border-[#344C43]/15 pl-4 text-right">
-                  <p className="font-mono text-[6px] uppercase tracking-[0.24em] text-[#344C43]/50">Member since</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#344C43]/50">Member since</p>
                   <p className="mt-0.5 flex items-center justify-end gap-1.5 font-mono text-[9px] font-bold text-[#344C43]">
                     <CalendarDays aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
                     {PERSONA.joined}
                   </p>
-                  <p className="mt-2 font-mono text-[6px] uppercase tracking-[0.24em] text-[#344C43]/50">Scholars guided</p>
+                  <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.24em] text-[#344C43]/50">Scholars guided</p>
                   <p className="mt-0.5 flex items-center justify-end gap-1.5 font-mono text-[9px] font-bold text-[#344C43]">
                     <NotebookPen aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
                     {PERSONA.scholars}
@@ -569,24 +569,24 @@ export default function ProfilePage() {
             <div className="flex flex-col-reverse gap-2.5 border border-[#344C43]/25 bg-[#F2ECDF]/60 p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-col items-start gap-1.5">
                 {dirty && !savedFlash ? (
-                  <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#B87959]/50 bg-[#B87959]/10 px-2.5 py-1.5 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#B87959]">
+                  <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#B87959]/50 bg-[#B87959]/10 px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#B87959]">
                     <span aria-hidden="true" className="size-2 rounded-full bg-[#B87959]" />
                     Unsaved changes on the desk
                   </span>
                 ) : savedFlash ? (
-                  <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#668B78]/50 bg-[#668B78]/10 px-2.5 py-1.5 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#4A695C]">
+                  <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#668B78]/50 bg-[#668B78]/10 px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#4A695C]">
                     <CheckCircle2 aria-hidden="true" className="size-3.5" strokeWidth={2} />
                     Saved to your desk
                   </span>
                 ) : (
-                  <span className="font-mono text-[7px] uppercase tracking-[0.22em] text-[#344C43]/45">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/45">
                     Everything as the board left it
                   </span>
                 )}
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/30 px-4 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                  className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/30 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                 >
                   <RotateCcw aria-hidden="true" className="size-4" strokeWidth={1.75} />
                   Cancel Changes

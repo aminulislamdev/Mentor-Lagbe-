@@ -162,14 +162,14 @@ function RegistrationChart() {
       {[0, 500, 1000, 1450].map((v) => (
         <g key={v}>
           <line x1={PAD_L} y1={y(v)} x2={W - 4} y2={y(v)} stroke="#10181A" strokeOpacity="0.12" strokeDasharray="2 5" />
-          <text x={PAD_L - 6} y={y(v) + 3} textAnchor="end" fontSize="7" fill="#10181A" fillOpacity="0.55" className="font-mono">{v}</text>
+          <text x={PAD_L - 6} y={y(v) + 3} textAnchor="end" fontSize="9" fill="#10181A" fillOpacity="0.55" className="font-mono">{v}</text>
         </g>
       ))}
       <path d={area("students")} fill="#668B78" fillOpacity="0.22" />
       <path d={line("students")} fill="none" stroke="#4A695C" strokeWidth="2.2" strokeLinejoin="round" />
       <path d={line("tutors")} fill="none" stroke="#B87959" strokeWidth="2" strokeLinejoin="round" strokeDasharray="4 3" />
       {REGISTRATION_GROWTH.map((d, i) => (
-        <text key={d.m} x={x(i)} y={H - 6} textAnchor="middle" fontSize="7.5" fill="#10181A" fillOpacity={i === REGISTRATION_GROWTH.length - 1 ? 0.9 : 0.5} fontWeight={i === REGISTRATION_GROWTH.length - 1 ? 700 : 400} className="font-mono">{d.m}</text>
+        <text key={d.m} x={x(i)} y={H - 6} textAnchor="middle" fontSize="9" fill="#10181A" fillOpacity={i === REGISTRATION_GROWTH.length - 1 ? 0.9 : 0.5} fontWeight={i === REGISTRATION_GROWTH.length - 1 ? 700 : 400} className="font-mono">{d.m}</text>
       ))}
     </svg>
   )
@@ -194,10 +194,10 @@ function RevenueBars() {
         return (
           <g key={d.m}>
             <rect x={x} y={y} width={bw} height={h} rx="1.5" fill={last ? "#B87959" : "#10181A"} fillOpacity={last ? 1 : 0.82} />
-            <text x={x + bw / 2} y={y - 4} textAnchor="middle" fontSize="7.5" fontWeight={last ? 800 : 500} fill={last ? "#B87959" : "#10181A"} fillOpacity={last ? 1 : 0.6} className="font-mono">
+            <text x={x + bw / 2} y={y - 4} textAnchor="middle" fontSize="9" fontWeight={last ? 800 : 500} fill={last ? "#B87959" : "#10181A"} fillOpacity={last ? 1 : 0.6} className="font-mono">
               {(d.usd / 1000).toFixed(1)}K
             </text>
-            <text x={x + bw / 2} y={H - 5} textAnchor="middle" fontSize="7" fill="#10181A" fillOpacity="0.55" className="font-mono">{d.m}</text>
+            <text x={x + bw / 2} y={H - 5} textAnchor="middle" fontSize="9" fill="#10181A" fillOpacity="0.55" className="font-mono">{d.m}</text>
           </g>
         )
       })}
@@ -266,7 +266,7 @@ export default function AdminDashboardPage() {
 
       {/* ══ TICKER TAPE — live board strip ═══════════════════════════════ */}
       <div className="relative overflow-hidden border-b border-[#D8C9A3]/25 bg-[#10181A] py-1.5" aria-hidden="true">
-        <div className="terminal-ticker flex w-max whitespace-nowrap font-mono text-[7px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]">
+        <div className="terminal-ticker flex w-max whitespace-nowrap font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]">
           {[...TICKER, ...TICKER].map((t, i) => (
             <span key={i} className="mx-6 inline-flex items-center gap-2">
               <span className="size-1 bg-[#B87959]" />
@@ -311,11 +311,11 @@ export default function AdminDashboardPage() {
               <div className="terminal-rise mt-4 flex flex-wrap items-center gap-3" style={{ "--rise-delay": "0.18s" } as React.CSSProperties}>
                 <span className="inline-flex items-center gap-2 border border-[#C9A25E]/45 bg-[#C9A25E]/10 px-3 py-1.5">
                   <ShieldCheck aria-hidden="true" className="size-4 text-[#C9A25E]" strokeWidth={2} />
-                  <span className="font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#EDE8DA]">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#EDE8DA]">
                     Arif Chowdhury · <span className="text-[#C9A25E]">Trust Office — Admin</span>
                   </span>
                 </span>
-                <span className="inline-flex items-center gap-2 border border-[#F2EDDF]/15 bg-[#F2EDDF]/5 px-3 py-1.5 font-mono text-[7px] uppercase tracking-[0.22em] text-[#F2EDDF]/60">
+                <span className="inline-flex items-center gap-2 border border-[#F2EDDF]/15 bg-[#F2EDDF]/5 px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.22em] text-[#F2EDDF]/60">
                   <Clock3 aria-hidden="true" className="size-3.5 text-[#B87959]" strokeWidth={2} />
                   Reporting period — Nov ’26 · Trailing 90 days
                 </span>
@@ -324,7 +324,7 @@ export default function AdminDashboardPage() {
 
             {/* Quick actions */}
             <div className="lg:col-span-4">
-              <p className="font-mono text-[7px] uppercase tracking-[0.32em] text-[#F2EDDF]/40">
+              <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[#F2EDDF]/40">
                 Quick Keys
               </p>
               <ol className="mt-2 divide-y divide-[#F2EDDF]/10 border-y border-[#F2EDDF]/14">
@@ -344,7 +344,7 @@ export default function AdminDashboardPage() {
                       <span className="min-w-0 flex-1 text-[13px] font-semibold tracking-tight text-[#EDE8DA] transition-colors group-hover:text-white">
                         {item.label}
                       </span>
-                      <span className="font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#F2EDDF]/45">
+                      <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#F2EDDF]/45">
                         {item.meta}
                       </span>
                       <ChevronRight aria-hidden="true" className="size-4 text-[#C9A25E]/60 transition-all duration-200 group-hover:translate-x-1 group-hover:text-[#C9A25E]" strokeWidth={2} />
@@ -362,13 +362,13 @@ export default function AdminDashboardPage() {
         <div className="mx-auto grid max-w-[1280px] grid-cols-2 divide-x divide-[#F2EDDF]/10 sm:grid-cols-3 lg:grid-cols-6">
           {KPIS.map((kpi) => (
             <div key={kpi.label} className="flex flex-col gap-1 px-4 py-4 text-center sm:py-5">
-              <p className="font-mono text-[6.5px] font-bold uppercase leading-snug tracking-[0.18em] text-[#D8C9A3]/75">
+              <p className="font-mono text-[9px] font-bold uppercase leading-snug tracking-[0.18em] text-[#D8C9A3]/75">
                 {kpi.label}
               </p>
               <p className="terminal-serif text-2xl font-black leading-none tracking-tight text-[#F2EDDF] sm:text-3xl">
                 {kpi.value}
               </p>
-              <p className="flex items-center justify-center gap-1 font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#F2EDDF]/50">
+              <p className="flex items-center justify-center gap-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[#F2EDDF]/50">
                 {kpi.dir === "up" ? (
                   <ArrowUpRight aria-hidden="true" className="size-3 text-[#7AA890]" strokeWidth={2.5} />
                 ) : (
@@ -393,7 +393,7 @@ export default function AdminDashboardPage() {
             className="lg:col-span-5"
           >
             <RegistrationChart />
-            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-[#10181A]/15 pt-2 font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#10181A]/60">
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-[#10181A]/15 pt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#10181A]/60">
               <span className="inline-flex items-center gap-1.5"><span className="inline-block h-[3px] w-5 bg-[#4A695C]" />Students</span>
               <span className="inline-flex items-center gap-1.5"><span className="inline-block h-[3px] w-5 border-t-2 border-dashed border-[#B87959]" />Tutors</span>
               <span className="ml-auto">1,605 new this quarter</span>
@@ -412,11 +412,11 @@ export default function AdminDashboardPage() {
               <ul className="min-w-0 flex-1 space-y-1.5">
                 {STUDENT_TUTOR_SPLIT.map((seg) => (
                   <li key={seg.label} className="flex items-baseline justify-between gap-2 border-b border-[#10181A]/10 pb-1 last:border-b-0">
-                    <span className="flex items-center gap-1.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#10181A]/70">
+                    <span className="flex items-center gap-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#10181A]/70">
                       <span aria-hidden="true" className="inline-block size-2" style={{ backgroundColor: seg.tone }} />
                       {seg.label}
                     </span>
-                    <span className="font-mono text-[8px] font-bold tabular-nums text-[#10181A]">
+                    <span className="font-mono text-[10px] font-bold tabular-nums text-[#10181A]">
                       {seg.value.toLocaleString("en-US")} <span className="font-normal text-[#10181A]/45">· {seg.pct}%</span>
                     </span>
                   </li>
@@ -434,7 +434,7 @@ export default function AdminDashboardPage() {
               {APPROVAL_MIX.map((seg) => (
                 <li key={seg.label}>
                   <div className="flex items-baseline justify-between gap-2">
-                    <span className="flex items-center gap-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-[#10181A]/70">
+                    <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#10181A]/70">
                       {seg.label === "Pending" ? <Clock3 aria-hidden="true" className="size-3 text-[#B87959]" strokeWidth={2} /> : seg.label === "Approved" ? <BadgeCheck aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} /> : <XCircle aria-hidden="true" className="size-3 text-[#A34343]" strokeWidth={2} />}
                       {seg.label}
                     </span>
@@ -446,7 +446,7 @@ export default function AdminDashboardPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 border-t border-[#10181A]/15 pt-2 font-mono text-[6.5px] uppercase leading-relaxed tracking-[0.18em] text-[#10181A]/55">
+            <p className="mt-3 border-t border-[#10181A]/15 pt-2 font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em] text-[#10181A]/55">
               Approval SLA — 2 working days · 94% inside window
             </p>
           </IndexPanel>
@@ -460,7 +460,7 @@ export default function AdminDashboardPage() {
             className="lg:col-span-7"
           >
             <RevenueBars />
-            <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#10181A]/15 pt-2 font-mono text-[7px] uppercase tracking-[0.18em] text-[#10181A]/60">
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-3 border-t border-[#10181A]/15 pt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#10181A]/60">
               <span>Nov ’26 — <span className="font-bold text-[#B87959]">$10,420</span> · strongest month on record</span>
               <span>QTD <span className="font-bold text-[#10181A]">$27,570</span></span>
             </div>
@@ -482,7 +482,7 @@ export default function AdminDashboardPage() {
                   <dd className={cn("terminal-serif text-xl font-black leading-none tracking-tight sm:text-2xl", s.tone)}>
                     {s.n}
                   </dd>
-                  <dd className="font-mono text-[6px] uppercase leading-snug tracking-[0.14em] text-[#10181A]/55">
+                  <dd className="font-mono text-[10px] uppercase leading-snug tracking-[0.14em] text-[#10181A]/55">
                     {s.label}
                   </dd>
                 </div>
@@ -491,23 +491,23 @@ export default function AdminDashboardPage() {
             <ul className="mt-3 divide-y divide-[#10181A]/12">
               {RECENT_PAYMENTS.map((p) => (
                 <li key={`${p.name}-${p.when}`} className="flex items-center gap-2.5 py-2">
-                  <span aria-hidden="true" className="flex size-7 shrink-0 items-center justify-center rounded-full border border-[#C9A25E]/50 bg-[#C9A25E]/15 font-mono text-[8px] font-bold text-[#7A6A35]">
+                  <span aria-hidden="true" className="flex size-7 shrink-0 items-center justify-center rounded-full border border-[#C9A25E]/50 bg-[#C9A25E]/15 font-mono text-[10px] font-bold text-[#7A6A35]">
                     <Receipt className="size-3.5" strokeWidth={2} />
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[11px] font-semibold leading-tight tracking-tight">{p.name}</span>
-                    <span className="font-mono text-[6px] uppercase tracking-[0.16em] text-[#10181A]/55">{p.plan} · {p.method}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#10181A]/55">{p.plan} · {p.method}</span>
                   </span>
                   <span className="shrink-0 text-right">
                     <span className="block font-mono text-[10px] font-bold tabular-nums text-[#10181A]">{p.amount}</span>
-                    <span className="font-mono text-[5.5px] uppercase tracking-[0.16em] text-[#10181A]/50">{p.when}</span>
+                    <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#10181A]/50">{p.when}</span>
                   </span>
                 </li>
               ))}
             </ul>
             <Link
               href="/dashboard/admin/transactions"
-              className="group mt-2 flex items-center justify-between border-t border-[#10181A]/20 pt-2 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#10181A] transition-colors hover:text-[#B87959]"
+              className="group mt-2 flex items-center justify-between border-t border-[#10181A]/20 pt-2 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#10181A] transition-colors hover:text-[#B87959]"
             >
               Open the full ledger
               <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
@@ -527,7 +527,7 @@ export default function AdminDashboardPage() {
               <div className="flex flex-col items-center py-6 text-center">
                 <CheckCircle2 aria-hidden="true" className="size-9 text-[#668B78]" strokeWidth={1.5} />
                 <p className="terminal-serif mt-3 text-lg font-black tracking-tight">The queue is clear.</p>
-                <p className="mt-1 max-w-xs font-mono text-[7px] uppercase leading-relaxed tracking-[0.2em] text-[#10181A]/60">
+                <p className="mt-1 max-w-xs font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em] text-[#10181A]/60">
                   Every submission ruled. The board convenes again at 09:00.
                 </p>
               </div>
@@ -537,11 +537,11 @@ export default function AdminDashboardPage() {
                   <li key={item.ref} className="py-2.5">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
-                        <p className="flex flex-wrap items-center gap-2 font-mono text-[6.5px] uppercase tracking-[0.18em] text-[#B87959]">
+                        <p className="flex flex-wrap items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#B87959]">
                           {item.ref} <span aria-hidden="true">·</span> Submitted {item.submitted}
                         </p>
                         <p className="mt-0.5 text-[13px] font-semibold leading-snug tracking-tight">{item.title}</p>
-                        <p className="mt-0.5 font-mono text-[6.5px] uppercase tracking-[0.16em] text-[#10181A]/55">
+                        <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.16em] text-[#10181A]/55">
                           {item.tutor} · {item.subject} · <span className="font-bold text-[#10181A]">{item.fee}</span>
                         </p>
                       </div>
@@ -550,7 +550,7 @@ export default function AdminDashboardPage() {
                           type="button"
                           size="sm"
                           onClick={() => actOn(item.ref, "approved")}
-                          className="h-8 rounded-sm border border-[#10181A] bg-[#10181A] px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#9DBFA9] hover:bg-[#1E2A24]"
+                          className="h-8 rounded-sm border border-[#10181A] bg-[#10181A] px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#9DBFA9] hover:bg-[#1E2A24]"
                           aria-label={`Approve ${item.ref}`}
                         >
                           <CheckCircle2 aria-hidden="true" className="size-3.5" strokeWidth={2} />
@@ -560,7 +560,7 @@ export default function AdminDashboardPage() {
                           type="button"
                           size="sm"
                           onClick={() => actOn(item.ref, "rejected")}
-                          className="h-8 rounded-sm border border-[#A34343]/50 bg-transparent px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#A34343] hover:bg-[#A34343]/10"
+                          className="h-8 rounded-sm border border-[#A34343]/50 bg-transparent px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#A34343] hover:bg-[#A34343]/10"
                           aria-label={`Reject ${item.ref}`}
                         >
                           <XCircle aria-hidden="true" className="size-3.5" strokeWidth={2} />
@@ -576,7 +576,7 @@ export default function AdminDashboardPage() {
             {/* Recently ruled */}
             <div className="mt-3 grid gap-3 border-t border-[#10181A]/20 pt-3 sm:grid-cols-2">
               <div>
-                <p className="font-mono text-[6.5px] font-bold uppercase tracking-[0.28em] text-[#4A695C]">
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.28em] text-[#4A695C]">
                   Recently Approved
                 </p>
                 <ul className="mt-1.5 space-y-1.5">
@@ -585,14 +585,14 @@ export default function AdminDashboardPage() {
                       <BadgeCheck aria-hidden="true" className="mt-0.5 size-3 shrink-0 text-[#668B78]" strokeWidth={2} />
                       <span>
                         <span className="font-semibold tracking-tight">{item.title}</span>
-                        <span className="block font-mono text-[6px] uppercase tracking-[0.16em] text-[#10181A]/55">{item.ref} · {item.when}</span>
+                        <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#10181A]/55">{item.ref} · {item.when}</span>
                       </span>
                     </li>
                   ))}
                 </ul>
               </div>
               <div>
-                <p className="font-mono text-[6.5px] font-bold uppercase tracking-[0.28em] text-[#A34343]">
+                <p className="font-mono text-[9px] font-bold uppercase tracking-[0.28em] text-[#A34343]">
                   Recently Rejected
                 </p>
                 <ul className="mt-1.5 space-y-1.5">
@@ -601,7 +601,7 @@ export default function AdminDashboardPage() {
                       <XCircle aria-hidden="true" className="mt-0.5 size-3 shrink-0 text-[#A34343]" strokeWidth={2} />
                       <span>
                         <span className="font-semibold tracking-tight">{item.title}</span>
-                        <span className="block font-mono text-[6px] uppercase tracking-[0.16em] text-[#10181A]/55">{item.ref} · {item.when} · {item.reason}</span>
+                        <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-[#10181A]/55">{item.ref} · {item.when} · {item.reason}</span>
                       </span>
                     </li>
                   ))}
@@ -634,11 +634,11 @@ export default function AdminDashboardPage() {
                     >
                       <item.Icon className="size-2.5" strokeWidth={2.25} />
                     </span>
-                    <p className="font-mono text-[6px] font-bold uppercase tracking-[0.22em] text-[#B87959]">
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#B87959]">
                       {item.day} · {item.time}
                     </p>
                     <p className="mt-0.5 text-[11px] font-semibold leading-snug tracking-tight">{item.text}</p>
-                    <p className="font-mono text-[6.5px] uppercase leading-snug tracking-[0.14em] text-[#10181A]/55">{item.detail}</p>
+                    <p className="font-mono text-[9px] uppercase leading-snug tracking-[0.14em] text-[#10181A]/55">{item.detail}</p>
                   </li>
                 )
               })}

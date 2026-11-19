@@ -319,7 +319,7 @@ function RulingDialog({
           {isApprove ? "§" : "⌧"}
         </span>
         <p className={cn(
-          "font-mono text-[8px] uppercase tracking-[0.32em]",
+          "font-mono text-[10px] uppercase tracking-[0.32em]",
           isApprove ? "text-[#C9A25E]" : "text-[#E8B4B4]"
         )}>
           {isApprove ? "The Seal of Approval" : "The Returned Proof"}
@@ -341,7 +341,7 @@ function RulingDialog({
           )}
         </p>
         <p className={cn(
-          "mt-4 border-t pt-3 font-mono text-[7px] uppercase leading-relaxed tracking-[0.2em]",
+          "mt-4 border-t pt-3 font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em]",
           isApprove ? "border-[#F2EDDF]/12 text-[#F2EDDF]/45" : "border-[#F7EDE1]/12 text-[#F7EDE1]/45"
         )}>
           {isApprove
@@ -498,14 +498,14 @@ export default function AdminTuitionsPage() {
             </div>
             {/* Pending count hero */}
             <div className="lg:col-span-4">
-              <p className="font-mono text-[7px] uppercase tracking-[0.32em] text-[#F2EDDF]/40">
+              <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[#F2EDDF]/40">
                 Pending Review
               </p>
               <div className="mt-1 flex items-end gap-3">
                 <p className="studio-serif text-6xl font-black leading-none text-[#C9A25E] sm:text-7xl">
                   {String(counts.pending).padStart(2, "0")}
                 </p>
-                <p className="mb-1 font-mono text-[6.5px] uppercase leading-snug tracking-[0.2em] text-[#F2EDDF]/50">
+                <p className="mb-1 font-mono text-[9px] uppercase leading-snug tracking-[0.2em] text-[#F2EDDF]/50">
                   Proofs on the<br />review desk
                 </p>
               </div>
@@ -518,10 +518,10 @@ export default function AdminTuitionsPage() {
       <div className="border-b border-[#D8C9A3]/25 bg-[#10181A]" aria-label="Moderation overview">
         <div className="mx-auto max-w-[1280px] px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-baseline justify-between gap-4">
-            <p className="font-mono text-[7px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]/75">
+            <p className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]/75">
               The Ruling Ledger — Trailing 180 Days
             </p>
-            <p className="font-mono text-[7px] uppercase tracking-[0.22em] text-[#F2EDDF]/50">
+            <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#F2EDDF]/50">
               Total submitted — <span className="font-bold text-[#F2EDDF]">{counts.submitted + 527}</span> · Resolve rate <span className="font-bold text-[#9DBFA9]">97.4%</span>
             </p>
           </div>
@@ -541,12 +541,12 @@ export default function AdminTuitionsPage() {
           </div>
           <ul className="mt-1.5 flex flex-wrap gap-x-5 gap-y-1">
             {segments.map((seg) => (
-              <li key={seg.label} className="inline-flex items-center gap-1.5 font-mono text-[6.5px] uppercase tracking-[0.2em] text-[#F2EDDF]/55">
+              <li key={seg.label} className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-[#F2EDDF]/55">
                 <span aria-hidden="true" className="inline-block size-2.5" style={{ backgroundColor: seg.tone }} />
                 {seg.label} — {seg.count}
               </li>
             ))}
-            <li className="font-mono text-[6.5px] uppercase tracking-[0.2em] text-[#F2EDDF]/35">
+            <li className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#F2EDDF]/35">
               527 ruled historically
             </li>
           </ul>
@@ -565,7 +565,7 @@ export default function AdminTuitionsPage() {
                 id="studio-subject"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value as (typeof SUBJECTS)[number])}
-                className="h-10 appearance-none rounded-sm border border-[#10181A]/30 bg-[#FCFAF2] pl-3 pr-8 font-mono text-[8px] font-bold uppercase tracking-[0.16em] text-[#10181A] outline-none transition-all hover:border-[#10181A]/55 focus:border-[#C9A25E] focus:ring-2 focus:ring-[#C9A25E]/25 sm:text-[9px]"
+                className="h-10 appearance-none rounded-sm border border-[#10181A]/30 bg-[#FCFAF2] pl-3 pr-8 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#10181A] outline-none transition-all hover:border-[#10181A]/55 focus:border-[#C9A25E] focus:ring-2 focus:ring-[#C9A25E]/25 sm:text-[10px]"
               >
                 {SUBJECTS.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
@@ -583,7 +583,7 @@ export default function AdminTuitionsPage() {
                     aria-pressed={active}
                     onClick={() => setStatus(f.key)}
                     className={cn(
-                      "flex h-10 items-baseline gap-1.5 rounded-sm border px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A] sm:px-3 sm:text-[8px]",
+                      "flex h-10 items-baseline gap-1.5 rounded-sm border px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A] sm:px-3 sm:text-[10px]",
                       active
                         ? "border-[#D8C9A3] bg-[#10181A] text-[#D8C9A3]"
                         : "border-[#10181A]/30 text-[#10181A]/70 hover:border-[#10181A]/60 hover:text-[#10181A]"
@@ -606,7 +606,7 @@ export default function AdminTuitionsPage() {
                     aria-pressed={active}
                     onClick={() => setMode(f.key)}
                     className={cn(
-                      "h-10 px-3 font-mono text-[7px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#10181A] sm:text-[8px]",
+                      "h-10 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#10181A] sm:text-[10px]",
                       active ? "bg-[#10181A] text-[#D8C9A3]" : "text-[#10181A]/60 hover:text-[#10181A]"
                     )}
                   >
@@ -636,7 +636,7 @@ export default function AdminTuitionsPage() {
                 id="studio-sort"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="h-10 appearance-none rounded-sm border border-[#10181A]/30 bg-[#FCFAF2] pl-9 pr-8 font-mono text-[8px] font-bold uppercase tracking-[0.14em] text-[#10181A] outline-none transition-all hover:border-[#10181A]/55 focus:border-[#C9A25E] focus:ring-2 focus:ring-[#C9A25E]/25 sm:text-[9px]"
+                className="h-10 appearance-none rounded-sm border border-[#10181A]/30 bg-[#FCFAF2] pl-9 pr-8 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#10181A] outline-none transition-all hover:border-[#10181A]/55 focus:border-[#C9A25E] focus:ring-2 focus:ring-[#C9A25E]/25 sm:text-[10px]"
               >
                 {SORTS.map((s) => <option key={s.key} value={s.key}>{s.label}</option>)}
               </select>
@@ -694,23 +694,23 @@ export default function AdminTuitionsPage() {
                             className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                           <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#10181A]/75 via-[#10181A]/15 to-transparent" />
-                          <span className="absolute bottom-1 left-1.5 font-mono text-[5.5px] font-bold uppercase tracking-[0.18em] text-[#EDE8DA]">
+                          <span className="absolute bottom-1 left-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#EDE8DA]">
                             {s.mode}
                           </span>
                         </span>
 
                         {/* Body */}
                         <span className="min-w-0 px-2.5 py-2 sm:px-3 sm:py-2.5">
-                          <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[5.5px] uppercase tracking-[0.18em] text-[#B87959] sm:text-[6px]">
+                          <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-[#B87959] sm:text-[10px]">
                             {s.ref} · {s.subject}
                           </span>
                           <span className="studio-serif mt-0.5 block text-[11px] font-black leading-snug tracking-tight sm:text-[12.5px]">
                             {s.title}
                           </span>
-                          <span className="mt-1 block truncate font-mono text-[5.5px] uppercase tracking-[0.14em] text-[#10181A]/60 sm:text-[6px]">
+                          <span className="mt-1 block truncate font-mono text-[9px] uppercase tracking-[0.14em] text-[#10181A]/60 sm:text-[10px]">
                             {s.tutorName} · {s.classLevel}
                           </span>
-                          <span className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 font-mono text-[5.5px] uppercase tracking-[0.14em] text-[#10181A]/55 sm:text-[6px]">
+                          <span className="mt-0.5 flex flex-wrap items-center gap-x-2.5 gap-y-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-[#10181A]/55 sm:text-[10px]">
                             <span className="font-bold text-[#10181A]">{fmtFee(s.monthlySalary)}</span>
                             <span aria-hidden="true">·</span>
                             <span>{s.daysPerWeek}×/wk</span>
@@ -750,13 +750,13 @@ export default function AdminTuitionsPage() {
                 />
                 <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#10181A]/85 via-[#10181A]/20 to-transparent" />
                 <div className="absolute bottom-2 left-3 right-3 flex items-end justify-between gap-2">
-                  <span className="border border-[#D8C9A3]/55 bg-[#10181A]/75 px-1.5 py-0.5 font-mono text-[6px] font-bold uppercase tracking-[0.26em] text-[#D8C9A3] backdrop-blur-sm">
+                  <span className="border border-[#D8C9A3]/55 bg-[#10181A]/75 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.26em] text-[#D8C9A3] backdrop-blur-sm">
                     {selected.subject}
                   </span>
                   <span
                     aria-hidden="true"
                     className={cn(
-                      "inline-block -rotate-11 border-2 border-dashed px-2 py-1 font-mono text-[6px] font-bold uppercase leading-none tracking-[0.2em]",
+                      "inline-block -rotate-11 border-2 border-dashed px-2 py-1 font-mono text-[10px] font-bold uppercase leading-none tracking-[0.2em]",
                       selected.status === "pending" && "border-[#C9A25E] text-[#D8C9A3]",
                       selected.status === "approved" && "border-[#7AA890] text-[#9DBFA9]",
                       selected.status === "rejected" && "border-[#A34343] text-[#E8B4B4]"
@@ -768,13 +768,13 @@ export default function AdminTuitionsPage() {
               </div>
 
               <div className="mt-3">
-                <p className="font-mono text-[6.5px] uppercase tracking-[0.22em] text-[#B87959]">
+                <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#B87959]">
                   {selected.ref} · Submitted {selected.submittedAt}
                 </p>
                 <h3 className="studio-serif mt-1 text-xl font-black leading-tight tracking-tight sm:text-2xl">
                   {selected.title}
                 </h3>
-                <p className="mt-0.5 font-mono text-[7px] uppercase tracking-[0.18em] text-[#10181A]/55">
+                <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-[#10181A]/55">
                   {selected.subject} · <span className="text-[#10181A]">{selected.classLevel}</span>
                 </p>
 
@@ -786,11 +786,11 @@ export default function AdminTuitionsPage() {
                       <span className="truncate text-[12px] font-semibold tracking-tight">{selected.tutorName}</span>
                       {selected.tutorVerified && <BadgeCheck aria-hidden="true" className="size-3.5 shrink-0 text-[#668B78]" strokeWidth={2} />}
                     </span>
-                    <span className="block truncate font-mono text-[6px] uppercase tracking-[0.16em] text-[#10181A]/55">
+                    <span className="block truncate font-mono text-[10px] uppercase tracking-[0.16em] text-[#10181A]/55">
                       {selected.tutorEmail}
                     </span>
                   </span>
-                  <span className="shrink-0 font-mono text-[5.5px] uppercase leading-snug tracking-[0.16em] text-[#10181A]/50 text-right">
+                  <span className="shrink-0 font-mono text-[9px] uppercase leading-snug tracking-[0.16em] text-[#10181A]/50 text-right">
                     {selected.strengths.split("·")[0].trim()}
                   </span>
                 </div>
@@ -802,7 +802,7 @@ export default function AdminTuitionsPage() {
 
                 {/* Requirements */}
                 <div className="mt-3">
-                  <p className="font-mono text-[7px] font-bold uppercase tracking-[0.26em] text-[#10181A]/60">
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-[0.26em] text-[#10181A]/60">
                     Board Requirements
                   </p>
                   <ul className="mt-1 space-y-1">
@@ -824,7 +824,7 @@ export default function AdminTuitionsPage() {
                   ].map(({ Icon, k, v }) => (
                     <div key={k} className="flex items-baseline gap-2.5 py-1.5">
                       <Icon aria-hidden="true" className="size-3.5 shrink-0 translate-y-[2px] text-[#C9A25E]" strokeWidth={2} />
-                      <dt className="w-16 shrink-0 font-mono text-[7px] uppercase tracking-[0.18em] text-[#10181A]/50">{k}</dt>
+                      <dt className="w-16 shrink-0 font-mono text-[9px] uppercase tracking-[0.18em] text-[#10181A]/50">{k}</dt>
                       <dd className="font-semibold leading-snug tracking-tight">{v}</dd>
                     </div>
                   ))}
@@ -836,7 +836,7 @@ export default function AdminTuitionsPage() {
                   onClick={() => setDossierOpen((v) => !v)}
                   aria-expanded={dossierOpen}
                   aria-controls="ruling-dossier"
-                  className="mt-3 inline-flex items-center gap-2 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#10181A] underline decoration-[#C9A25E] decoration-2 underline-offset-4 transition-colors hover:text-[#7A6A35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
+                  className="mt-3 inline-flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#10181A] underline decoration-[#C9A25E] decoration-2 underline-offset-4 transition-colors hover:text-[#7A6A35] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
                 >
                   <Eye aria-hidden="true" className="size-4" strokeWidth={1.75} />
                   {dossierOpen ? "Hide submission dossier" : "View Details"}
@@ -853,7 +853,7 @@ export default function AdminTuitionsPage() {
                       ["Checklist", `${selected.requirements.length} requirements verified`],
                     ].map(([k, v]) => (
                       <div key={k}>
-                        <dt className="font-mono text-[6px] uppercase tracking-[0.2em] text-[#10181A]/50">{k}</dt>
+                        <dt className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#10181A]/50">{k}</dt>
                         <dd className="mt-0.5 text-[10px] font-semibold leading-snug tracking-tight">{v}</dd>
                       </div>
                     ))}
@@ -865,7 +865,7 @@ export default function AdminTuitionsPage() {
                   <Button
                     type="button"
                     onClick={() => setDialog("approve")}
-                    className="h-11 rounded-sm border border-[#10181A] bg-[#10181A] px-4 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#9DBFA9] hover:bg-[#1E2A24] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A]"
+                    className="h-11 rounded-sm border border-[#10181A] bg-[#10181A] px-4 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#9DBFA9] hover:bg-[#1E2A24] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#10181A]"
                   >
                     <CheckCircle2 aria-hidden="true" className="size-4" strokeWidth={2.25} />
                     Approve Tuition
@@ -873,7 +873,7 @@ export default function AdminTuitionsPage() {
                   <Button
                     type="button"
                     onClick={() => setDialog("reject")}
-                    className="h-11 rounded-sm border border-[#A34343]/50 bg-transparent px-4 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#A34343] hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
+                    className="h-11 rounded-sm border border-[#A34343]/50 bg-transparent px-4 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#A34343] hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
                   >
                     <XCircle aria-hidden="true" className="size-4" strokeWidth={2} />
                     Reject Tuition

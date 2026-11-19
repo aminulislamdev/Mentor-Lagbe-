@@ -76,12 +76,12 @@ function DeskSection({
 }) {
   return (
     <section aria-labelledby={`desk-${index}`} className="relative border border-[#344C43]/25 bg-[#EFE7DC] shadow-[4px_5px_0_rgba(52,76,67,0.13)]">
-      <span className="absolute -top-[13px] left-4 inline-flex h-[26px] items-center gap-2 border border-[#344C43] bg-[#344C43] px-3 font-mono text-[7px] font-bold uppercase tracking-[0.3em] text-[#EFE7DC]">
+      <span className="absolute -top-[13px] left-4 inline-flex h-[26px] items-center gap-2 border border-[#344C43] bg-[#344C43] px-3 font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#EFE7DC]">
         <span className="text-[#C98B6D]">{index}</span>
         {title}
       </span>
       {hint && (
-        <p className="absolute -top-[11px] right-4 hidden font-mono text-[7px] uppercase tracking-[0.22em] text-[#344C43]/55 sm:block">
+        <p className="absolute -top-[11px] right-4 hidden font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/55 sm:block">
           {hint}
         </p>
       )}
@@ -167,11 +167,11 @@ export default function PostTuitionPage() {
             </p>
           </div>
           <div className="flex flex-col items-start gap-2 sm:items-end">
-            <span className="inline-flex items-center gap-1.5 border border-[#C98B6D]/50 bg-[#B87959]/10 px-2.5 py-1 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#B87959]">
+            <span className="inline-flex items-center gap-1.5 border border-[#C98B6D]/50 bg-[#B87959]/10 px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#B87959]">
               <Crown aria-hidden="true" className="size-3.5" strokeWidth={2} />
               Tutor Pro · Unlimited Ink
             </span>
-            <span className="font-mono text-[7px] uppercase tracking-[0.22em] text-[#344C43]/50">
+            <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/50">
               Avg. board approval — 2 days
             </span>
           </div>
@@ -213,7 +213,7 @@ export default function PostTuitionPage() {
                     placeholder="One sentence a parent can't scroll past."
                     className={areaField}
                   />
-                  <p className="mt-1.5 text-right font-mono text-[7px] uppercase tracking-[0.2em] text-[#344C43]/40">
+                  <p className="mt-1.5 text-right font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/40">
                     {form.pitch.length} / 140 characters — make every one earn its keep
                   </p>
                 </div>
@@ -268,7 +268,7 @@ export default function PostTuitionPage() {
                     </button>
                     <span aria-live="polite" className="flex flex-1 flex-col items-center justify-center">
                       <span className="publish-serif text-lg font-black leading-none text-[#344C43]">{form.daysPerWeek}</span>
-                      <span className="font-mono text-[6px] uppercase tracking-[0.22em] text-[#344C43]/50">days / week</span>
+                      <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#344C43]/50">days / week</span>
                     </span>
                     <button
                       type="button"
@@ -329,7 +329,7 @@ export default function PostTuitionPage() {
                         aria-pressed={active}
                         onClick={() => toggleFit(chip)}
                         className={cn(
-                          "rounded-full border px-2.5 py-1.5 font-mono text-[7.5px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
+                          "rounded-full border px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
                           active
                             ? "border-[#668B78] bg-[#668B78]/15 text-[#4A695C]"
                             : "border-[#344C43]/25 bg-transparent text-[#344C43]/55 hover:border-[#668B78]/60 hover:text-[#4A695C]"
@@ -358,7 +358,7 @@ export default function PostTuitionPage() {
                       className={cn(wellField, "pl-9")}
                     />
                   </div>
-                  <p className="mt-1.5 flex items-center gap-1.5 font-mono text-[7px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/50">
+                  <p className="mt-1.5 flex items-center gap-1.5 font-mono text-[9px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/50">
                     {form.mode === "Online" ? (
                       <><Link2 aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />Online batch — link auto-enclosed in every admission letter</>
                     ) : (
@@ -401,7 +401,7 @@ export default function PostTuitionPage() {
                       aria-describedby="fee-hint"
                     />
                   </div>
-                  <p id="fee-hint" className="mt-1.5 font-mono text-[7px] uppercase tracking-[0.2em] text-[#344C43]/50">
+                  <p id="fee-hint" className="mt-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/50">
                     Market median — ৳4,500
                   </p>
                 </div>
@@ -449,7 +449,7 @@ export default function PostTuitionPage() {
                     Drop banner here<br />
                     <span className="font-medium text-[#344C43]/55">or browse files</span>
                   </p>
-                  <p className="font-mono text-[6.5px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/45">
+                  <p className="font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/45">
                     PNG · JPG · 1600 × 640 · ≤ 5 MB<br />Warm tones photograph best
                   </p>
                 </div>
@@ -473,14 +473,14 @@ export default function PostTuitionPage() {
                           )}
                           style={{ backgroundColor: tConf.bg }}
                         >
-                          <span className="font-mono text-[7px] font-bold uppercase tracking-[0.24em]" style={{ color: tConf.ink }}>
+                          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.24em]" style={{ color: tConf.ink }}>
                             {t}
                           </span>
                         </button>
                       )
                     })}
                   </div>
-                  <p className="mt-2 flex items-center gap-1.5 font-mono text-[6.5px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/50">
+                  <p className="mt-2 flex items-center gap-1.5 font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/50">
                     <Sparkles aria-hidden="true" className="size-3 text-[#B87959]" strokeWidth={2} />
                     Studio default applies to all listings
                   </p>
@@ -497,7 +497,7 @@ export default function PostTuitionPage() {
               <div className="flex items-start gap-3">
                 <Crown aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-[#B87959]" strokeWidth={1.75} />
                 <div>
-                  <p className="font-mono text-[8px] font-bold uppercase leading-snug tracking-[0.26em] text-[#B87959]">
+                  <p className="font-mono text-[10px] font-bold uppercase leading-snug tracking-[0.26em] text-[#B87959]">
                     Free Plan — 2 Active Listings Max
                   </p>
                   <p className="mt-1.5 text-[12px] leading-snug text-[#344C43]/85">
@@ -505,7 +505,7 @@ export default function PostTuitionPage() {
                     publishes as <strong>Tutor Pro — unlimited listings</strong>, verified seal and
                     the featured index.
                   </p>
-                  <Link href="/pricing" className="mt-2 inline-flex items-center gap-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#B87959] underline decoration-[#B87959]/40 underline-offset-4 transition-colors hover:text-[#96603F]">
+                  <Link href="/pricing" className="mt-2 inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#B87959] underline decoration-[#B87959]/40 underline-offset-4 transition-colors hover:text-[#96603F]">
                     Compare plans
                     <ArrowRight aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
                   </Link>
@@ -516,11 +516,11 @@ export default function PostTuitionPage() {
             {/* Final proof — live banner preview */}
             <figure className="border border-[#344C43]/30 bg-[#EFE7DC] p-4 shadow-[6px_7px_0_rgba(52,76,67,0.16)]">
               <figcaption className="flex items-center justify-between gap-3 border-b border-[#344C43]/20 pb-2">
-                <span className="flex items-center gap-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#344C43]/60">
+                <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#344C43]/60">
                   <Eye aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
                   Final Proof — Live Galley
                 </span>
-                <span className="font-mono text-[7px] uppercase tracking-[0.2em] text-[#344C43]/45">
+                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/45">
                   ML-1025 · Draft
                 </span>
               </figcaption>
@@ -535,12 +535,12 @@ export default function PostTuitionPage() {
                 <div className="flex h-full flex-col justify-between">
                   <div className="flex items-start justify-between gap-3">
                     <span
-                      className="publish-stamp-idle inline-block border-2 border-dashed px-2 py-1 font-mono text-[8px] font-bold uppercase tracking-[0.3em]"
+                      className="publish-stamp-idle inline-block border-2 border-dashed px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.3em]"
                       style={{ borderColor: tone.stamp, color: tone.stamp }}
                     >
                       {form.subject}
                     </span>
-                    <span className="font-mono text-[7px] uppercase leading-relaxed tracking-[0.24em] text-right" style={{ color: tone.ink, opacity: 0.75 }}>
+                    <span className="font-mono text-[9px] uppercase leading-relaxed tracking-[0.24em] text-right" style={{ color: tone.ink, opacity: 0.75 }}>
                       {form.mode} · {form.daysPerWeek}× / wk
                     </span>
                   </div>
@@ -548,7 +548,7 @@ export default function PostTuitionPage() {
                     {form.title || "Untitled batch"}
                   </p>
                   <div className="flex items-end justify-between gap-2">
-                    <span className="font-mono text-[7px] uppercase leading-relaxed tracking-[0.18em]" style={{ color: tone.ink, opacity: 0.85 }}>
+                    <span className="font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em]" style={{ color: tone.ink, opacity: 0.85 }}>
                       Dr. Nasrin Islam · <BadgeCheck aria-hidden="true" className="inline size-3 align-[-2px]" /> Verified
                     </span>
                     <span className="shrink-0 font-mono text-[9px] font-bold tracking-[0.14em]" style={{ color: tone.stamp }}>
@@ -559,7 +559,7 @@ export default function PostTuitionPage() {
               </div>
 
               {/* Proof ledger lines */}
-              <dl className="mt-3 divide-y divide-[#344C43]/15 border-y border-[#344C43]/20 font-mono text-[8px] uppercase tracking-[0.18em]">
+              <dl className="mt-3 divide-y divide-[#344C43]/15 border-y border-[#344C43]/20 font-mono text-[10px] uppercase tracking-[0.18em]">
                 {[
                   ["Level", form.classLevel],
                   ["Schedule", form.schedule],
@@ -614,7 +614,7 @@ export default function PostTuitionPage() {
                   </>
                 )}
               </button>
-              <p className="flex items-center justify-center gap-1.5 pt-0.5 text-center font-mono text-[6.5px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/45">
+              <p className="flex items-center justify-center gap-1.5 pt-0.5 text-center font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/45">
                 <Info aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />
                 {published
                   ? "The board reads every submission — avg. 2 days"
@@ -623,7 +623,7 @@ export default function PostTuitionPage() {
             </div>
 
             {/* Fine print / back link */}
-            <p className="flex items-center justify-between gap-3 border-t border-[#344C43]/20 pt-3 font-mono text-[7px] uppercase tracking-[0.22em] text-[#344C43]/50">
+            <p className="flex items-center justify-between gap-3 border-t border-[#344C43]/20 pt-3 font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/50">
               <Link href="/dashboard/tutor/my-tuitions" className="group inline-flex items-center gap-1.5 font-bold text-[#344C43] transition-colors hover:text-[#B87959]">
                 <ArrowLeft aria-hidden="true" className="size-3 transition-transform duration-200 group-hover:-translate-x-1" strokeWidth={2.5} />
                 My Tuitions

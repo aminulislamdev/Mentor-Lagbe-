@@ -137,7 +137,7 @@ export default function PaymentSuccessPage() {
 
       {/* ══ TICKER TAPE ══════════════════════════════════════════════════ */}
       <div className="relative overflow-hidden border-b border-[#C9A25E]/25 bg-[#10181A] py-1.5" aria-hidden="true">
-        <div className="ceremony-ticker flex w-max whitespace-nowrap font-mono text-[7px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]">
+        <div className="ceremony-ticker flex w-max whitespace-nowrap font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]">
           {[...TICKER, ...TICKER].map((t, i) => (
             <span key={i} className="mx-6 inline-flex items-center gap-2">
               <span className="size-1.5 rounded-full bg-[#C9A25E]" />
@@ -178,10 +178,10 @@ export default function PaymentSuccessPage() {
               {/* Inner seal */}
               <div className="ceremony-seal relative flex size-32 flex-col items-center justify-center rounded-full border-2 border-[#C9A25E]/70 sm:size-40">
                 <Crown className="size-7 text-[#C9A25E] sm:size-9" strokeWidth={1.5} />
-                <span className="mt-1.5 font-mono text-[7px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3] sm:text-[8px]">
+                <span className="mt-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3] sm:text-[10px]">
                   MentorLagbe
                 </span>
-                <span className="font-mono text-[6px] uppercase tracking-[0.26em] text-[#C9A25E]/80 sm:text-[7px]">
+                <span className="font-mono text-[10px] uppercase tracking-[0.26em] text-[#C9A25E]/80 sm:text-[10px]">
                   Pro Guild
                 </span>
               </div>
@@ -213,7 +213,7 @@ export default function PaymentSuccessPage() {
             <div className="ceremony-rise mt-5 inline-flex items-center gap-3 rounded-sm border border-[#C9A25E]/45 bg-[#C9A25E]/10 py-2 pl-3 pr-4" style={{ "--rise-delay": "0.18s" } as React.CSSProperties}>
               <Crown aria-hidden="true" className="size-6 text-[#C9A25E]" strokeWidth={1.6} />
               <span>
-                <span className="block font-mono text-[8px] uppercase leading-snug tracking-[0.28em] text-[#C9A25E]">
+                <span className="block font-mono text-[10px] uppercase leading-snug tracking-[0.28em] text-[#C9A25E]">
                   Pro Membership
                 </span>
                 <span className="block font-mono text-[10px] font-bold uppercase leading-tight tracking-[0.14em] text-[#F2EDDF]">
@@ -225,11 +225,11 @@ export default function PaymentSuccessPage() {
             {/* Receipt — the ledger */}
             <dl aria-label="Payment receipt" className="ceremony-rise mt-6 border border-[#F2EDDF]/18 bg-[#1E2A24]/70 p-4 backdrop-blur-sm sm:p-5" style={{ "--rise-delay": "0.26s" } as React.CSSProperties}>
               <div className="flex items-center justify-between gap-3 border-b border-[#F2EDDF]/12 pb-3">
-                <span className="flex items-center gap-2 font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]">
+                <span className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]">
                   <Receipt aria-hidden="true" className="size-4" strokeWidth={1.75} />
                   Payment Receipt
                 </span>
-                <span className="rounded-sm border border-[#7AA890]/55 bg-[#668B78]/20 px-2 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.24em] text-[#9DBFA9]">
+                <span className="rounded-sm border border-[#7AA890]/55 bg-[#668B78]/20 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.24em] text-[#9DBFA9]">
                   Paid
                 </span>
               </div>
@@ -243,13 +243,13 @@ export default function PaymentSuccessPage() {
                   ["Invoice", CONFIRMATION.invoice],
                 ].map(([k, v]) => (
                   <div key={k as string}>
-                    <dt className="font-mono text-[6.5px] uppercase tracking-[0.2em] text-[#F2EDDF]/45">{k}</dt>
-                    <dd className="mt-0.5 font-mono text-[8.5px] font-bold leading-snug tracking-tight text-[#F2EDDF]">{v}</dd>
+                    <dt className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#F2EDDF]/45">{k}</dt>
+                    <dd className="mt-0.5 font-mono text-[10px] font-bold leading-snug tracking-tight text-[#F2EDDF]">{v}</dd>
                   </div>
                 ))}
               </div>
               <div className="mt-3 border-t border-[#F2EDDF]/12 pt-3">
-                <p className="font-mono text-[6.5px] uppercase tracking-[0.2em] text-[#F2EDDF]/45">
+                <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#F2EDDF]/45">
                   Transaction Reference
                 </p>
                 <CopyField
@@ -279,7 +279,7 @@ export default function PaymentSuccessPage() {
                     aria-pressed={active}
                     onClick={() => setRole(r)}
                     className={cn(
-                      "flex h-10 items-center gap-1.5 px-4 font-mono text-[8px] font-bold uppercase tracking-[0.22em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#C9A25E]",
+                      "flex h-10 items-center gap-1.5 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#C9A25E]",
                       active ? "bg-[#C9A25E] text-[#10181A]" : "text-[#F2EDDF]/55 hover:text-[#F2EDDF]"
                     )}
                   >
@@ -290,7 +290,7 @@ export default function PaymentSuccessPage() {
               })}
             </div>
           </div>
-          <p className="mt-1 font-mono text-[7px] uppercase tracking-[0.26em] text-[#F2EDDF]/40">
+          <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.26em] text-[#F2EDDF]/40">
             {benefits.title} — active now
           </p>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
@@ -329,7 +329,7 @@ export default function PaymentSuccessPage() {
                   {title}
                 </span>
                 <span className="mt-1 text-[10.5px] leading-snug text-[#F2EDDF]/60">{desc}</span>
-                <span className="mt-3 inline-flex items-center gap-1.5 border-t border-[#F2EDDF]/12 pt-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#C9A25E]">
+                <span className="mt-3 inline-flex items-center gap-1.5 border-t border-[#F2EDDF]/12 pt-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#C9A25E]">
                   {cta}
                   <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
                 </span>
@@ -346,7 +346,7 @@ export default function PaymentSuccessPage() {
               </span>
               <span className="ceremony-serif mt-3 text-base font-black leading-snug tracking-tight text-[#F2EDDF]">Visit Dashboard</span>
               <span className="mt-1 text-[10.5px] leading-snug text-[#F2EDDF]/60">Your register, your queue, your plan — one desk</span>
-              <span className="mt-3 inline-flex items-center gap-1.5 border-t border-[#F2EDDF]/12 pt-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#9DBFA9]">
+              <span className="mt-3 inline-flex items-center gap-1.5 border-t border-[#F2EDDF]/12 pt-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#9DBFA9]">
                 Go to Dashboard
                 <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
               </span>
@@ -360,7 +360,7 @@ export default function PaymentSuccessPage() {
               </span>
               <span className="ceremony-serif mt-3 text-base font-black leading-snug tracking-tight text-[#F2EDDF]">Return to Home</span>
               <span className="mt-1 text-[10.5px] leading-snug text-[#F2EDDF]/60">Back to the atelier — your Pro badge travels with you</span>
-              <span className="mt-3 inline-flex items-center gap-1.5 border-t border-[#F2EDDF]/12 pt-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#EDE8DA]/70">
+              <span className="mt-3 inline-flex items-center gap-1.5 border-t border-[#F2EDDF]/12 pt-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#EDE8DA]/70">
                 Back Home
                 <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
               </span>
@@ -369,7 +369,7 @@ export default function PaymentSuccessPage() {
         </section>
 
         {/* ══ Colophon ═══════════════════════════════════════════════════ */}
-        <footer className="relative flex flex-col items-start justify-between gap-3 border-t border-[#F2EDDF]/12 px-4 py-4 font-mono text-[8px] uppercase leading-relaxed tracking-[0.24em] text-[#F2EDDF]/45 sm:flex-row sm:items-center sm:px-8 sm:text-[9px]">
+        <footer className="relative flex flex-col items-start justify-between gap-3 border-t border-[#F2EDDF]/12 px-4 py-4 font-mono text-[10px] uppercase leading-relaxed tracking-[0.24em] text-[#F2EDDF]/45 sm:flex-row sm:items-center sm:px-8 sm:text-[10px]">
           <Link href="/" className="group inline-flex items-center gap-1.5 font-bold text-[#F2EDDF] transition-colors hover:text-[#C9A25E]">
             <ArrowLeft aria-hidden="true" className="size-3.5 transition-transform duration-200 group-hover:-translate-x-1" strokeWidth={2.5} />
             Back to the Atelier
@@ -387,7 +387,7 @@ export default function PaymentSuccessPage() {
           <a
             href="/dashboard/tutor/settings"
             aria-label="Manage your subscription (opens settings)"
-            className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#F2EDDF]/20 px-3 font-mono text-[7px] font-bold uppercase tracking-[0.22em] text-[#F2EDDF]/60 transition-colors hover:bg-[#F2EDDF]/8 hover:text-[#F2EDDF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
+            className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#F2EDDF]/20 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#F2EDDF]/60 transition-colors hover:bg-[#F2EDDF]/8 hover:text-[#F2EDDF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
           >
             <Printer aria-hidden="true" className="size-3.5" strokeWidth={2} />
             Print Receipt

@@ -244,8 +244,8 @@ function SeatGauge({ filled, cap }: { filled: number; cap: number }) {
   return (
     <div>
       <div className="flex items-baseline justify-between gap-2">
-        <span className="font-mono text-[7px] uppercase tracking-[0.22em] text-[#344C43]/55">Seats filled</span>
-        <span className="font-mono text-[8px] font-bold tabular-nums text-[#344C43]">
+        <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/55">Seats filled</span>
+        <span className="font-mono text-[10px] font-bold tabular-nums text-[#344C43]">
           {filled}<span className="text-[#344C43]/40"> / {cap}</span>
         </span>
       </div>
@@ -381,7 +381,7 @@ export default function MyTuitionsPage() {
                 board, what the board approved, what the board returned, and
                 what has served its season. Select an edition to read its proof sheet.
               </p>
-              <p className="mt-2 inline-flex items-center gap-1.5 border border-[#C98B6D]/50 bg-[#B87959]/10 px-2 py-1 font-mono text-[7px] font-bold uppercase tracking-[0.24em] text-[#B87959]">
+              <p className="mt-2 inline-flex items-center gap-1.5 border border-[#C98B6D]/50 bg-[#B87959]/10 px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.24em] text-[#B87959]">
                 <Crown aria-hidden="true" className="size-3" strokeWidth={2} />
                 Tutor Pro · Unlimited Listings
               </p>
@@ -391,10 +391,10 @@ export default function MyTuitionsPage() {
           {/* ══ THE PORTFOLIO BEAM — horizontal performance visualization ══ */}
           <div className="portfolio-rise mt-5" style={{ "--rise-delay": "0.14s" } as React.CSSProperties} aria-label={`Portfolio overview: ${stats.total} total tuitions, ${stats.approved} approved, ${stats.pending} pending approval, ${stats.closed} closed`}>
             <div className="flex items-baseline justify-between gap-4">
-              <p className="font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#344C43]/55">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#344C43]/55">
                 Portfolio Health
               </p>
-              <p className="font-mono text-[8px] uppercase tracking-[0.24em] text-[#344C43]/55">
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#344C43]/55">
                 <span className="mr-2 hidden sm:inline">The Register Closes Monthly</span>
                 Total — <span className="font-bold text-[#344C43]">{String(stats.total).padStart(2, "0")}</span>
               </p>
@@ -418,7 +418,7 @@ export default function MyTuitionsPage() {
             </div>
             <ul className="mt-1.5 flex flex-wrap gap-x-5 gap-y-1">
               {beam.map((seg) => (
-                <li key={seg.label} className="inline-flex items-center gap-1.5 font-mono text-[7px] uppercase tracking-[0.2em] text-[#344C43]/60">
+                <li key={seg.label} className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/60">
                   <span aria-hidden="true" className="inline-block size-2.5" style={{ backgroundColor: seg.tone }} />
                   {seg.label} — {seg.count}
                 </li>
@@ -430,13 +430,13 @@ export default function MyTuitionsPage() {
         {/* Undo banner after delete */}
         {deleted && (
           <div role="status" className="mt-3 flex flex-wrap items-center justify-between gap-3 border border-[#A34343]/40 bg-[#A34343]/8 px-4 py-2.5">
-            <p className="font-mono text-[8px] font-bold uppercase leading-snug tracking-[0.2em] text-[#A34343]">
+            <p className="font-mono text-[10px] font-bold uppercase leading-snug tracking-[0.2em] text-[#A34343]">
               Edition {deleted.ref} torn from the register
             </p>
             <button
               type="button"
               onClick={undoDelete}
-              className="inline-flex items-center gap-1.5 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#344C43] underline decoration-[#A34343]/60 decoration-2 underline-offset-4 transition-colors hover:text-[#A34343]"
+              className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43] underline decoration-[#A34343]/60 decoration-2 underline-offset-4 transition-colors hover:text-[#A34343]"
             >
               <RotateCcw aria-hidden="true" className="size-3.5" strokeWidth={2.25} />
               Undo — restore edition
@@ -454,7 +454,7 @@ export default function MyTuitionsPage() {
                 id="portfolio-subject"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value as (typeof SUBJECTS)[number])}
-                className="h-10 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-3 pr-8 font-mono text-[8px] font-bold uppercase tracking-[0.18em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[9px]"
+                className="h-10 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-3 pr-8 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[10px]"
               >
                 {SUBJECTS.map((s) => (
                   <option key={s} value={s}>{s}</option>
@@ -474,7 +474,7 @@ export default function MyTuitionsPage() {
                     aria-pressed={active}
                     onClick={() => setApproval(f.key)}
                     className={cn(
-                      "flex h-10 items-baseline gap-1.5 rounded-sm border px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:px-3 sm:text-[8px]",
+                      "flex h-10 items-baseline gap-1.5 rounded-sm border px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:px-3 sm:text-[10px]",
                       active
                         ? "border-[#344C43] bg-[#344C43] text-[#EFE7DC] shadow-[2px_2px_0_#B87959]"
                         : "border-[#344C43]/25 text-[#344C43]/65 hover:border-[#344C43]/55 hover:text-[#344C43]"
@@ -500,7 +500,7 @@ export default function MyTuitionsPage() {
                     aria-pressed={active}
                     onClick={() => setActiveFilter(f.key)}
                     className={cn(
-                      "h-10 px-3 font-mono text-[7px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#344C43] sm:text-[8px]",
+                      "h-10 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#344C43] sm:text-[10px]",
                       active ? "bg-[#344C43]/85 text-[#EFE7DC]" : "text-[#344C43]/60 hover:text-[#344C43]"
                     )}
                   >
@@ -531,7 +531,7 @@ export default function MyTuitionsPage() {
                 id="portfolio-sort"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="h-10 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-9 pr-8 font-mono text-[8px] font-bold uppercase tracking-[0.14em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[9px]"
+                className="h-10 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-9 pr-8 font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[10px]"
               >
                 {SORTS.map((s) => (
                   <option key={s.key} value={s.key}>{s.label}</option>
@@ -548,10 +548,10 @@ export default function MyTuitionsPage() {
           {/* ── Left — the edition index ── */}
           <section aria-labelledby="index-heading" className="lg:col-span-7">
             <div className="flex items-baseline justify-between gap-4">
-              <h2 id="index-heading" className="font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[9px]">
+              <h2 id="index-heading" className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[10px]">
                 The Register — Your Listings
               </h2>
-              <p aria-live="polite" className="font-mono text-[8px] uppercase tracking-[0.22em] text-[#344C43]/55">
+              <p aria-live="polite" className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#344C43]/55">
                 {visible.length} {visible.length === 1 ? "listing" : "listings"} on the shelf
               </p>
             </div>
@@ -563,7 +563,7 @@ export default function MyTuitionsPage() {
                 <h3 className="portfolio-serif mt-4 text-2xl font-black tracking-tight text-[#344C43] sm:text-3xl">
                   The register is <span className="italic text-[#B87959]">bare.</span>
                 </h3>
-                <p className="mt-2 max-w-sm font-mono text-[8px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/60">
+                <p className="mt-2 max-w-sm font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/60">
                   Every tutor starts with an empty register. Your first batch is six sections away.
                 </p>
                 <Link
@@ -581,7 +581,7 @@ export default function MyTuitionsPage() {
                 <h3 className="portfolio-serif mt-4 text-2xl font-black tracking-tight text-[#344C43]">
                   Nothing on this <span className="italic text-[#B87959]">shelf.</span>
                 </h3>
-                <p className="mt-2 max-w-xs font-mono text-[8px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/60">
+                <p className="mt-2 max-w-xs font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/60">
                   {query.trim()
                     ? `No edition matches “${query.trim()}” — the register keeps honest books.`
                     : "No editions filed under these filters."}
@@ -622,7 +622,7 @@ export default function MyTuitionsPage() {
                             "flex flex-col items-center justify-center gap-1 border-r py-3 transition-colors sm:py-4",
                             active ? "border-[#344C43] bg-[#344C43]" : "border-[#344C43]/20 bg-[#344C43]/5"
                           )}>
-                            <span className={cn("font-mono text-[6px] uppercase tracking-[0.3em]", active ? "text-[#C98B6D]" : "text-[#B87959]")}>Ed.</span>
+                            <span className={cn("font-mono text-[10px] uppercase tracking-[0.3em]", active ? "text-[#C98B6D]" : "text-[#B87959]")}>Ed.</span>
                             <span className={cn("portfolio-serif text-sm font-black leading-none tracking-tight sm:text-base", active ? "text-[#EFE7DC]" : "text-[#344C43]")}>
                               {l.ref.replace("ML-", "")}
                             </span>
@@ -630,13 +630,13 @@ export default function MyTuitionsPage() {
 
                           {/* Body */}
                           <span className="min-w-0 px-3 py-3 sm:px-4">
-                            <span className="block font-mono text-[6px] uppercase tracking-[0.28em] text-[#344C43]/50 sm:text-[6.5px]">
+                            <span className="block font-mono text-[10px] uppercase tracking-[0.28em] text-[#344C43]/50 sm:text-[10px]">
                               {l.subject} · {l.classLevel}
                             </span>
                             <span className="portfolio-serif mt-1 block text-[13px] font-black leading-snug tracking-tight text-[#344C43] sm:text-[15px]">
                               {l.title}
                             </span>
-                            <span className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[6.5px] uppercase tracking-[0.14em] text-[#344C43]/60 sm:text-[7px]">
+                            <span className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-[#344C43]/60 sm:text-[10px]">
                               <span className="inline-flex items-center gap-1">{l.mode === "Online" ? <Wifi aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} /> : <MapPin aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />}{l.mode}</span>
                               <span aria-hidden="true">·</span>
                               <span>{l.daysPerWeek}× / wk</span>
@@ -652,8 +652,8 @@ export default function MyTuitionsPage() {
                             <span className="portfolio-serif text-sm font-black leading-none tracking-tight text-[#344C43] sm:text-base">
                               ৳{l.monthlySalary.toLocaleString("en-IN")}
                             </span>
-                            <span className="font-mono text-[5.5px] uppercase tracking-[0.16em] text-[#344C43]/50">/ month</span>
-                            <span className="mt-1 flex items-center gap-1 font-mono text-[7px] font-bold tabular-nums text-[#B87959]">
+                            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#344C43]/50">/ month</span>
+                            <span className="mt-1 flex items-center gap-1 font-mono text-[9px] font-bold tabular-nums text-[#B87959]">
                               <Users aria-hidden="true" className="size-3" strokeWidth={2} />
                               {l.applicants}
                             </span>
@@ -661,11 +661,11 @@ export default function MyTuitionsPage() {
 
                           {/* Approval stamp + active chip */}
                           <span className="hidden flex-col items-center justify-center gap-1.5 border-l border-[#344C43]/15 px-3 md:flex">
-                            <span className={cn("whitespace-nowrap rounded-sm border px-2 py-0.5 font-mono text-[6px] font-bold uppercase tracking-[0.18em]", meta.chip)}>
+                            <span className={cn("whitespace-nowrap rounded-sm border px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em]", meta.chip)}>
                               {meta.label}
                             </span>
                             <span className={cn(
-                              "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border px-2 py-0.5 font-mono text-[6px] font-bold uppercase tracking-[0.18em]",
+                              "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em]",
                               l.isActive ? "border-[#668B78]/55 bg-[#668B78]/10 text-[#4A695C]" : "border-[#344C43]/40 bg-[#344C43]/5 text-[#344C43]/60"
                             )}>
                               <span aria-hidden="true" className={cn("size-1.5 rounded-full", l.isActive ? "bg-[#668B78]" : "bg-[#344C43]/50")} />
@@ -679,14 +679,14 @@ export default function MyTuitionsPage() {
                           <button
                             type="button"
                             onClick={() => setSelectedRef(l.ref)}
-                            className="inline-flex h-8 items-center gap-1.5 rounded-sm border border-[#344C43]/25 bg-transparent px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                            className="inline-flex h-8 items-center gap-1.5 rounded-sm border border-[#344C43]/25 bg-transparent px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                           >
                             <Eye aria-hidden="true" className="size-3.5" strokeWidth={2} />
                             View Details
                           </button>
                           <Link
                             href="/dashboard/tutor/post-tuition"
-                            className="inline-flex h-8 items-center gap-1.5 rounded-sm border border-[#344C43]/25 bg-transparent px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                            className="inline-flex h-8 items-center gap-1.5 rounded-sm border border-[#344C43]/25 bg-transparent px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                           >
                             <Pencil aria-hidden="true" className="size-3.5" strokeWidth={2} />
                             Edit Tuition
@@ -696,7 +696,7 @@ export default function MyTuitionsPage() {
                             onClick={() => toggleActive(l.ref)}
                             aria-label={l.isActive ? `Close tuition ${l.ref}` : `Activate tuition ${l.ref}`}
                             className={cn(
-                              "inline-flex h-8 items-center gap-1.5 rounded-sm border px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
+                              "inline-flex h-8 items-center gap-1.5 rounded-sm border px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
                               l.isActive
                                 ? "border-[#B87959]/45 bg-transparent text-[#B87959] hover:bg-[#B87959]/10"
                                 : "border-[#668B78]/45 bg-transparent text-[#4A695C] hover:bg-[#668B78]/10"
@@ -707,18 +707,18 @@ export default function MyTuitionsPage() {
                           </button>
                           {confirmDelete === l.ref ? (
                             <span className="inline-flex items-center gap-1.5">
-                              <span className="font-mono text-[6.5px] font-bold uppercase leading-none tracking-[0.16em] text-[#A34343]">Tear up?</span>
+                              <span className="font-mono text-[9px] font-bold uppercase leading-none tracking-[0.16em] text-[#A34343]">Tear up?</span>
                               <button
                                 type="button"
                                 onClick={() => deleteListing(l.ref)}
-                                className="inline-flex h-8 items-center rounded-sm border border-[#A34343]/50 bg-[#A34343] px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#EFE7DC] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
+                                className="inline-flex h-8 items-center rounded-sm border border-[#A34343]/50 bg-[#A34343] px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#EFE7DC] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
                               >
                                 Yes
                               </button>
                               <button
                                 type="button"
                                 onClick={() => setConfirmDelete(null)}
-                                className="inline-flex h-8 items-center rounded-sm border border-[#344C43]/25 px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#344C43]/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                                className="inline-flex h-8 items-center rounded-sm border border-[#344C43]/25 px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#344C43]/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                               >
                                 Keep
                               </button>
@@ -728,7 +728,7 @@ export default function MyTuitionsPage() {
                               type="button"
                               onClick={() => setConfirmDelete(l.ref)}
                               aria-label={`Delete tuition ${l.ref}`}
-                              className="inline-flex h-8 items-center gap-1.5 rounded-sm border border-[#A34343]/30 bg-transparent px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
+                              className="inline-flex h-8 items-center gap-1.5 rounded-sm border border-[#A34343]/30 bg-transparent px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
                             >
                               <Trash2 aria-hidden="true" className="size-3.5" strokeWidth={2} />
                               Delete
@@ -747,10 +747,10 @@ export default function MyTuitionsPage() {
           {selected ? (
             <StickyRail ariaLabelledby="proof-heading" className="lg:col-span-5">
               <div className="flex items-baseline justify-between gap-4">
-                <h2 id="proof-heading" className="font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[9px]">
+                <h2 id="proof-heading" className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[10px]">
                   The Proof Sheet
                 </h2>
-                <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-[#344C43]/55">{selected.ref}</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#344C43]/55">{selected.ref}</p>
               </div>
 
               <figure className="mt-3 border border-[#344C43]/30 bg-[#EFE7DC] shadow-[6px_7px_0_rgba(52,76,67,0.16)]">
@@ -762,13 +762,13 @@ export default function MyTuitionsPage() {
                   aria-label={`Banner for ${selected.title}`}
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <span className="border border-dashed border-white/40 px-1.5 py-0.5 font-mono text-[6.5px] font-bold uppercase tracking-[0.28em] text-white/85">
+                    <span className="border border-dashed border-white/40 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.28em] text-white/85">
                       {selected.subject}
                     </span>
                     <span
                       aria-hidden="true"
                       className={cn(
-                        "portfolio-stamp inline-block border-2 border-dashed px-2 py-1 font-mono text-[6px] font-bold uppercase leading-none tracking-[0.22em] sm:text-[7px]",
+                        "portfolio-stamp inline-block border-2 border-dashed px-2 py-1 font-mono text-[10px] font-bold uppercase leading-none tracking-[0.22em] sm:text-[10px]",
                         selected.approval === "approved" && "border-white/60 text-white/95",
                         selected.approval === "pending" && "border-[#C98B6D] text-[#C98B6D]",
                         selected.approval === "rejected" && "border-[#E8B4B4] text-[#E8B4B4]"
@@ -784,11 +784,11 @@ export default function MyTuitionsPage() {
 
                 <div className="p-4 sm:p-5">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="font-mono text-[7px] uppercase tracking-[0.24em] text-[#344C43]/55">
+                    <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">
                       Edition {selected.ref} · Created {selected.createdAt}
                     </span>
                     <span className={cn(
-                      "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border px-2 py-0.5 font-mono text-[6.5px] font-bold uppercase tracking-[0.2em]",
+                      "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em]",
                       selected.isActive ? "border-[#668B78]/55 bg-[#668B78]/10 text-[#4A695C]" : "border-[#344C43]/40 bg-[#344C43]/5 text-[#344C43]/60"
                     )}>
                       <span aria-hidden="true" className={cn("size-1.5 rounded-full", selected.isActive ? "bg-[#668B78]" : "bg-[#344C43]/50")} />
@@ -799,7 +799,7 @@ export default function MyTuitionsPage() {
                   <h3 className="portfolio-serif mt-2 text-xl font-black leading-tight tracking-tight text-[#344C43] sm:text-2xl">
                     {selected.title}
                   </h3>
-                  <p className="mt-1 font-mono text-[7px] uppercase tracking-[0.2em] text-[#B87959]">
+                  <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.2em] text-[#B87959]">
                     {selected.subject} · <span className="text-[#344C43]/55">{selected.classLevel}</span>
                   </p>
 
@@ -814,7 +814,7 @@ export default function MyTuitionsPage() {
                     ].map(({ Icon, k, v }) => (
                       <div key={k} className="flex items-baseline gap-2.5 py-2">
                         <Icon aria-hidden="true" className="size-3.5 shrink-0 translate-y-[2px] text-[#668B78]" strokeWidth={2} />
-                        <dt className="w-16 shrink-0 font-mono text-[7px] uppercase tracking-[0.2em] text-[#344C43]/50">{k}</dt>
+                        <dt className="w-16 shrink-0 font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/50">{k}</dt>
                         <dd className="font-semibold leading-snug tracking-tight text-[#344C43]">{v}</dd>
                       </div>
                     ))}
@@ -837,14 +837,14 @@ export default function MyTuitionsPage() {
                   <div className="mt-4 flex flex-wrap items-center gap-2">
                     <Link
                       href="/dashboard/tutor/post-tuition"
-                      className="inline-flex h-10 items-center gap-2 rounded-sm border border-[#344C43]/35 bg-transparent px-3.5 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#344C43] transition-all hover:border-[#344C43] hover:bg-[#EFE7DC] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                      className="inline-flex h-10 items-center gap-2 rounded-sm border border-[#344C43]/35 bg-transparent px-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43] transition-all hover:border-[#344C43] hover:bg-[#EFE7DC] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                     >
                       <Pencil aria-hidden="true" className="size-4" strokeWidth={1.75} />
                       Edit Tuition
                     </Link>
                     <Link
                       href="/dashboard/tutor/applicants"
-                      className="inline-flex h-10 items-center gap-2 rounded-sm border border-[#344C43] bg-[#344C43] px-3.5 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#EFE7DC] shadow-[3px_3px_0_#B87959] transition-all hover:-translate-y-0.5 hover:shadow-[5px_5px_0_#B87959] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                      className="inline-flex h-10 items-center gap-2 rounded-sm border border-[#344C43] bg-[#344C43] px-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#EFE7DC] shadow-[3px_3px_0_#B87959] transition-all hover:-translate-y-0.5 hover:shadow-[5px_5px_0_#B87959] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                     >
                       <Eye aria-hidden="true" className="size-4" strokeWidth={1.75} />
                       View Applicants
@@ -854,7 +854,7 @@ export default function MyTuitionsPage() {
                       type="button"
                       onClick={() => toggleActive(selected.ref)}
                       className={cn(
-                        "inline-flex h-10 items-center gap-2 rounded-sm border px-3.5 font-mono text-[8px] font-bold uppercase tracking-[0.22em] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
+                        "inline-flex h-10 items-center gap-2 rounded-sm border px-3.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
                         selected.isActive
                           ? "border-[#B87959]/45 bg-transparent text-[#B87959] hover:bg-[#B87959]/10"
                           : "border-[#668B78]/45 bg-transparent text-[#4A695C] hover:bg-[#668B78]/10"
@@ -865,7 +865,7 @@ export default function MyTuitionsPage() {
                     </button>
                   </div>
                   {selected.isActive && (
-                    <p className="mt-3 flex items-center gap-2 border-t border-[#344C43]/15 pt-3 font-mono text-[7px] uppercase tracking-[0.22em] text-[#344C43]/55">
+                    <p className="mt-3 flex items-center gap-2 border-t border-[#344C43]/15 pt-3 font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/55">
                       <CheckCircle2 aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
                       Live — applications close 30 Nov · 2 seats remaining
                     </p>
@@ -880,12 +880,12 @@ export default function MyTuitionsPage() {
                 <h3 id="proof-empty-heading" className="portfolio-serif mt-3 text-xl font-black tracking-tight text-[#344C43]">
                   Nothing to proof.
                 </h3>
-                <p className="mt-1.5 font-mono text-[8px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/55">
+                <p className="mt-1.5 font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/55">
                   Every edition is torn — the register is yours to write.
                 </p>
                 <Link
                   href="/dashboard/tutor/post-tuition"
-                  className="mt-5 inline-flex h-10 items-center gap-2 rounded-sm border border-[#A6683F]/60 bg-[#B87959] px-4 font-mono text-[8px] font-bold uppercase tracking-[0.22em] text-[#1E3A2F] transition-all hover:-translate-y-0.5"
+                  className="mt-5 inline-flex h-10 items-center gap-2 rounded-sm border border-[#A6683F]/60 bg-[#B87959] px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#1E3A2F] transition-all hover:-translate-y-0.5"
                 >
                   Publish a tuition
                   <ArrowRight aria-hidden="true" className="size-4" strokeWidth={2.5} />

@@ -146,13 +146,13 @@ function ChosenStamp() {
       className="charter-stamp absolute -right-3 -top-4 sm:-right-4 sm:-top-5 z-10"
     >
       <div className="flex size-20 sm:size-24 flex-col items-center justify-center rounded-full border-[3px] border-double border-[#B87959] bg-[#EFE7DC]/90 text-[#B87959] shadow-[0_4px_14px_rgba(184,121,89,0.35)] backdrop-blur-[2px] dark:bg-[#243630]/90">
-        <span className="font-mono text-[8px] sm:text-[9px] font-bold uppercase leading-none tracking-[0.2em]">
+        <span className="font-mono text-[10px] sm:text-[10px] font-bold uppercase leading-none tracking-[0.2em]">
           Sealed
         </span>
         <span className="charter-serif text-[13px] sm:text-sm font-black uppercase leading-tight tracking-wide">
           Chosen
         </span>
-        <span className="font-mono text-[7px] sm:text-[8px] uppercase leading-none tracking-[0.18em] opacity-80">
+        <span className="font-mono text-[9px] sm:text-[10px] uppercase leading-none tracking-[0.18em] opacity-80">
           2026
         </span>
       </div>
@@ -251,7 +251,7 @@ function OathSlab({
       {/* Ledger footer */}
       <span
         className={cn(
-          "mt-5 border-t pt-3 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.18em]",
+          "mt-5 border-t pt-3 font-mono text-[10px] sm:text-[10px] uppercase tracking-[0.18em]",
           selected
             ? "border-[#EFE7DC]/15 text-[#EFE7DC]/50"
             : "border-[#344C43]/15 text-[#344C43]/50"
@@ -423,7 +423,7 @@ function SealPanel() {
           </svg>
           <div className="relative flex size-14 sm:size-16 flex-col items-center justify-center rounded-full bg-[#B87959] text-[#EFE7DC] shadow-inner">
             <Feather className="size-5 sm:size-6" strokeWidth={1.5} />
-            <span className="mt-0.5 font-mono text-[6px] sm:text-[7px] font-bold uppercase tracking-[0.2em]">
+            <span className="mt-0.5 font-mono text-[10px] sm:text-[10px] font-bold uppercase tracking-[0.2em]">
               Sealed
             </span>
           </div>
@@ -433,7 +433,7 @@ function SealPanel() {
           <p className="charter-serif text-lg sm:text-xl font-bold italic leading-snug text-[#EFE7DC]">
             “Four minutes, start to sealed.”
           </p>
-          <p className="mt-1.5 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-[#EFE7DC]/55">
+          <p className="mt-1.5 font-mono text-[10px] sm:text-[10px] uppercase tracking-[0.2em] text-[#EFE7DC]/55">
             Anika R. — Scholar of Physics · Mirpur
           </p>
         </div>
@@ -461,13 +461,13 @@ function SealPanel() {
             style={{ width: "38%" }}
           />
         </div>
-        <div className="mt-1.5 flex justify-between font-mono text-[8px] uppercase tracking-[0.2em] text-[#EFE7DC]/40">
+        <div className="mt-1.5 flex justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-[#EFE7DC]/40">
           <span>Ledger open</span>
           <span>Sealing soon</span>
         </div>
       </div>
 
-      <p className="mt-5 flex items-center gap-2 font-mono text-[8px] sm:text-[9px] uppercase tracking-[0.22em] text-[#EFE7DC]/45">
+      <p className="mt-5 flex items-center gap-2 font-mono text-[10px] sm:text-[10px] uppercase tracking-[0.22em] text-[#EFE7DC]/45">
         <ShieldCheck className="size-3.5 text-[#668B78]" strokeWidth={2} />
         Seal authenticity verified · Trust Office
       </p>
@@ -518,13 +518,13 @@ export default function SignUpPage() {
 
       {/* ══ Registry ribbon — the masthead strip ═══════════════════════════ */}
       <div className="relative border-b border-[#344C43]/30 dark:border-[#EFE7DC]/15">
-        <div className="mx-auto flex h-9 max-w-[1500px] items-center justify-between gap-4 px-4 font-mono text-[8px] uppercase tracking-[0.28em] text-[#344C43]/70 dark:text-[#EFE7DC]/55 sm:px-8 sm:text-[9px]">
+        <div className="mx-auto flex h-9 max-w-[1500px] items-center justify-between gap-4 px-4 font-mono text-[10px] uppercase tracking-[0.28em] text-[#344C43]/70 dark:text-[#EFE7DC]/55 sm:px-8 sm:text-[10px]">
           <span className="flex items-center gap-2 whitespace-nowrap">
             <Asterisk className="size-3 text-[#B87959]" strokeWidth={2.5} />
             MentorLagbe · The Enrollment Charter
           </span>
           <span className="hidden md:inline">Dhaka — Est. 2026</span>
-          <span className="whitespace-nowrap">Folio Nº ML-REG-001</span>
+          <span className="hidden whitespace-nowrap sm:inline">Folio Nº ML-REG-001</span>
         </div>
       </div>
 
@@ -588,7 +588,7 @@ export default function SignUpPage() {
                       {item.title}
                     </span>
                     <span aria-hidden="true" className="mx-0.5 min-w-2 flex-1 -translate-y-[3px] border-b border-dotted border-[#344C43]/40 dark:border-[#EFE7DC]/30" />
-                    <span className="shrink-0 font-mono text-[8px] uppercase tracking-[0.18em] text-[#344C43]/50 transition-colors group-hover:text-[#B87959] dark:text-[#EFE7DC]/40">
+                    <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-[#344C43]/50 transition-colors group-hover:text-[#B87959] dark:text-[#EFE7DC]/40">
                       {item.note}
                     </span>
                   </a>
@@ -604,7 +604,7 @@ export default function SignUpPage() {
                   <dd className="charter-serif text-lg font-black tracking-tight text-[#344C43] dark:text-[#EFE7DC] sm:text-xl">
                     {m.value}
                   </dd>
-                  <dd className="mt-0.5 font-mono text-[7px] uppercase leading-tight tracking-[0.14em] text-[#344C43]/55 dark:text-[#EFE7DC]/45 sm:text-[8px]">
+                  <dd className="mt-0.5 font-mono text-[9px] uppercase leading-tight tracking-[0.14em] text-[#344C43]/55 dark:text-[#EFE7DC]/45 sm:text-[10px]">
                     {m.label}
                   </dd>
                 </div>
@@ -627,7 +627,7 @@ export default function SignUpPage() {
                 Declaration of <span className="italic text-[#668B78]">Intent</span>
               </h2>
             </div>
-            <p className="max-w-[32ch] text-right font-mono text-[8px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/55 dark:text-[#EFE7DC]/45 sm:text-[9px]">
+            <p className="max-w-[32ch] text-right font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/55 dark:text-[#EFE7DC]/45 sm:text-[10px]">
               Choose exactly one — the rest of the charter conforms
             </p>
           </div>
@@ -656,7 +656,7 @@ export default function SignUpPage() {
                 The <span className="italic text-[#668B78]">Inscription</span>
               </h2>
             </div>
-            <p className="font-mono text-[8px] uppercase tracking-[0.24em] text-[#344C43]/55 dark:text-[#EFE7DC]/45 sm:text-[9px]">
+            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#344C43]/55 dark:text-[#EFE7DC]/45 sm:text-[10px]">
               Now inscribing: <span className="text-[#B87959]">{role === "student" ? "The Scholar" : "The Mentor"}</span>
             </p>
           </div>
@@ -737,7 +737,7 @@ export default function SignUpPage() {
                           (optional)
                         </span>
                       </Label>
-                      <span className="rounded-sm border border-[#B87959]/40 bg-[#B87959]/10 px-1.5 py-0.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] text-[#B87959]">
+                      <span className="rounded-sm border border-[#B87959]/40 bg-[#B87959]/10 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#B87959]">
                         Clause IV — Mentor filing
                       </span>
                     </div>
@@ -800,7 +800,7 @@ export default function SignUpPage() {
                       {oath.cta}
                       <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1.5" strokeWidth={2} />
                     </button>
-                    <p className="font-mono text-[8px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/55 dark:text-[#EFE7DC]/45 sm:max-w-[16ch]">
+                    <p className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/55 dark:text-[#EFE7DC]/45 sm:max-w-[16ch]">
                       Free to join · No card · Cancel anytime
                     </p>
                   </div>
@@ -819,7 +819,7 @@ export default function SignUpPage() {
 
         {/* ══ Colophon — guarantees & sign-in ══════════════════════════════ */}
         <footer className="flex flex-col items-start justify-between gap-4 border-t border-[#344C43]/30 py-5 dark:border-[#EFE7DC]/15 sm:flex-row sm:items-center">
-          <p className="font-mono text-[8px] uppercase leading-relaxed tracking-[0.24em] text-[#344C43]/60 dark:text-[#EFE7DC]/50 sm:text-[9px]">
+          <p className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.24em] text-[#344C43]/60 dark:text-[#EFE7DC]/50 sm:text-[10px]">
             {ATTESTED_FEATS.map((feat) => (
               <span key={feat} className="mr-4 inline-flex items-center gap-1.5">
                 <Asterisk className="size-3 text-[#B87959]" strokeWidth={2.5} />

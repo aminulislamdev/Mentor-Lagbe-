@@ -51,7 +51,7 @@ export function IndexPanel({ tab, meta, children, className }: IndexPanelProps) 
           {tab}
         </h2>
         {meta && (
-          <p className="hidden font-mono text-[8px] uppercase tracking-[0.2em] text-[#FCFAF2]/45 sm:block">
+          <p className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-[#FCFAF2]/45 sm:block">
             {meta}
           </p>
         )}
@@ -109,7 +109,7 @@ export interface MonogramProps {
 }
 
 const SIZE_STYLES: Record<MonogramSize, string> = {
-  sm: "size-7 text-[8px]",
+  sm: "size-7 text-[10px]",
   md: "size-9 text-[9px]",
   lg: "size-11 text-[10px]",
   xl: "size-14 text-[13px]",

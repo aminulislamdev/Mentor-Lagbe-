@@ -367,7 +367,7 @@ function DecisionDialog({
               <strong className="text-[#F2EDDF]"> {applicant.tuitionTitle}</strong>. The seat is deducted
               from the batch ledger — <span className="font-mono text-[#9DBFA9]">3 of 12 remain after</span>.
             </p>
-            <div className="mt-4 flex items-center gap-2 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[7px] uppercase tracking-[0.22em] text-[#F2EDDF]/45">
+            <div className="mt-4 flex items-center gap-2 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[9px] uppercase tracking-[0.22em] text-[#F2EDDF]/45">
               <BadgeCheck aria-hidden="true" className="size-3.5 text-[#C98B6D]" strokeWidth={2} />
               Seal of admission · Board notified automatically
             </div>
@@ -403,7 +403,7 @@ function DecisionDialog({
               for <strong className="text-[#F7EDE1]">{applicant.subject}</strong>. The return is kind by design —
               one line, no reasons demanded, no bridge burned. They may reapply next term.
             </p>
-            <div className="mt-4 flex items-center gap-2 border-t border-[#F7EDE1]/12 pt-3 font-mono text-[7px] uppercase tracking-[0.22em] text-[#F7EDE1]/45">
+            <div className="mt-4 flex items-center gap-2 border-t border-[#F7EDE1]/12 pt-3 font-mono text-[9px] uppercase tracking-[0.22em] text-[#F7EDE1]/45">
               <XCircle aria-hidden="true" className="size-3.5 text-[#A34343]" strokeWidth={2} />
               Return sealed · Applicant notified with a kind note
             </div>
@@ -526,7 +526,7 @@ export default function ApplicantsPage() {
                 notes, their hunger, their seat. Read each letter before the
                 board seals your reply.
               </p>
-              <p className="mt-2 inline-flex items-center gap-2 border border-[#C98B6D]/50 bg-[#B87959]/10 px-2 py-1 font-mono text-[7px] font-bold uppercase tracking-[0.24em] text-[#B87959]">
+              <p className="mt-2 inline-flex items-center gap-2 border border-[#C98B6D]/50 bg-[#B87959]/10 px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.24em] text-[#B87959]">
                 <Hourglass aria-hidden="true" className="size-3.5" strokeWidth={2} />
                 {counts.pending} awaiting your review
               </p>
@@ -536,10 +536,10 @@ export default function ApplicantsPage() {
           {/* ══ THE VERDICT BAROMETER — horizontal status visualization ══ */}
           <div className="applicant-rise mt-5" style={{ "--rise-delay": "0.14s" } as React.CSSProperties} aria-label={`Applicant barometer: ${counts.total} total, ${counts.pending} pending review, ${counts.accepted} accepted, ${counts.rejected} rejected`}>
             <div className="flex items-baseline justify-between gap-4">
-              <p className="font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#344C43]/55">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#344C43]/55">
                 The Verdict Barometer
               </p>
-              <p className="font-mono text-[8px] uppercase tracking-[0.24em] text-[#344C43]/55">
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#344C43]/55">
                 <span className="hidden sm:inline">HSC Physics — 3 seats remain </span>
                 Total — <span className="font-bold text-[#344C43]">{String(counts.total).padStart(2, "0")}</span>
               </p>
@@ -560,7 +560,7 @@ export default function ApplicantsPage() {
             </div>
             <ul className="mt-1.5 flex flex-wrap gap-x-5 gap-y-1">
               {verdictSegments.map((seg) => (
-                <li key={seg.label} className="inline-flex items-center gap-1.5 font-mono text-[7px] uppercase tracking-[0.2em] text-[#344C43]/60">
+                <li key={seg.label} className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/60">
                   <span aria-hidden="true" className="inline-block size-2.5" style={{ backgroundColor: seg.tone }} />
                   {seg.label} — {seg.count}
                 </li>
@@ -579,7 +579,7 @@ export default function ApplicantsPage() {
                 id="studio-tuition"
                 value={tuition}
                 onChange={(e) => setTuition(e.target.value as (typeof TUITION_FILTERS)[number])}
-                className="h-10 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-3 pr-8 font-mono text-[8px] font-bold uppercase tracking-[0.16em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[9px]"
+                className="h-10 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-3 pr-8 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[10px]"
               >
                 {TUITION_FILTERS.map((t) => (
                   <option key={t} value={t}>{t}</option>
@@ -599,7 +599,7 @@ export default function ApplicantsPage() {
                     aria-pressed={active}
                     onClick={() => setStatus(f.key)}
                     className={cn(
-                      "flex h-10 items-baseline gap-1.5 rounded-sm border px-2.5 font-mono text-[7px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:px-3 sm:text-[8px]",
+                      "flex h-10 items-baseline gap-1.5 rounded-sm border px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:px-3 sm:text-[10px]",
                       active
                         ? "border-[#344C43] bg-[#344C43] text-[#EFE7DC] shadow-[2px_2px_0_#B87959]"
                         : "border-[#344C43]/25 text-[#344C43]/65 hover:border-[#344C43]/55 hover:text-[#344C43]"
@@ -635,7 +635,7 @@ export default function ApplicantsPage() {
                 id="studio-sort"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortKey)}
-                className="h-10 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-9 pr-8 font-mono text-[8px] font-bold uppercase tracking-[0.16em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[9px]"
+                className="h-10 appearance-none rounded-sm border border-[#344C43]/25 bg-[#EFE7DC] pl-9 pr-8 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-[#344C43] outline-none transition-all hover:border-[#344C43]/45 focus:border-[#668B78] focus:ring-2 focus:ring-[#668B78]/20 sm:text-[10px]"
               >
                 <option value="newest">Newest first</option>
                 <option value="oldest">Oldest first</option>
@@ -651,10 +651,10 @@ export default function ApplicantsPage() {
           {/* ── Left — applicant index ── */}
           <section aria-labelledby="applicants-heading" className="lg:col-span-7">
             <div className="flex items-baseline justify-between gap-4">
-              <h2 id="applicants-heading" className="font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[9px]">
+              <h2 id="applicants-heading" className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[10px]">
                 The Applicant Index
               </h2>
-              <p aria-live="polite" className="font-mono text-[8px] uppercase tracking-[0.22em] text-[#344C43]/55">
+              <p aria-live="polite" className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#344C43]/55">
                 {visible.length} {visible.length === 1 ? "applicant" : "applicants"} on the desk
               </p>
             </div>
@@ -710,10 +710,10 @@ export default function ApplicantsPage() {
                           <span className="block truncate text-[13px] font-bold tracking-tight text-[#344C43] sm:text-[14px]">
                             {a.name}
                           </span>
-                          <span className="mt-0.5 block truncate font-mono text-[6.5px] uppercase leading-snug tracking-[0.16em] text-[#B87959]">
+                          <span className="mt-0.5 block truncate font-mono text-[9px] uppercase leading-snug tracking-[0.16em] text-[#B87959]">
                             {a.subject} · <span className="text-[#344C43]/55">{a.tuitionRef}</span>
                           </span>
-                          <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[6.5px] uppercase tracking-[0.14em] text-[#344C43]/60">
+                          <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-[#344C43]/60">
                             <span>{a.preferredSchedule}</span>
                             <span aria-hidden="true">·</span>
                             <span>{a.appliedAt}</span>
@@ -725,13 +725,13 @@ export default function ApplicantsPage() {
                           <span className="text-[12px] font-black tabular-nums tracking-tight text-[#344C43]">
                             {fmtSalary(a.monthlySalary)}
                           </span>
-                          <span className="font-mono text-[5.5px] uppercase tracking-[0.16em] text-[#344C43]/50">/ month</span>
+                          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#344C43]/50">/ month</span>
                         </span>
 
                         {/* Status chip */}
                         <span className="hidden flex-col items-center justify-center gap-1.5 border-l border-[#344C43]/15 px-3 sm:flex">
                           <span className={cn(
-                            "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border px-2 py-1 font-mono text-[6px] font-bold uppercase tracking-[0.18em]",
+                            "inline-flex items-center gap-1.5 whitespace-nowrap rounded-sm border px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em]",
                             meta.chip
                           )}>
                             {a.status === "pending" && <Hourglass aria-hidden="true" className="size-3" strokeWidth={2} />}
@@ -756,10 +756,10 @@ export default function ApplicantsPage() {
           {selected && (
             <StickyRail ariaLabelledby="selection-heading" className="lg:col-span-5">
               <div className="flex items-baseline justify-between gap-4">
-                <h2 id="selection-heading" className="font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[9px]">
+                <h2 id="selection-heading" className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#B87959] sm:text-[10px]">
                   The Selection Sheet
                 </h2>
-                <p className="font-mono text-[8px] uppercase tracking-[0.22em] text-[#344C43]/55">{selected.ref}</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#344C43]/55">{selected.ref}</p>
               </div>
 
               <figure className="mt-3 overflow-hidden border border-[#344C43]/30 bg-[#EFE7DC] shadow-[6px_7px_0_rgba(52,76,67,0.16)]">
@@ -772,14 +772,14 @@ export default function ApplicantsPage() {
                     <span className="block truncate text-base font-bold tracking-tight text-[#EFE7DC]">
                       {selected.name}
                     </span>
-                    <span className="mt-0.5 block font-mono text-[6.5px] uppercase leading-snug tracking-[0.18em] text-[#9DBFA9]">
+                    <span className="mt-0.5 block font-mono text-[9px] uppercase leading-snug tracking-[0.18em] text-[#9DBFA9]">
                       {selected.classLevel} · {selected.gpa}
                     </span>
                   </span>
                   <span
                     aria-hidden="true"
                     className={cn(
-                      "applicant-stamp inline-block shrink-0 -rotate-11 border-2 border-dashed px-2 py-1 font-mono text-[6px] font-bold uppercase leading-none tracking-[0.2em] sm:text-[7px]",
+                      "applicant-stamp inline-block shrink-0 -rotate-11 border-2 border-dashed px-2 py-1 font-mono text-[10px] font-bold uppercase leading-none tracking-[0.2em] sm:text-[10px]",
                       STATUS_META[selected.status].stampBorder,
                       STATUS_META[selected.status].stampText
                     )}
@@ -797,7 +797,7 @@ export default function ApplicantsPage() {
                     aria-label={`Applied to ${selected.tuitionTitle}`}
                   >
                     <span className="min-w-0">
-                      <span className="block font-mono text-[6.5px] uppercase leading-snug tracking-[0.22em] text-white/65">
+                      <span className="block font-mono text-[9px] uppercase leading-snug tracking-[0.22em] text-white/65">
                         Applying to — {selected.tuitionRef}
                       </span>
                       <span className="applicant-serif mt-1 block text-[13px] font-black leading-snug tracking-tight text-[#F2ECDF]">
@@ -808,7 +808,7 @@ export default function ApplicantsPage() {
                       <span className="block font-mono text-[11px] font-bold tracking-tight text-[#F2ECDF]">
                         {fmtSalary(selected.monthlySalary)}
                       </span>
-                      <span className="font-mono text-[5.5px] uppercase tracking-[0.2em] text-white/55">/ month</span>
+                      <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/55">/ month</span>
                     </span>
                   </div>
 
@@ -823,7 +823,7 @@ export default function ApplicantsPage() {
                     ].map(({ Icon, k, v }) => (
                       <li key={k} className="flex items-baseline gap-2.5 py-2">
                         <Icon aria-hidden="true" className="size-3.5 shrink-0 translate-y-[2px] text-[#668B78]" strokeWidth={2} />
-                        <span className="w-14 shrink-0 font-mono text-[7px] uppercase tracking-[0.18em] text-[#344C43]/50">{k}</span>
+                        <span className="w-14 shrink-0 font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/50">{k}</span>
                         <span className="truncate font-semibold leading-snug tracking-tight text-[#344C43]">{v}</span>
                       </li>
                     ))}
@@ -831,7 +831,7 @@ export default function ApplicantsPage() {
 
                   {/* The letter — learning note */}
                   <div className="mt-3 border-l-2 border-[#B87959] bg-[#F2ECDF] p-3">
-                    <p className="flex items-center gap-1.5 font-mono text-[6.5px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
+                    <p className="flex items-center gap-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
                       <FileText aria-hidden="true" className="size-3" strokeWidth={2} />
                       The Letter
                     </p>
@@ -841,7 +841,7 @@ export default function ApplicantsPage() {
                   </div>
 
                   {/* Application footer */}
-                  <p className="mt-3 flex flex-wrap items-center justify-between gap-2 font-mono text-[7px] uppercase tracking-[0.2em] text-[#344C43]/55">
+                  <p className="mt-3 flex flex-wrap items-center justify-between gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/55">
                     <span>Applied {selected.appliedAt}</span>
                     <span>{selected.ref} · Dhaka Post</span>
                   </p>
@@ -851,7 +851,7 @@ export default function ApplicantsPage() {
                     <button
                       type="button"
                       onClick={() => setDialog("accept")}
-                      className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#7AA890]/60 bg-[#668B78] px-4 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#16241F] shadow-[3px_3px_0_#C98B6D] transition-all hover:-translate-y-0.5 hover:bg-[#7AA890] hover:shadow-[5px_5px_0_#C98B6D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#668B78]"
+                      className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#7AA890]/60 bg-[#668B78] px-4 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#16241F] shadow-[3px_3px_0_#C98B6D] transition-all hover:-translate-y-0.5 hover:bg-[#7AA890] hover:shadow-[5px_5px_0_#C98B6D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#668B78]"
                     >
                       <CheckCircle2 aria-hidden="true" className="size-4" strokeWidth={2.25} />
                       Accept Application
@@ -859,7 +859,7 @@ export default function ApplicantsPage() {
                     <button
                       type="button"
                       onClick={() => setDialog("reject")}
-                      className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#A34343]/45 bg-transparent px-4 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
+                      className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#A34343]/45 bg-transparent px-4 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
                     >
                       <XCircle aria-hidden="true" className="size-4" strokeWidth={2} />
                       Reject Application
@@ -868,7 +868,7 @@ export default function ApplicantsPage() {
                       type="button"
                       onClick={() => setDossierOpen((v) => !v)}
                       aria-expanded={dossierOpen}
-                      className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/25 px-4 font-mono text-[8px] font-bold uppercase tracking-[0.24em] text-[#344C43] transition-all hover:border-[#344C43] hover:bg-[#EFE7DC] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                      className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/25 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#344C43] transition-all hover:border-[#344C43] hover:bg-[#EFE7DC] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                     >
                       <Eye aria-hidden="true" className="size-4" strokeWidth={1.75} />
                       {dossierOpen ? "Hide Details" : "View Details"}
@@ -878,7 +878,7 @@ export default function ApplicantsPage() {
                   {/* Full dossier expansion */}
                   {dossierOpen && (
                     <div className="mt-3 border border-dashed border-[#344C43]/35 bg-[#F2ECDF]/60 p-3">
-                      <p className="font-mono text-[7px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
+                      <p className="font-mono text-[9px] font-bold uppercase tracking-[0.28em] text-[#B87959]">
                         Full Dossier
                       </p>
                       <dl className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 text-[11px]">
@@ -891,7 +891,7 @@ export default function ApplicantsPage() {
                           ["Preferred", selected.preferredSchedule],
                         ].map(([k, v]) => (
                           <div key={k}>
-                            <dt className="font-mono text-[6.5px] uppercase tracking-[0.22em] text-[#344C43]/50">{k}</dt>
+                            <dt className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/50">{k}</dt>
                             <dd className="mt-0.5 font-semibold leading-snug tracking-tight text-[#344C43]">{v}</dd>
                           </div>
                         ))}
