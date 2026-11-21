@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import {
   ShieldCheck,
@@ -19,21 +18,46 @@ import {
   Crown,
   ChevronRight,
   CircleDollarSign,
+  RefreshCw,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useApi } from "@/lib/hooks/use-api"
 import { IndexPanel, Colophon } from "@/components/dashboard/shared"
+import type { AdminStats } from "@/lib/api-types"
 
-// ─── Static platform data ────────────────────────────────────────────────────
+// ─── Scoped terminal styles ──────────────────────────────────────────────────
 
-const KPIS = [
-  { label: "Total Users", value: "12,847", delta: "+4.6%", dir: "up" as const, note: "vs. Oct ’26" },
-  { label: "Total Students", value: "10,392", delta: "+5.1%", dir: "up" as const, note: "80.9% of base" },
-  { label: "Total Tutors", value: "1,681", delta: "+2.7%", dir: "up" as const, note: "13.1% of base" },
-  { label: "Pending Approvals", value: "14", delta: "-3", dir: "down" as const, note: "board queue" },
-  { label: "Approved Tuitions", value: "486", delta: "+12", dir: "up" as const, note: "live on index" },
-  { label: "Stripe Revenue", value: "$48,214", delta: "+9.2%", dir: "up" as const, note: "USD · all-time" },
+const terminalStyles = `
+  .terminal-serif { font-family: Georgia, 'Times New Roman', Times, serif; }
+
+  .terminal-root ::selection { background: #C9A25E; color: #10181A; }
+
+  @keyframes terminal-rise {
+    from { transform: translateY(16px); }
+    to   { transform: translateY(0); }
+  }
+  .terminal-rise { animation: terminal-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--rise-delay, 0s); }
+
+  @keyframes terminal-ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .terminal-ticker { animation: terminal-ticker 42s linear infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .terminal-rise, .terminal-ticker { animation: none !important; }
+  }
+`
+
+// ─── Ticker tape items ───────────────────────────────────────────────────────
+
+const TICKER = [
+  "STRIPE ● OPERATIONAL",
+  "BOARD SYNCED 60s AGO",
 ]
+
+// ─── Registration chart data (decorative — no time-series API yet) ────────
 
 const REGISTRATION_GROWTH = [
   { m: "May", students: 620, tutors: 96 },
@@ -52,19 +76,6 @@ const MONTHLY_REVENUE = [
   { m: "Sep", usd: 6840 },
   { m: "Oct", usd: 7910 },
   { m: "Nov", usd: 10420 },
-]
-
-const APPROVAL_MIX = [
-  { label: "Approved", value: 486, pct: 91.2, tone: "#668B78" },
-  { label: "Pending", value: 14, pct: 2.6, tone: "#B87959" },
-  { label: "Rejected", value: 33, pct: 6.2, tone: "#A34343" },
-]
-
-const STUDENT_TUTOR_SPLIT = [
-  { label: "Students", value: 10392, pct: 80.9, tone: "#668B78" },
-  { label: "Tutors", value: 1681, pct: 13.1, tone: "#B87959" },
-  { label: "Admins", value: 7, pct: 0.05, tone: "#C9A25E" },
-  { label: "Others", value: 767, pct: 6.0, tone: "#8A8F87" },
 ]
 
 const PENDING_QUEUE = [
@@ -101,44 +112,6 @@ const RECENT_PAYMENTS = [
   { name: "Tasnim Rahman", plan: "Student Pro", amount: "$10.00", method: "bKash → Stripe", when: "Today, 10:48" },
   { name: "Mr. Tanvir Alam", plan: "Tutor Pro", amount: "$15.00", method: "Visa •• 7710", when: "Yesterday, 16:18" },
   { name: "Sumaiya Akter", plan: "Student Pro", amount: "$10.00", method: "Visa •• 1198", when: "15 Nov, 08:31" },
-]
-
-
-
-// ─── Scoped terminal styles ──────────────────────────────────────────────────
-
-const terminalStyles = `
-  .terminal-serif { font-family: Georgia, 'Times New Roman', Times, serif; }
-
-  .terminal-root ::selection { background: #C9A25E; color: #10181A; }
-
-  @keyframes terminal-rise {
-    from { transform: translateY(16px); }
-    to   { transform: translateY(0); }
-  }
-  .terminal-rise { animation: terminal-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--rise-delay, 0s); }
-
-  @keyframes terminal-ticker {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-  .terminal-ticker { animation: terminal-ticker 42s linear infinite; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .terminal-rise, .terminal-ticker { animation: none !important; }
-  }
-`
-
-// ─── Ticker tape items ───────────────────────────────────────────────────────
-
-const TICKER = [
-  "INDEX +9.2% QTD",
-  "REVENUE $48,214",
-  "12,847 REGISTERED",
-  "486 LIVE TUITIONS",
-  "14 PENDING BOARD",
-  "STRIPE ● OPERATIONAL",
-  "BOARD SYNCED 60s AGO",
 ]
 
 // ─── Custom SVG primitives ───────────────────────────────────────────────────
@@ -205,12 +178,12 @@ function RevenueBars() {
   )
 }
 
-function DistributionDonut() {
+function DistributionDonut({ split, totalUsers }: { split: Array<{ label: string; value: number; pct: number; tone: string }>; totalUsers: number }) {
   const R = 52
   const C = 2 * Math.PI * R
 
   // Precompute accumulated dash offsets before render (pure, no mutation)
-  const arcs = STUDENT_TUTOR_SPLIT.reduce<Array<{ seg: (typeof STUDENT_TUTOR_SPLIT)[number]; dash: number; offset: number }>>(
+  const arcs = split.reduce<Array<{ seg: (typeof split)[number]; dash: number; offset: number }>>(
     (acc, seg) => {
       const dash = (seg.pct / 100) * C
       const offset = acc.length === 0 ? 0 : acc[acc.length - 1].offset + acc[acc.length - 1].dash
@@ -236,7 +209,7 @@ function DistributionDonut() {
           transform="rotate(-90 75 75)"
         />
       ))}
-      <text x="75" y="70" textAnchor="middle" fontSize="19" fontWeight="800" fill="#10181A" className="font-mono">12,847</text>
+      <text x="75" y="70" textAnchor="middle" fontSize="19" fontWeight="800" fill="#10181A" className="font-mono">{totalUsers.toLocaleString()}</text>
       <text x="75" y="88" textAnchor="middle" fontSize="6" fill="#10181A" fillOpacity="0.6" className="font-mono" letterSpacing="1.5">TOTAL USERS</text>
     </svg>
   )
@@ -245,20 +218,42 @@ function DistributionDonut() {
 // ─── Main page ───────────────────────────────────────────────────────────────
 
 export default function AdminDashboardPage() {
-  const [queue, setQueue] = useState(PENDING_QUEUE)
-  const [approved, setApproved] = useState(RECENTLY_APPROVED)
-  const [rejected, setRejected] = useState(RECENTLY_REJECTED)
+  const stats = useApi<AdminStats>("/api/dashboard/stats")
 
-  const actOn = (ref: string, verdict: "approved" | "rejected") => {
-    const item = queue.find((q) => q.ref === ref)
-    if (!item) return
-    setQueue((prev) => prev.filter((q) => q.ref !== ref))
-    if (verdict === "approved") {
-      setApproved((prev) => [{ ref: item.ref, title: item.title, tutor: item.tutor, when: "Just now" }, ...prev].slice(0, 4))
-    } else {
-      setRejected((prev) => [{ ref: item.ref, title: item.title, tutor: item.tutor, when: "Just now", reason: "Outcome guarantee — off-brief" }, ...prev].slice(0, 4))
-    }
-  }
+  const summary = stats.data
+  const loading = stats.loading
+  const error = stats.error
+
+  const retry = () => stats.refetch()
+
+  const totalUsers = summary?.totalUsers ?? 0
+  const totalStudents = summary?.totalStudents ?? 0
+  const totalTutors = summary?.totalTutors ?? 0
+  const totalTuitions = summary?.totalTuitions ?? 0
+  const pendingTuitions = summary?.pendingTuitions ?? 0
+  const approvedTuitions = summary?.approvedTuitions ?? 0
+
+  const ADMIN_KPIS = [
+    { label: "Total Users", value: loading ? "—" : totalUsers.toLocaleString(), delta: "+4.6%", dir: "up" as const, note: "vs. Oct ’26" },
+    { label: "Total Students", value: loading ? "—" : totalStudents.toLocaleString(), delta: "+5.1%", dir: "up" as const, note: "80.9% of base" },
+    { label: "Total Tutors", value: loading ? "—" : totalTutors.toLocaleString(), delta: "+2.7%", dir: "up" as const, note: "13.1% of base" },
+    { label: "Pending Approvals", value: loading ? "—" : pendingTuitions, delta: "-3", dir: "down" as const, note: "board queue" },
+    { label: "Approved Tuitions", value: loading ? "—" : approvedTuitions, delta: "+12", dir: "up" as const, note: "live on index" },
+    { label: "Stripe Revenue", value: "$48,214", delta: "+9.2%", dir: "up" as const, note: "USD · all-time" },
+  ]
+
+  const STUDENT_TUTOR_SPLIT_DYNAMIC = [
+    { label: "Students", value: totalStudents, pct: totalUsers > 0 ? Math.round((totalStudents / totalUsers) * 1000) / 10 : 80.9, tone: "#668B78" },
+    { label: "Tutors", value: totalTutors, pct: totalUsers > 0 ? Math.round((totalTutors / totalUsers) * 1000) / 10 : 13.1, tone: "#B87959" },
+    { label: "Admins", value: 7, pct: 0.05, tone: "#C9A25E" },
+    { label: "Others", value: Math.max(0, totalUsers - totalStudents - totalTutors - 7), pct: totalUsers > 0 ? Math.round(((totalUsers - totalStudents - totalTutors - 7) / totalUsers) * 1000) / 10 : 6.0, tone: "#8A8F87" },
+  ]
+
+  const APPROVAL_MIX_DYNAMIC = [
+    { label: "Approved", value: approvedTuitions, pct: totalTuitions > 0 ? Math.round((approvedTuitions / totalTuitions) * 1000) / 10 : 91.2, tone: "#668B78" },
+    { label: "Pending", value: pendingTuitions, pct: totalTuitions > 0 ? Math.round((pendingTuitions / totalTuitions) * 1000) / 10 : 2.6, tone: "#B87959" },
+    { label: "Rejected", value: Math.max(0, totalTuitions - approvedTuitions - pendingTuitions), pct: totalTuitions > 0 ? Math.round(((totalTuitions - approvedTuitions - pendingTuitions) / totalTuitions) * 1000) / 10 : 6.2, tone: "#A34343" },
+  ]
 
   return (
     <div className="terminal-root relative bg-[#F1EDE2] text-[#10181A]">
@@ -329,8 +324,8 @@ export default function AdminDashboardPage() {
               </p>
               <ol className="mt-2 divide-y divide-[#F2EDDF]/10 border-y border-[#F2EDDF]/14">
                 {[
-                  { key: "01", label: "Manage Users", meta: "12,847 accounts", href: "/dashboard/admin/users" },
-                  { key: "02", label: "Review Tuitions", meta: `${queue.length} awaiting board`, href: "/dashboard/admin/tuitions" },
+                  { key: "01", label: "Manage Users", meta: `${totalUsers.toLocaleString()} accounts`, href: "/dashboard/admin/users" },
+                  { key: "02", label: "Review Tuitions", meta: `${pendingTuitions} awaiting board`, href: "/dashboard/admin/tuitions" },
                   { key: "03", label: "View Transactions", meta: "$48,214 settled", href: "/dashboard/admin/transactions" },
                 ].map((item) => (
                   <li key={item.key}>
@@ -359,27 +354,51 @@ export default function AdminDashboardPage() {
 
       {/* ══ KPI LEDGER BAND — six ruled operations ═══════════════════════ */}
       <div className="border-b border-[#D8C9A3]/25 bg-[#10181A]" aria-label="Platform key metrics">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-2 divide-x divide-[#F2EDDF]/10 sm:grid-cols-3 lg:grid-cols-6">
-          {KPIS.map((kpi) => (
-            <div key={kpi.label} className="flex flex-col gap-1 px-4 py-4 text-center sm:py-5">
-              <p className="font-mono text-[9px] font-bold uppercase leading-snug tracking-[0.18em] text-[#D8C9A3]/75">
-                {kpi.label}
-              </p>
-              <p className="terminal-serif text-2xl font-black leading-none tracking-tight text-[#F2EDDF] sm:text-3xl">
-                {kpi.value}
-              </p>
-              <p className="flex items-center justify-center gap-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[#F2EDDF]/50">
-                {kpi.dir === "up" ? (
-                  <ArrowUpRight aria-hidden="true" className="size-3 text-[#7AA890]" strokeWidth={2.5} />
-                ) : (
-                  <ArrowDownRight aria-hidden="true" className="size-3 text-[#C98B6D]" strokeWidth={2.5} />
-                )}
-                <span className={kpi.dir === "up" ? "text-[#9DBFA9]" : "text-[#E0A57E]"}>{kpi.delta}</span>
-                <span className="hidden xl:inline">· {kpi.note}</span>
-              </p>
+        {loading && !summary ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <div className="h-8 w-8 mx-auto rounded-full border-2 border-[#D8C9A3]/30 border-t-[#C9A25E] animate-spin" />
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[#D8C9A3]/60">Loading ledger…</p>
             </div>
-          ))}
-        </div>
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="text-center">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9A25E]">The ledger could not be opened.</p>
+              <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[#F2EDDF]/50">{error}</p>
+              <Button
+                type="button"
+                onClick={retry}
+                className="mt-3 h-9 rounded-sm border border-[#C9A25E]/50 bg-transparent px-4 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#C9A25E] hover:bg-[#C9A25E]/10"
+              >
+                <RefreshCw aria-hidden="true" className="mr-1.5 size-3.5" strokeWidth={2} />
+                Retry
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="mx-auto grid max-w-[1280px] grid-cols-2 divide-x divide-[#F2EDDF]/10 sm:grid-cols-3 lg:grid-cols-6">
+            {ADMIN_KPIS.map((kpi) => (
+              <div key={kpi.label} className="flex flex-col gap-1 px-4 py-4 text-center sm:py-5">
+                <p className="font-mono text-[9px] font-bold uppercase leading-snug tracking-[0.18em] text-[#D8C9A3]/75">
+                  {kpi.label}
+                </p>
+                <p className="terminal-serif text-2xl font-black leading-none tracking-tight text-[#F2EDDF] sm:text-3xl">
+                  {kpi.value}
+                </p>
+                <p className="flex items-center justify-center gap-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[#F2EDDF]/50">
+                  {kpi.dir === "up" ? (
+                    <ArrowUpRight aria-hidden="true" className="size-3 text-[#7AA890]" strokeWidth={2.5} />
+                  ) : (
+                    <ArrowDownRight aria-hidden="true" className="size-3 text-[#C98B6D]" strokeWidth={2.5} />
+                  )}
+                  <span className={kpi.dir === "up" ? "text-[#9DBFA9]" : "text-[#E0A57E]"}>{kpi.delta}</span>
+                  <span className="hidden xl:inline">· {kpi.note}</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ══ BODY ═══════════════════════════════════════════════════════════ */}
@@ -407,10 +426,10 @@ export default function AdminDashboardPage() {
           >
             <div className="flex items-center gap-4">
               <div className="size-28 shrink-0 sm:size-32">
-                <DistributionDonut />
+                <DistributionDonut split={STUDENT_TUTOR_SPLIT_DYNAMIC} totalUsers={totalUsers} />
               </div>
               <ul className="min-w-0 flex-1 space-y-1.5">
-                {STUDENT_TUTOR_SPLIT.map((seg) => (
+                {STUDENT_TUTOR_SPLIT_DYNAMIC.map((seg) => (
                   <li key={seg.label} className="flex items-baseline justify-between gap-2 border-b border-[#10181A]/10 pb-1 last:border-b-0">
                     <span className="flex items-center gap-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#10181A]/70">
                       <span aria-hidden="true" className="inline-block size-2" style={{ backgroundColor: seg.tone }} />
@@ -431,7 +450,7 @@ export default function AdminDashboardPage() {
             className="lg:col-span-4"
           >
             <ul className="space-y-2.5">
-              {APPROVAL_MIX.map((seg) => (
+              {APPROVAL_MIX_DYNAMIC.map((seg) => (
                 <li key={seg.label}>
                   <div className="flex items-baseline justify-between gap-2">
                     <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#10181A]/70">
@@ -520,10 +539,10 @@ export default function AdminDashboardPage() {
           {/* Moderation */}
           <IndexPanel
             tab="The Board — Moderation Queue"
-            meta={`${queue.length} awaiting review · SLA 2 days`}
+            meta={`${pendingTuitions} awaiting review · SLA 2 days`}
             className="lg:col-span-7"
           >
-            {queue.length === 0 ? (
+            {pendingTuitions === 0 ? (
               <div className="flex flex-col items-center py-6 text-center">
                 <CheckCircle2 aria-hidden="true" className="size-9 text-[#668B78]" strokeWidth={1.5} />
                 <p className="terminal-serif mt-3 text-lg font-black tracking-tight">The queue is clear.</p>
@@ -533,7 +552,7 @@ export default function AdminDashboardPage() {
               </div>
             ) : (
               <ul className="divide-y divide-[#10181A]/12">
-                {queue.map((item) => (
+                {PENDING_QUEUE.map((item) => (
                   <li key={item.ref} className="py-2.5">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
@@ -549,7 +568,6 @@ export default function AdminDashboardPage() {
                         <Button
                           type="button"
                           size="sm"
-                          onClick={() => actOn(item.ref, "approved")}
                           className="h-8 rounded-sm border border-[#10181A] bg-[#10181A] px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#9DBFA9] hover:bg-[#1E2A24]"
                           aria-label={`Approve ${item.ref}`}
                         >
@@ -559,7 +577,6 @@ export default function AdminDashboardPage() {
                         <Button
                           type="button"
                           size="sm"
-                          onClick={() => actOn(item.ref, "rejected")}
                           className="h-8 rounded-sm border border-[#A34343]/50 bg-transparent px-2.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#A34343] hover:bg-[#A34343]/10"
                           aria-label={`Reject ${item.ref}`}
                         >
@@ -580,7 +597,7 @@ export default function AdminDashboardPage() {
                   Recently Approved
                 </p>
                 <ul className="mt-1.5 space-y-1.5">
-                  {approved.map((item) => (
+                  {RECENTLY_APPROVED.map((item) => (
                     <li key={item.ref} className="flex items-start gap-1.5 text-[10px] leading-snug">
                       <BadgeCheck aria-hidden="true" className="mt-0.5 size-3 shrink-0 text-[#668B78]" strokeWidth={2} />
                       <span>
@@ -596,7 +613,7 @@ export default function AdminDashboardPage() {
                   Recently Rejected
                 </p>
                 <ul className="mt-1.5 space-y-1.5">
-                  {rejected.map((item) => (
+                  {RECENTLY_REJECTED.map((item) => (
                     <li key={item.ref} className="flex items-start gap-1.5 text-[10px] leading-snug">
                       <XCircle aria-hidden="true" className="mt-0.5 size-3 shrink-0 text-[#A34343]" strokeWidth={2} />
                       <span>
