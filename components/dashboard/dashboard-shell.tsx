@@ -3,23 +3,17 @@
 import * as React from "react"
 import { usePathname } from "next/navigation"
 import { Sidebar } from "@/components/dashboard/sidebar"
-import { Topbar } from "@/components/dashboard/topbar"
 import type { DashboardRole } from "@/components/dashboard/nav-config"
 import { useSession } from "@/lib/auth-client"
 import { initials } from "@/lib/adapters"
+import { PanelLeft } from "lucide-react"
 
-/** "pro" → "Pro", "free" → "Free", anything unknown → "Free". */
 function planLabel(plan: string | undefined): string {
   if (plan === "pro") return "Pro"
   if (plan === "admin") return "Admin"
   return "Free"
 }
 
-/**
- * Reusable dashboard chassis for all MentorLagbe roles.
- * Navbar (root layout) → shell (topbar + sidebar) → role page.
- * Each role page brings its own accent identity; the chassis stays constant.
- */
 export function DashboardShell({
   role,
   children,
@@ -31,8 +25,6 @@ export function DashboardShell({
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const pathname = usePathname()
 
-  // Real identity, so the shell never contradicts the page. While the session
-  // is still loading the components keep their demo placeholder.
   const { data: session } = useSession()
   const signedInUser = session?.user as
     | { name?: string; plan?: string }
@@ -46,7 +38,6 @@ export function DashboardShell({
       }
     : undefined
 
-  // Close the mobile drawer whenever the route changes (adjust state during render)
   const [prevPathname, setPrevPathname] = React.useState(pathname)
   if (prevPathname !== pathname) {
     setPrevPathname(pathname)
@@ -54,7 +45,8 @@ export function DashboardShell({
   }
 
   return (
-    <div className="flex min-w-0 items-stretch bg-[#F2ECDF]">
+    <div className="flex min-h-screen">
+      {/* Sidebar (desktop fixed rail + mobile drawer) */}
       <Sidebar
         role={role}
         collapsed={collapsed}
@@ -62,21 +54,39 @@ export function DashboardShell({
         onCloseMobile={() => setMobileOpen(false)}
         identity={identity}
       />
+
+      {/* Main content area beside sidebar */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar
-          role={role}
-          collapsed={collapsed}
-          onToggleCollapse={() => setCollapsed((v) => !v)}
-          onOpenMobile={() => setMobileOpen(true)}
-          identity={identity}
-        />
-        <main
-          className="min-w-0 flex-1"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(to bottom, transparent 0px, transparent 31px, rgba(52,76,67,0.06) 31px, rgba(52,76,67,0.06) 32px)",
-          }}
-        >
+        {/* Mobile hamburger button (shown only on small screens) */}
+        <div className="sticky top-[72px] z-30 flex h-14 items-center gap-3 border-b border-[#344C43]/20 bg-[#F2ECDF]/90 px-4 backdrop-blur-md lg:hidden">
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open dashboard navigation"
+            aria-controls="dashboard-sidebar-mobile"
+            className="flex size-10 items-center justify-center rounded-sm border border-[#344C43]/25 bg-[#EFE7DC]/70 text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C]"
+          >
+            <PanelLeft className="size-5" strokeWidth={1.75} />
+          </button>
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#344C43]/60">
+            Dashboard
+          </span>
+        </div>
+
+        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8">
+          <div className="mb-4 hidden lg:block">
+            <button
+              type="button"
+              onClick={() => setCollapsed((v) => !v)}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className="flex size-10 items-center justify-center rounded-sm border border-[#344C43]/25 bg-[#EFE7DC]/70 text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C]"
+            >
+              <PanelLeft
+                className={`size-5 transition-transform duration-300 ${collapsed ? "rotate-180" : ""}`}
+                strokeWidth={1.75}
+              />
+            </button>
+          </div>
           {children}
         </main>
       </div>
