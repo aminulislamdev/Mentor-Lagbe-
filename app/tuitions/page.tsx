@@ -9,7 +9,6 @@ import {
   MapPin,
   CalendarDays,
   Clock,
-  Sparkles,
   ArrowUpRight,
   GraduationCap,
   ChevronLeft,
@@ -23,221 +22,43 @@ import {
   Code2,
   Languages,
   TrendingUp,
-  Stethoscope,
   CheckCircle2,
+  RefreshCw,
 } from "lucide-react"
+import { useApi, useDebouncedValue } from "@/lib/hooks/use-api"
+import { initials, formatFee, weeklyPace, formatDate, toQueryString } from "@/lib/adapters"
+import type { Tuition } from "@/lib/api-types"
 
-interface TuitionDossier {
-  id: string
-  title: string
-  subject: string
-  classLevel: string
-  mode: "Online" | "Offline"
-  location: string
-  monthlyFee: number
-  daysPerWeek: number
-  scheduleTime: string
-  seatsRemaining: number
-  bannerImage: string
-  description: string
-  tutorName: string
-  tutorTitle: string
-  tutorInitials: string
-  rating: number
-  reviewCount: number
-  syllabusTags: string[]
-}
-
-const ALL_TUITIONS: TuitionDossier[] = [
-  {
-    id: "tui-001",
-    title: "HSC Higher Mathematics & Differential Calculus Batch",
-    subject: "Mathematics",
-    classLevel: "HSC (Class 11-12)",
-    mode: "Offline",
-    location: "Dhanmondi, Dhaka",
-    monthlyFee: 4500,
-    daysPerWeek: 3,
-    scheduleTime: "Sat, Mon, Wed 4:00 PM",
-    seatsRemaining: 3,
-    bannerImage:
-      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80",
-    description:
-      "Comprehensive weekly batch focused on differential calculus, vectors, and coordinate geometry with board exam problem solving and weekly assessments.",
-    tutorName: "Tanvir Ahmed, M.Sc",
-    tutorTitle: "BUET Mathematics • 7 yrs teaching",
-    tutorInitials: "TA",
-    rating: 4.9,
-    reviewCount: 38,
-    syllabusTags: ["Calculus", "Vectors", "Board Test Papers", "Formula Bank"],
-  },
-  {
-    id: "tui-002",
-    title: "Quantum Physics, Optics & Derivations Masterclass",
-    subject: "Physics",
-    classLevel: "Class 10 / SSC",
-    mode: "Online",
-    location: "Google Meet & Miro Whiteboard",
-    monthlyFee: 3800,
-    daysPerWeek: 2,
-    scheduleTime: "Fri, Sat 7:00 PM",
-    seatsRemaining: 5,
-    bannerImage:
-      "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?auto=format&fit=crop&w=800&q=80",
-    description:
-      "Interactive digital physics lab with weekly simulation experiments, mathematical derivations, and past 10 years question bank breakdowns.",
-    tutorName: "Dr. Samia Rahman",
-    tutorTitle: "DU Physics • Ph.D Researcher",
-    tutorInitials: "SR",
-    rating: 4.95,
-    reviewCount: 52,
-    syllabusTags: ["Optics", "Thermodynamics", "Derivations", "Virtual Labs"],
-  },
-  {
-    id: "tui-003",
-    title: "Full-Stack Web Engineering & Modern Next.js Mentorship",
-    subject: "Programming",
-    classLevel: "Undergraduate / Career",
-    mode: "Online",
-    location: "Discord & GitHub Code Reviews",
-    monthlyFee: 6000,
-    daysPerWeek: 3,
-    scheduleTime: "Sun, Tue, Thu 9:00 PM",
-    seatsRemaining: 2,
-    bannerImage:
-      "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80",
-    description:
-      "Production-grade web engineering batch covering TypeScript, Next.js App Router, Tailwind CSS, REST APIs, and portfolio capstone building.",
-    tutorName: "Abrar Fahad",
-    tutorTitle: "Lead Full-Stack Engineer",
-    tutorInitials: "AF",
-    rating: 5.0,
-    reviewCount: 64,
-    syllabusTags: ["TypeScript", "Next.js 15", "PostgreSQL", "PR Reviews"],
-  },
-  {
-    id: "tui-004",
-    title: "IELTS Academic Band 8.0 Comprehensive & Speaking Lab",
-    subject: "IELTS",
-    classLevel: "University / Higher Studies",
-    mode: "Online",
-    location: "Live Interactive Classroom",
-    monthlyFee: 5200,
-    daysPerWeek: 3,
-    scheduleTime: "Mon, Wed, Fri 8:00 PM",
-    seatsRemaining: 4,
-    bannerImage:
-      "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80",
-    description:
-      "Targeted preparation covering all 4 modules: Writing Task 1 & 2 rubrics, 1-on-1 speaking evaluations, reading skimming techniques, and listening drills.",
-    tutorName: "Nafis Kamal",
-    tutorTitle: "CELTA Certified • Band 8.5 Scorer",
-    tutorInitials: "NK",
-    rating: 4.88,
-    reviewCount: 45,
-    syllabusTags: ["Writing Rubrics", "Speaking Mock", "Lexical Resource", "Listening Drills"],
-  },
-  {
-    id: "tui-005",
-    title: "Organic Chemistry Mechanisms & Biochemical Pathways",
-    subject: "Chemistry",
-    classLevel: "HSC (Class 11-12)",
-    mode: "Offline",
-    location: "Uttara Sector 7, Dhaka",
-    monthlyFee: 4200,
-    daysPerWeek: 3,
-    scheduleTime: "Sun, Tue, Thu 5:00 PM",
-    seatsRemaining: 6,
-    bannerImage:
-      "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=800&q=80",
-    description:
-      "Simplifying reaction mechanisms, IUPAC nomenclature, and stoichiometry equations with structured problem sets and handwritten formula sheets.",
-    tutorName: "Maliha Hossain, B.Sc",
-    tutorTitle: "DU Applied Chemistry",
-    tutorInitials: "MH",
-    rating: 4.92,
-    reviewCount: 29,
-    syllabusTags: ["Reaction Mechanisms", "Stereochemistry", "IUPAC", "Formulas"],
-  },
-  {
-    id: "tui-006",
-    title: "Molecular Biology, Human Physiology & Genetics Mastery",
-    subject: "Biology",
-    classLevel: "Class 9-10 (SSC)",
-    mode: "Online",
-    location: "Live Interactive Whiteboard",
-    monthlyFee: 3500,
-    daysPerWeek: 2,
-    scheduleTime: "Tue, Thu 6:30 PM",
-    seatsRemaining: 8,
-    bannerImage:
-      "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=800&q=80",
-    description:
-      "Visual diagram-oriented learning covering cellular respiration, human circulatory systems, genetics problem solving, and diagram drawing techniques.",
-    tutorName: "Dr. Rubel Karim",
-    tutorTitle: "DMC MBBS • Biology Mentor",
-    tutorInitials: "RK",
-    rating: 4.85,
-    reviewCount: 31,
-    syllabusTags: ["Human Physiology", "Genetics", "Diagram Labs", "Board Mocks"],
-  },
-  {
-    id: "tui-007",
-    title: "Microeconomics, Macro Policy & Financial Accounting",
-    subject: "Commerce",
-    classLevel: "HSC & O/A Levels",
-    mode: "Offline",
-    location: "Banani Road 11, Dhaka",
-    monthlyFee: 4000,
-    daysPerWeek: 3,
-    scheduleTime: "Sat, Mon, Wed 6:00 PM",
-    seatsRemaining: 5,
-    bannerImage:
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
-    description:
-      "Balancing financial ledgers, journal entries, macro trade policies, and elasticity calculations with real-world case studies and past paper mocks.",
-    tutorName: "Zaid Chowdhury",
-    tutorTitle: "ACCA Affiliated • IBA Finance",
-    tutorInitials: "ZC",
-    rating: 4.9,
-    reviewCount: 24,
-    syllabusTags: ["Balance Sheets", "Cost Accounting", "Macro Policies", "Case Studies"],
-  },
-  {
-    id: "tui-008",
-    title: "Medical Admission Chemistry & Biology Rapid Prep Batch",
-    subject: "Medical Prep",
-    classLevel: "Admission Candidates",
-    mode: "Offline",
-    location: "Farmgate, Dhaka",
-    monthlyFee: 5500,
-    daysPerWeek: 4,
-    scheduleTime: "Sat, Sun, Tue, Thu 3:00 PM",
-    seatsRemaining: 2,
-    bannerImage:
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
-    description:
-      "Intensive 10,000 MCQ bank drilling, negative marking strategy mastery, rapid-fire daily recall quizzes, and full-length OMR sheet mock simulations.",
-    tutorName: "Dr. Farhana Yasmin",
-    tutorTitle: "SSMC MBBS • Medical Mentor",
-    tutorInitials: "FY",
-    rating: 4.97,
-    reviewCount: 78,
-    syllabusTags: ["10K MCQ Bank", "Negative Marking", "OMR Mocks", "Rapid Recall"],
-  },
-]
-
+// Subjects the seeded catalogue actually uses.
 const CATEGORIES = [
   { name: "All Subjects", icon: BookOpen },
   { name: "Mathematics", icon: Calculator },
   { name: "Physics", icon: Atom },
   { name: "Chemistry", icon: FlaskConical },
   { name: "Biology", icon: Dna },
-  { name: "Programming", icon: Code2 },
+  { name: "English", icon: Languages },
   { name: "IELTS", icon: Languages },
-  { name: "Commerce", icon: TrendingUp },
-  { name: "Medical Prep", icon: Stethoscope },
+  { name: "Programming", icon: Code2 },
+  { name: "Accounting", icon: TrendingUp },
 ]
+
+// Exact values stored in the tuitions collection (the API matches exactly).
+const CLASS_LEVELS = ["HSC", "SSC", "Admission", "Undergraduate", "Class 9", "Career"]
+
+const BUDGETS = [
+  { value: "all", label: "Monthly Budget: All" },
+  { value: "under-4000", label: "Under ৳4,000" },
+  { value: "4000-5000", label: "৳4,000 – ৳5,000" },
+  { value: "above-5000", label: "Above ৳5,000" },
+]
+
+const SORTS = [
+  { value: "newest", label: "Newest first" },
+  { value: "fee_asc", label: "Fee: low to high" },
+  { value: "fee_desc", label: "Fee: high to low" },
+]
+
+const PAGE_SIZE = 6
 
 export default function BrowseTuitionsPage() {
   const [searchQuery, setSearchQuery] = React.useState("")
@@ -245,47 +66,43 @@ export default function BrowseTuitionsPage() {
   const [selectedMode, setSelectedMode] = React.useState<"all" | "Online" | "Offline">("all")
   const [selectedLevel, setSelectedLevel] = React.useState("all")
   const [selectedBudget, setSelectedBudget] = React.useState("all")
+  const [sort, setSort] = React.useState("newest")
   const [currentPage, setCurrentPage] = React.useState(1)
 
-  // Filter realistic items
-  const filteredTuitions = React.useMemo(() => {
-    return ALL_TUITIONS.filter((t) => {
-      // Search query
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase()
-        const matchesQuery =
-          t.title.toLowerCase().includes(q) ||
-          t.subject.toLowerCase().includes(q) ||
-          t.tutorName.toLowerCase().includes(q) ||
-          t.location.toLowerCase().includes(q)
-        if (!matchesQuery) return false
-      }
+  // Typing should not fire one request per keystroke.
+  const debouncedSearch = useDebouncedValue(searchQuery)
 
-      // Category
-      if (selectedCategory !== "All Subjects" && t.subject !== selectedCategory) {
-        return false
-      }
+  // Filters live in the query string, so the server does the filtering,
+  // sorting and pagination (Challenge 1) instead of the browser.
+  const query = React.useMemo(() => {
+    const budget =
+      selectedBudget === "under-4000"
+        ? { maxFee: 3999 }
+        : selectedBudget === "4000-5000"
+          ? { minFee: 4000, maxFee: 5000 }
+          : selectedBudget === "above-5000"
+            ? { minFee: 5001 }
+            : {}
 
-      // Mode
-      if (selectedMode !== "all" && t.mode !== selectedMode) {
-        return false
-      }
-
-      // Class level
-      if (selectedLevel !== "all") {
-        if (!t.classLevel.toLowerCase().includes(selectedLevel.toLowerCase())) {
-          return false
-        }
-      }
-
-      // Budget
-      if (selectedBudget === "under-4000" && t.monthlyFee >= 4000) return false
-      if (selectedBudget === "4000-5000" && (t.monthlyFee < 4000 || t.monthlyFee > 5000)) return false
-      if (selectedBudget === "above-5000" && t.monthlyFee <= 5000) return false
-
-      return true
+    return toQueryString({
+      search: debouncedSearch.trim() || undefined,
+      subject: selectedCategory === "All Subjects" ? undefined : selectedCategory,
+      mode: selectedMode === "all" ? undefined : selectedMode,
+      classLevel: selectedLevel === "all" ? undefined : selectedLevel,
+      sort,
+      limit: PAGE_SIZE,
+      page: currentPage,
+      ...budget,
     })
-  }, [searchQuery, selectedCategory, selectedMode, selectedLevel, selectedBudget])
+  }, [debouncedSearch, selectedCategory, selectedMode, selectedLevel, selectedBudget, sort, currentPage])
+
+  const { data, pagination, loading, error, refetch } = useApi<Tuition[]>(
+    `/api/tuitions?${query}`
+  )
+
+  const tuitions = data ?? []
+  const total = pagination?.total ?? 0
+  const totalPages = Math.max(pagination?.totalPages ?? 1, 1)
 
   const handleResetFilters = () => {
     setSearchQuery("")
@@ -293,6 +110,7 @@ export default function BrowseTuitionsPage() {
     setSelectedMode("all")
     setSelectedLevel("all")
     setSelectedBudget("all")
+    setSort("newest")
     setCurrentPage(1)
   }
 
@@ -334,11 +152,11 @@ export default function BrowseTuitionsPage() {
             {/* Quick Archival Badge */}
             <div className="flex items-center gap-3 self-start lg:self-auto p-3 rounded-2xl bg-card border border-border shadow-2xs font-mono text-xs">
               <div className="flex size-9 rounded-xl bg-primary/10 text-primary items-center justify-center font-bold">
-                {filteredTuitions.length}
+                {loading && !data ? "…" : total}
               </div>
               <div>
                 <p className="font-semibold text-foreground">
-                  {filteredTuitions.length} Batches Enrolling
+                  {total} {total === 1 ? "Batch" : "Batches"} Enrolling
                 </p>
                 <p className="text-[11px] text-muted-foreground">
                   Zero Application Surcharge
@@ -399,7 +217,10 @@ export default function BrowseTuitionsPage() {
               {searchQuery && (
                 <button
                   type="button"
-                  onClick={() => setSearchQuery("")}
+                  onClick={() => {
+                    setSearchQuery("")
+                    setCurrentPage(1)
+                  }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
                 >
                   Clear
@@ -441,11 +262,11 @@ export default function BrowseTuitionsPage() {
                   className="px-3 py-2 rounded-xl bg-card border border-border text-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-2xs"
                 >
                   <option value="all">All Class Levels</option>
-                  <option value="Class 9-10">Class 9-10 (SSC)</option>
-                  <option value="HSC">HSC (Class 11-12)</option>
-                  <option value="O/A Levels">O/A Levels</option>
-                  <option value="Undergraduate">Undergraduate</option>
-                  <option value="Admission">Admission Candidates</option>
+                  {CLASS_LEVELS.map((level) => (
+                    <option key={level} value={level}>
+                      {level}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -459,10 +280,29 @@ export default function BrowseTuitionsPage() {
                   }}
                   className="px-3 py-2 rounded-xl bg-card border border-border text-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-2xs"
                 >
-                  <option value="all">Monthly Budget: All</option>
-                  <option value="under-4000">Under ৳4,000</option>
-                  <option value="4000-5000">৳4,000 – ৳5,000</option>
-                  <option value="above-5000">Above ৳5,000</option>
+                  {BUDGETS.map((budget) => (
+                    <option key={budget.value} value={budget.value}>
+                      {budget.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sort */}
+              <div className="relative">
+                <select
+                  value={sort}
+                  onChange={(e) => {
+                    setSort(e.target.value)
+                    setCurrentPage(1)
+                  }}
+                  className="px-3 py-2 rounded-xl bg-card border border-border text-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-2xs"
+                >
+                  {SORTS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -491,17 +331,71 @@ export default function BrowseTuitionsPage() {
           <div className="flex items-center gap-2">
             <SlidersHorizontal className="size-3.5 text-primary" />
             <span>
-              Displaying <strong className="text-foreground">{filteredTuitions.length}</strong> verified batch dossiers
+              {loading && !data ? (
+                "Loading listings…"
+              ) : (
+                <>
+                  Displaying <strong className="text-foreground">{tuitions.length}</strong> of{" "}
+                  <strong className="text-foreground">{total}</strong> verified batch dossiers
+                </>
+              )}
             </span>
           </div>
 
           <span className="hidden sm:inline-block">
-            Sorted by: <strong>Academic Board Approval Date</strong>
+            Sorted by: <strong>{SORTS.find((option) => option.value === sort)?.label}</strong>
           </span>
         </div>
 
-        {/* Empty Search State */}
-        {filteredTuitions.length === 0 ? (
+        {/* The API could not be reached */}
+        {error && (
+          <div className="flex flex-col items-center justify-center py-16 px-4 text-center rounded-3xl bg-card border border-destructive/30 my-6">
+            <div className="size-14 rounded-2xl bg-destructive/10 text-destructive flex items-center justify-center mb-4">
+              <RefreshCw className="size-6" />
+            </div>
+            <h3 className="font-heading text-lg font-bold text-foreground">
+              Could Not Load The Catalogue
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground max-w-md">{error}</p>
+            <button
+              type="button"
+              onClick={refetch}
+              className="mt-5 px-5 py-2.5 rounded-xl bg-primary hover:bg-[#537363] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+
+        {/* Loading skeletons */}
+        {!error && loading && !data && (
+          <div className="space-y-5" aria-hidden="true">
+            {[0, 1, 2].map((key) => (
+              <div
+                key={key}
+                className="rounded-2xl border border-border bg-card p-5 sm:p-6 animate-pulse"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                  <div className="lg:col-span-4 h-48 sm:h-52 rounded-xl bg-muted" />
+                  <div className="lg:col-span-5 space-y-3">
+                    <div className="h-3 w-24 rounded bg-muted" />
+                    <div className="h-5 w-3/4 rounded bg-muted" />
+                    <div className="h-3 w-full rounded bg-muted" />
+                    <div className="h-3 w-2/3 rounded bg-muted" />
+                  </div>
+                  <div className="lg:col-span-3 space-y-3">
+                    <div className="h-3 w-24 rounded bg-muted" />
+                    <div className="h-8 w-32 rounded bg-muted" />
+                    <div className="h-9 w-full rounded-xl bg-muted" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!error && !loading && tuitions.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 px-4 text-center rounded-3xl bg-card border border-border my-6">
             <div className="size-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
               <Compass className="size-8" />
@@ -523,11 +417,11 @@ export default function BrowseTuitionsPage() {
         ) : (
           /* The Editorial Dossier Card Stack */
           <div className="space-y-5">
-            {filteredTuitions.map((t) => {
+            {tuitions.map((t) => {
               const isOnline = t.mode === "Online"
               return (
                 <article
-                  key={t.id}
+                  key={t._id}
                   className="group relative rounded-2xl border border-border bg-card p-5 sm:p-6 shadow-2xs hover:shadow-md hover:border-primary/50 transition-all duration-200"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
@@ -566,19 +460,18 @@ export default function BrowseTuitionsPage() {
 
                       {/* Bottom Banner Stats */}
                       <div className="absolute bottom-2.5 inset-x-3 flex items-center justify-between text-white text-xs font-mono">
-                        <div className="flex items-center gap-1">
-                          <Sparkles className="size-3 text-amber-300 fill-amber-300" />
-                          <span>{t.rating.toFixed(2)}</span>
-                          <span className="text-white/70">({t.reviewCount})</span>
-                        </div>
+                        <span className="flex items-center gap-1.5">
+                          <CheckCircle2 className="size-3 text-emerald-300" />
+                          <span>Board approved</span>
+                        </span>
 
                         <span className="text-[11px] px-2 py-0.5 rounded-md bg-black/60 border border-white/20">
-                          {t.seatsRemaining} seats left
+                          {formatDate(t.createdAt)}
                         </span>
                       </div>
                     </div>
 
-                    {/* Middle Column: Editorial Content & Syllabus (5 cols) */}
+                    {/* Middle Column: Editorial Content (5 cols) */}
                     <div className="lg:col-span-5 space-y-3">
                       <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase tracking-wider">
                         <GraduationCap className="size-3.5 text-primary" />
@@ -593,22 +486,10 @@ export default function BrowseTuitionsPage() {
                         {t.description}
                       </p>
 
-                      {/* Syllabus Topic Chips */}
-                      <div className="pt-1 flex flex-wrap gap-1.5">
-                        {t.syllabusTags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-background/80 border border-border text-foreground/80"
-                          >
-                            #{tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      {/* Tutor Credential Lockup */}
+                      {/* Tutor Lockup */}
                       <div className="pt-2 flex items-center gap-2.5 text-xs">
                         <div className="size-8 rounded-full bg-primary/20 text-primary font-mono font-bold flex items-center justify-center border border-primary/30 shrink-0">
-                          {t.tutorInitials}
+                          {initials(t.tutorName)}
                         </div>
                         <div className="min-w-0">
                           <p className="font-semibold text-foreground truncate flex items-center gap-1.5">
@@ -616,7 +497,7 @@ export default function BrowseTuitionsPage() {
                             <CheckCircle2 className="size-3 text-primary inline" />
                           </p>
                           <p className="text-[11px] text-muted-foreground truncate font-mono">
-                            {t.tutorTitle}
+                            {weeklyPace(t.daysPerWeek)} · {t.location}
                           </p>
                         </div>
                       </div>
@@ -627,11 +508,11 @@ export default function BrowseTuitionsPage() {
                       <div className="space-y-2 text-xs text-muted-foreground font-mono">
                         <div className="flex items-center gap-1.5">
                           <CalendarDays className="size-3.5 text-primary shrink-0" />
-                          <span>{t.daysPerWeek} Days / Week</span>
+                          <span>{weeklyPace(t.daysPerWeek)}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <Clock className="size-3.5 text-primary shrink-0" />
-                          <span className="truncate">{t.scheduleTime}</span>
+                          <span className="truncate">Listed {formatDate(t.createdAt)}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                           <MapPin className="size-3.5 text-primary shrink-0" />
@@ -645,7 +526,7 @@ export default function BrowseTuitionsPage() {
                             Monthly Tuition Fee
                           </span>
                           <span className="font-mono text-2xl font-bold text-foreground">
-                            ৳ {t.monthlyFee.toLocaleString()}{" "}
+                            {formatFee(t.monthlyFee)}{" "}
                             <span className="text-xs font-normal text-muted-foreground">
                               / mo
                             </span>
@@ -653,7 +534,7 @@ export default function BrowseTuitionsPage() {
                         </div>
 
                         <Link
-                          href={`/tuitions/${t.id}`}
+                          href={`/tuitions/${t._id}`}
                           className="mt-3 w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-primary hover:bg-[#537363] text-white text-xs font-semibold shadow-xs transition-colors"
                         >
                           <span>Inspect Dossier & Apply</span>
@@ -669,25 +550,26 @@ export default function BrowseTuitionsPage() {
         )}
 
         {/* ─────────────────────────────────────────────────────────────
-            5. DISTINCTIVE ARCHIVAL PAGINATION RIBBON (UI Only)
+            5. ARCHIVAL PAGINATION RIBBON
         ────────────────────────────────────────────────────────────── */}
         <div className="mt-12 pt-6 border-t border-border/80 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-xs font-mono text-muted-foreground">
-            Archive Page <strong className="text-foreground">0{currentPage}</strong> of <strong>03</strong> • Showing 8 of 24 listings
+            Archive Page <strong className="text-foreground">0{currentPage}</strong> of{" "}
+            <strong>0{totalPages}</strong> • Showing {tuitions.length} of {total} listings
           </div>
 
           <div className="flex items-center gap-1.5 font-mono text-xs">
             <button
               type="button"
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
               className="flex items-center gap-1 px-3 py-2 rounded-xl border border-border bg-card hover:bg-card/90 text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
             >
               <ChevronLeft className="size-3.5" />
               <span>Previous</span>
             </button>
 
-            {[1, 2, 3].map((page) => (
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
               <button
                 key={page}
                 type="button"
@@ -698,14 +580,14 @@ export default function BrowseTuitionsPage() {
                     : "bg-card border border-border hover:border-primary/50 text-foreground shadow-2xs"
                 }`}
               >
-                0{page}
+                {String(page).padStart(2, "0")}
               </button>
             ))}
 
             <button
               type="button"
-              disabled={currentPage === 3}
-              onClick={() => setCurrentPage((p) => Math.min(3, p + 1))}
+              disabled={currentPage >= totalPages}
+              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
               className="flex items-center gap-1 px-3 py-2 rounded-xl border border-border bg-card hover:bg-card/90 text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
             >
               <span>Next</span>
