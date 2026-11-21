@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
+import { Suspense } from "react"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
+import { Toaster } from "sonner"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +34,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-200">
-        <Navbar />
+        <Suspense fallback={<div className="h-18 border-b border-border/80 bg-background/85" />}>
+          <Navbar />
+        </Suspense>
         <main className="flex-1">{children}</main>
         <Footer />
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   )
