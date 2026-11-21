@@ -92,6 +92,7 @@ export const ROLE_CONFIG: Record<DashboardRole, RoleConfig> = {
       { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
       { label: "Manage Users", href: "/dashboard/admin/users", icon: UsersRound },
       { label: "Manage Tuitions", href: "/dashboard/admin/tuitions", icon: ShieldCheck },
+      { label: "My Profile", href: "/dashboard/profile", icon: User },
       { label: "Transactions", href: "/dashboard/admin/transactions", icon: Landmark, soon: true },
       { label: "Back to Website", href: "/", icon: Home },
     ],
