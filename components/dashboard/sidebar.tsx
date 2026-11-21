@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Compass, Home, LogOut, Sparkles, X } from "lucide-react"
-import { ROLE_CONFIG, type DashboardRole } from "@/components/dashboard/nav-config"
+import { ROLE_CONFIG, type DashboardIdentity, type DashboardRole } from "@/components/dashboard/nav-config"
 import { cn } from "@/lib/utils"
 
 interface SidebarProps {
@@ -12,6 +12,7 @@ interface SidebarProps {
   collapsed: boolean
   mobileOpen: boolean
   onCloseMobile: () => void
+  identity?: DashboardIdentity
 }
 
 // ─── Shared nav renderer ─────────────────────────────────────────────────────
@@ -147,17 +148,28 @@ function BrandBlock({ collapsed, role }: { collapsed: boolean; role: DashboardRo
 
 // ─── Identity card ───────────────────────────────────────────────────────────
 
-function IdentityCard({ role, collapsed }: { role: DashboardRole; collapsed: boolean }) {
+function IdentityCard({
+  role,
+  collapsed,
+  identity,
+}: {
+  role: DashboardRole
+  collapsed: boolean
+  identity?: DashboardIdentity
+}) {
   const cfg = ROLE_CONFIG[role]
+  const userName = identity?.userName ?? cfg.userName
+  const initials = identity?.initials ?? cfg.initials
+  const plan = identity?.plan ?? cfg.plan
 
   if (collapsed) {
     return (
-      <div className="border-b border-[#EFE7DC]/10 px-2 py-4" title={cfg.userName}>
+      <div className="border-b border-[#EFE7DC]/10 px-2 py-4" title={userName}>
         <span
           aria-hidden="true"
           className="mx-auto flex size-10 items-center justify-center rounded-full border-2 border-[#B87959]/70 bg-[#243630] font-mono text-[10px] font-bold text-[#EFE7DC]"
         >
-          {cfg.initials}
+          {initials}
         </span>
       </div>
     )
@@ -170,18 +182,18 @@ function IdentityCard({ role, collapsed }: { role: DashboardRole; collapsed: boo
           aria-hidden="true"
           className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-[#B87959]/70 bg-[#16241F] font-mono text-[11px] font-bold text-[#EFE7DC]"
         >
-          {cfg.initials}
+          {initials}
         </span>
         <span className="min-w-0">
           <span className="block truncate text-[13px] font-semibold tracking-tight text-[#EFE7DC]">
-            {cfg.userName}
+            {userName}
           </span>
           <span className="mt-1 flex flex-wrap items-center gap-1.5">
             <span className="inline-flex items-center rounded-sm border border-[#7AA890]/40 bg-[#668B78]/20 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#9DBFA9]">
               {cfg.roleBadge}
             </span>
             <span className="inline-flex items-center rounded-sm border border-[#B87959]/45 bg-[#B87959]/15 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#C98B6D]">
-              {cfg.plan}
+              {plan}
             </span>
           </span>
         </span>
@@ -196,10 +208,12 @@ function SidebarBody({
   role,
   collapsed,
   onNavigate,
+  identity,
 }: {
   role: DashboardRole
   collapsed: boolean
   onNavigate?: () => void
+  identity?: DashboardIdentity
 }) {
   return (
     <div
@@ -219,7 +233,7 @@ function SidebarBody({
       </span>
 
       <BrandBlock collapsed={collapsed} role={role} />
-      <IdentityCard role={role} collapsed={collapsed} />
+      <IdentityCard role={role} collapsed={collapsed} identity={identity} />
 
       {/* Navigation */}
       <nav aria-label="Dashboard" className={cn("flex-1 overflow-y-auto px-3 py-4", collapsed && "px-2")}>
@@ -295,7 +309,7 @@ function SidebarBody({
 
 // ─── Sidebar: desktop rail + mobile drawer ───────────────────────────────────
 
-export function Sidebar({ role, collapsed, mobileOpen, onCloseMobile }: SidebarProps) {
+export function Sidebar({ role, collapsed, mobileOpen, onCloseMobile, identity }: SidebarProps) {
   // Close the mobile drawer on Escape
   React.useEffect(() => {
     if (!mobileOpen) return
@@ -327,7 +341,7 @@ export function Sidebar({ role, collapsed, mobileOpen, onCloseMobile }: SidebarP
           collapsed ? "w-[4.75rem]" : "w-72"
         )}
       >
-        <SidebarBody role={role} collapsed={collapsed} />
+        <SidebarBody role={role} collapsed={collapsed} identity={identity} />
       </aside>
 
       {/* Mobile drawer */}
@@ -357,7 +371,7 @@ export function Sidebar({ role, collapsed, mobileOpen, onCloseMobile }: SidebarP
             >
               <X className="size-5" strokeWidth={2} />
             </button>
-            <SidebarBody role={role} collapsed={false} onNavigate={onCloseMobile} />
+            <SidebarBody role={role} collapsed={false} onNavigate={onCloseMobile} identity={identity} />
           </div>
         </div>
       )}
