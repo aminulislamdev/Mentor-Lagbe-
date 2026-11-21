@@ -16,6 +16,17 @@ import {
 
 export type DashboardRole = "student" | "tutor" | "admin"
 
+/**
+ * Real signed-in user, supplied by DashboardShell. When absent (e.g. while the
+ * session is still loading) the components fall back to the demo identity in
+ * ROLE_CONFIG.
+ */
+export interface DashboardIdentity {
+  userName: string
+  initials: string
+  plan: string
+}
+
 export interface NavItem {
   label: string
   href: string
