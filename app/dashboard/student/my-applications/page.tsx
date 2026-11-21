@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react"
 import Link from "next/link"
+import { toast } from "sonner"
 import {
   Search,
   ChevronDown,
@@ -14,135 +15,23 @@ import {
   Feather,
   Phone,
   CalendarDays,
-  MapPin,
   Wallet,
   Inbox,
   ChevronRight,
+  RefreshCw,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Colophon } from "@/components/dashboard/shared"
+import { apiFetch, ApiError } from "@/lib/api"
+import { useApi } from "@/lib/hooks/use-api"
+import { formatDate, formatFee } from "@/lib/adapters"
+import type { Application, ApplicationStatus } from "@/lib/api-types"
 
-// ─── Static post-room data ───────────────────────────────────────────────────
+// ─── Display helpers ─────────────────────────────────────────────────────────
 
-type AppStatus = "pending" | "accepted" | "declined"
-
-interface Application {
-  ref: string
-  title: string
-  subject: string
-  tutor: string
-  tutorMeta: string
-  phone: string
-  schedule: string
-  place: string
-  fee: number
-  applied: string
-  appliedSort: number // yyyymmdd
-  status: AppStatus
-  yourNote: string
-  theirReply: string
-}
-
-const APPLICATIONS: Application[] = [
-  {
-    ref: "#AP-1039",
-    title: "ICT Practical Sprint — Number Systems",
-    subject: "ICT",
-    tutor: "Ms. Rumana Karim",
-    tutorMeta: "Dhaka College · 6 yrs teaching",
-    phone: "+880 1712-405 220",
-    schedule: "Thu · 6:30 PM · Lab-based",
-    place: "Dhanmondi, Dhaka",
-    fee: 3200,
-    applied: "14 Nov '26",
-    appliedSort: 20261114,
-    status: "pending",
-    yourNote: "Number systems keep melting in the exam hall — I need the timed-drill treatment before the practical.",
-    theirReply: "Awaiting Ms. Rumana's envelope back. Median reply: 4.2 days.",
-  },
-  {
-    ref: "#AP-1038",
-    title: "Higher Maths — Admission Marathon",
-    subject: "Higher Maths",
-    tutor: "Mr. Tanvir Alam",
-    tutorMeta: "BUET '28 · Admission wing · 10 yrs",
-    phone: "+880 1819-330 781",
-    schedule: "Tue & Thu · 5:00 PM · BUET Road",
-    place: "BUET Road, Shahbagh",
-    fee: 5200,
-    applied: "11 Nov '26",
-    appliedSort: 20261111,
-    status: "pending",
-    yourNote: "Targeting BUET Civil '31. Problem sets 07–12 in your marathon look tailor-made for me.",
-    theirReply: "Awaiting Mr. Tanvir's envelope back. Median reply: 4.2 days.",
-  },
-  {
-    ref: "#AP-1031",
-    title: "HSC Physics — The Integration Finals",
-    subject: "Physics",
-    tutor: "Dr. Nasrin Islam",
-    tutorMeta: "BUET '12 · 7 yrs · Honours thesis",
-    phone: "+880 1911-208 455",
-    schedule: "Fri & Sat · 6:00 PM",
-    place: "Dhanmondi, Dhaka",
-    fee: 4500,
-    applied: "04 Nov '26",
-    appliedSort: 20261104,
-    status: "accepted",
-    yourNote: "Integration by parts keeps beating me. I read your chapter twice — seat me in the front bench.",
-    theirReply: "“Front bench it is. Bring your Chapter 4 margin notes — I hear they're the talk of the reading room.”",
-  },
-  {
-    ref: "#AP-1027",
-    title: "Functional Groups, Finally",
-    subject: "Chemistry",
-    tutor: "Ms. Sadia Hossain",
-    tutorMeta: "Dhaka Medical '29 · 4 yrs",
-    phone: "+880 1713-902 614",
-    schedule: "Sun · 4:00 PM · Online cohort",
-    place: "Online · Zoom",
-    fee: 3800,
-    applied: "28 Oct '26",
-    appliedSort: 20261028,
-    status: "declined",
-    yourNote: "Organic chemistry is my blind side — I will not walk into the HSC unarmed again.",
-    theirReply: "“Dearest Scholar — the cohort filled with SSC candidates. Reapply for the January intake; you were lovely on paper.”",
-  },
-  {
-    ref: "#AP-1019",
-    title: "Comprehension for Boards — the Unseen Passage",
-    subject: "English",
-    tutor: "Mr. Arif Hossain",
-    tutorMeta: "Jahangirnagar U. · 8 yrs",
-    phone: "+880 1822-617 930",
-    schedule: "Sat · 9:00 AM · Online cohort",
-    place: "Online · Zoom",
-    fee: 2800,
-    applied: "21 Oct '26",
-    appliedSort: 20261021,
-    status: "declined",
-    yourNote: "The unseen passage is where my marks go to die — teach me the examiner's habit of mind.",
-    theirReply: "“Seat went to a repeater scholar with a 9.5 GPA. Send my regards to the Physics batch — you are doing well.”",
-  },
-  {
-    ref: "#AP-1015",
-    title: "Admission Physics — The Final Lap",
-    subject: "Physics",
-    tutor: "Dr. Nasrin Islam",
-    tutorMeta: "BUET '12 · 7 yrs · Honours thesis",
-    phone: "+880 1911-208 455",
-    schedule: "Mon & Wed · 7:00 PM",
-    place: "Dhanmondi, Dhaka",
-    fee: 6800,
-    applied: "02 Oct '26",
-    appliedSort: 20261002,
-    status: "accepted",
-    yourNote: "Admission test physics or nothing. Six weeks, one syllabus, zero excuses.",
-    theirReply: "“Six weeks. Two mock papers. One very determined scholar. Clock in, Tasnim.”",
-  },
-]
+type AppStatus = ApplicationStatus
 
 const STATUS_META: Record<
   AppStatus,
@@ -150,14 +39,14 @@ const STATUS_META: Record<
 > = {
   pending: { label: "Pending", sub: "Sealed", Icon: Hourglass },
   accepted: { label: "Accepted", sub: "Seal broken", Icon: CheckCircle2 },
-  declined: { label: "Declined", sub: "Returned", Icon: XCircle },
+  rejected: { label: "Declined", sub: "Returned", Icon: XCircle },
 }
 
 const FILTERS: Array<{ key: "all" | AppStatus; label: string }> = [
   { key: "all", label: "All Mail" },
   { key: "pending", label: "Pending" },
   { key: "accepted", label: "Accepted" },
-  { key: "declined", label: "Declined" },
+  { key: "rejected", label: "Declined" },
 ]
 
 type SortKey = "newest" | "oldest" | "feeAsc" | "feeDesc"
@@ -169,7 +58,21 @@ const SORTS: Array<{ key: SortKey; label: string }> = [
   { key: "feeDesc", label: "Fee · high to low" },
 ]
 
-const fmtFee = (n: number) => `৳${n.toLocaleString("en-IN")}`
+/** A short, stable reference derived from the real application id. */
+function applicationRef(application: Application): string {
+  return `#AP-${application._id.slice(-4).toUpperCase()}`
+}
+
+/** The application has no tutor reply text, so describe the real status instead. */
+function applicationReply(application: Application): string {
+  if (application.status === "accepted") {
+    return "The tutor accepted this application. Your seat is confirmed."
+  }
+  if (application.status === "rejected") {
+    return "The tutor declined this application. You can apply to another tuition."
+  }
+  return "Awaiting the tutor's reply."
+}
 
 // ─── Scoped post-room styles ─────────────────────────────────────────────────
 
@@ -250,45 +153,41 @@ function Envelope({
   app,
   expanded,
   onToggle,
-  withdrawn,
   onWithdraw,
-  onRestore,
+  withdrawing,
 }: {
   app: Application
   expanded: boolean
   onToggle: () => void
-  withdrawn: boolean
   onWithdraw: () => void
-  onRestore: () => void
+  withdrawing: boolean
 }) {
   const [confirming, setConfirming] = useState(false)
   const meta = STATUS_META[app.status]
+  const ref = applicationRef(app)
+  const applied = formatDate(app.appliedAt)
+  const panelId = `panel-${app._id}`
 
   return (
     <article
-      className={cn(
-        "group relative border border-[#344C43]/30 bg-[#EFE7DC] shadow-[4px_5px_0_rgba(52,76,67,0.14)] transition-all duration-300",
-        withdrawn
-          ? "opacity-60"
-          : "hover:-translate-y-0.5 hover:border-[#344C43]/55 hover:shadow-[6px_8px_0_rgba(52,76,67,0.18)]"
-      )}
-      aria-label={`Application ${app.ref} — ${app.title}, ${meta.label}${withdrawn ? ", withdrawn" : ""}`}
+      className="group relative border border-[#344C43]/30 bg-[#EFE7DC] shadow-[4px_5px_0_rgba(52,76,67,0.14)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#344C43]/55 hover:shadow-[6px_8px_0_rgba(52,76,67,0.18)]"
+      aria-label={`Application ${ref} — ${app.tuitionTitle}, ${meta.label}`}
     >
-      <Postmark date={app.applied} />
+      <Postmark date={applied} />
 
       {/* Envelope body: ref strip | address | stamp */}
       <div className="grid grid-cols-[3.25rem_1fr_auto] items-stretch sm:grid-cols-[4.5rem_1fr_auto]">
         {/* Ref strip */}
         <div className="flex flex-col items-center justify-center gap-1 border-r border-dashed border-[#344C43]/30 px-1 py-4">
           <span className="font-mono text-[10px] font-bold tracking-[0.14em] text-[#344C43]/70 sm:text-[10px]">
-            {app.ref.replace("#", "")}
+            {ref.replace("#", "")}
           </span>
           <span
             aria-hidden="true"
             className="size-1.5 rounded-full bg-[#B87959]"
           />
           <span className="font-mono text-[10px] uppercase leading-tight tracking-[0.14em] text-[#344C43]/45 sm:text-[10px]">
-            {app.applied}
+            {applied}
           </span>
         </div>
 
@@ -298,37 +197,25 @@ function Envelope({
             To the Desk of — {app.subject}
           </p>
           <h3 className="postroom-serif mt-1 truncate text-base font-black leading-tight tracking-tight text-[#344C43] sm:text-lg">
-            {app.title}
+            {app.tuitionTitle}
           </h3>
           <p className="mt-1 truncate font-mono text-[9px] uppercase tracking-[0.18em] text-[#B87959] sm:text-[10px]">
-            {app.tutor} · <span className="text-[#344C43]/55">{app.tutorMeta}</span>
+            {app.tutorEmail}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[9px] uppercase tracking-[0.14em] text-[#344C43]/60 sm:text-[10px]">
-            <span className="inline-flex items-center gap-1.5"><MapPin aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />{app.place}</span>
-            <span className="inline-flex items-center gap-1.5"><CalendarDays aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />{app.schedule}</span>
-            <span className="inline-flex items-center gap-1.5"><Wallet aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} /><span className="font-bold text-[#344C43]">{fmtFee(app.fee)}<span className="font-normal opacity-70"> / mo</span></span></span>
+            <span className="inline-flex items-center gap-1.5"><CalendarDays aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />{app.preferredSchedule}</span>
+            <span className="inline-flex items-center gap-1.5"><Wallet aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} /><span className="font-bold text-[#344C43]">{formatFee(app.monthlyFee)}<span className="font-normal opacity-70"> / mo</span></span></span>
           </div>
         </div>
 
         {/* Stamp + toggle */}
         <div className="flex flex-col items-center justify-center gap-2 border-l border-dashed border-[#344C43]/30 px-2 py-3 sm:px-5">
-          {withdrawn ? (
-            <div
-              className="postroom-stamp flex w-24 rotate-[-12deg] flex-col items-center border-2 border-dashed border-[#344C43]/45 bg-[#344C43]/5 px-2 py-2.5 text-[#344C43]/55 sm:w-28"
-              role="img"
-              aria-label="Status: withdrawn"
-            >
-              <span className="font-mono text-[10px] font-bold uppercase leading-none tracking-[0.24em]">Withdrawn</span>
-              <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] opacity-75">Torn up</span>
-            </div>
-          ) : (
-            <PostageStamp status={app.status} />
-          )}
+          <PostageStamp status={app.status} />
           <button
             type="button"
             onClick={onToggle}
             aria-expanded={expanded}
-            aria-controls={`panel-${app.ref.replace("#", "")}`}
+            aria-controls={panelId}
             className="inline-flex items-center gap-1 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#344C43]/60 underline decoration-[#B87959]/50 decoration-2 underline-offset-4 transition-colors hover:text-[#B87959] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:text-[10px]"
           >
             {expanded ? "Close" : "Details"}
@@ -340,7 +227,7 @@ function Envelope({
       {/* Detail panel */}
       {expanded && (
         <div
-          id={`panel-${app.ref.replace("#", "")}`}
+          id={panelId}
           className="grid gap-4 border-t border-dashed border-[#344C43]/30 bg-[#F2ECDF]/70 px-4 py-4 sm:grid-cols-3 sm:gap-6 sm:px-6"
         >
           {/* Your note */}
@@ -350,7 +237,7 @@ function Envelope({
               Your Envelope
             </p>
             <p className="postroom-serif mt-1.5 text-[12px] italic leading-snug text-[#344C43]/90">
-              “{app.yourNote}”
+              “{app.studentNote?.trim() || "No note was attached to this letter."}”
             </p>
           </div>
 
@@ -361,11 +248,11 @@ function Envelope({
               The Reply
             </p>
             <p className="postroom-serif mt-1.5 text-[12px] italic leading-snug text-[#344C43]/90">
-              {app.theirReply}
+              {applicationReply(app)}
             </p>
             <p className="mt-1.5 inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/50">
               <Phone aria-hidden="true" className="size-3 text-[#668B78]" strokeWidth={2} />
-              {app.phone}
+              {app.studentPhone}
             </p>
           </div>
 
@@ -375,23 +262,14 @@ function Envelope({
               Actions
             </p>
             <Link
-              href="/tuitions"
+              href={`/tuitions/${app.tuitionId}`}
               className="inline-flex items-center gap-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#344C43] underline decoration-[#668B78] decoration-2 underline-offset-4 transition-colors hover:text-[#4A695C]"
             >
               View tuition
               <ArrowRight aria-hidden="true" className="size-3" strokeWidth={2.5} />
             </Link>
 
-            {withdrawn ? (
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={onRestore}
-                className="h-auto px-2 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#668B78] hover:bg-[#668B78]/10 hover:text-[#4A695C]"
-              >
-                Restore letter
-              </Button>
-            ) : app.status === "pending" ? (
+            {app.status === "pending" ? (
               confirming ? (
                 <div className="w-full border border-[#A34343]/40 bg-[#A34343]/5 p-2">
                   <p className="font-mono text-[9px] font-bold uppercase leading-snug tracking-[0.18em] text-[#A34343]">
@@ -401,18 +279,20 @@ function Envelope({
                     <Button
                       type="button"
                       size="sm"
+                      disabled={withdrawing}
                       onClick={() => {
                         onWithdraw()
                         setConfirming(false)
                       }}
                       className="h-7 rounded-sm border border-[#A34343]/50 bg-[#A34343] px-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#EFE7DC] hover:bg-[#8f3838]"
                     >
-                      Yes, tear it
+                      {withdrawing ? "Tearing…" : "Yes, tear it"}
                     </Button>
                     <Button
                       type="button"
                       size="sm"
                       variant="ghost"
+                      disabled={withdrawing}
                       onClick={() => setConfirming(false)}
                       className="h-7 rounded-sm px-2 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#344C43]/70 hover:text-[#344C43]"
                     >
@@ -424,6 +304,7 @@ function Envelope({
                 <Button
                   type="button"
                   variant="ghost"
+                  disabled={withdrawing}
                   onClick={() => setConfirming(true)}
                   className="h-auto px-2 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#A34343] hover:bg-[#A34343]/10"
                 >
@@ -442,9 +323,60 @@ function Envelope({
   )
 }
 
+// ─── Loading letters ─────────────────────────────────────────────────────────
+
+function LoadingLetters() {
+  return (
+    <div className="mt-3 space-y-3" aria-hidden="true">
+      {[0, 1, 2].map((key) => (
+        <div
+          key={key}
+          className="h-28 animate-pulse border border-[#344C43]/15 bg-[#EFE7DC]/60"
+        />
+      ))}
+    </div>
+  )
+}
+
+// ─── Error notice ────────────────────────────────────────────────────────────
+
+function LoadError({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <div
+      role="alert"
+      className="mt-3 flex flex-col items-start gap-3 border border-[#A34343]/40 bg-[#A34343]/5 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div>
+        <p className="postroom-serif text-lg font-black tracking-tight text-[#A34343]">
+          The ledger could not be opened.
+        </p>
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#344C43]/60">
+          {message}
+        </p>
+      </div>
+      <Button
+        type="button"
+        onClick={onRetry}
+        className="h-10 shrink-0 rounded-sm border border-[#A34343] bg-[#A34343] px-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#EFE7DC] hover:bg-[#8f3838]"
+      >
+        <RefreshCw aria-hidden="true" className="mr-1.5 size-3.5" strokeWidth={2} />
+        Retry
+      </Button>
+    </div>
+  )
+}
+
 // ─── Empty pigeonhole ────────────────────────────────────────────────────────
 
-function EmptyPigeonhole({ query, onClear }: { query: string; onClear: () => void }) {
+function EmptyPigeonhole({
+  query,
+  hasApplications,
+  onClear,
+}: {
+  query: string
+  hasApplications: boolean
+  onClear: () => void
+}) {
   return (
     <div className="flex flex-col items-center border border-dashed border-[#344C43]/35 bg-[#EFE7DC]/50 px-6 py-14 text-center">
       {/* Pigeonhole illustration */}
@@ -459,21 +391,30 @@ function EmptyPigeonhole({ query, onClear }: { query: string; onClear: () => voi
         The pigeonhole is <span className="italic text-[#B87959]">empty.</span>
       </h3>
       <p className="mt-2 max-w-sm font-mono text-[9px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/60">
-        {query
-          ? `Nothing filed under “${query}” — try another pigeonhole.`
-          : "Nothing filed under this filter — try another pigeonhole."}
+        {!hasApplications
+          ? "You have not sent a letter yet — browse the catalogue and apply to your first tuition."
+          : query
+            ? `Nothing filed under “${query}” — try another pigeonhole.`
+            : "Nothing filed under this filter — try another pigeonhole."}
       </p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button
-          type="button"
-          onClick={onClear}
-          className="h-11 rounded-sm border border-[#344C43]/40 bg-[#344C43] px-5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#EFE7DC] shadow-[4px_4px_0_#B87959] transition-all hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#B87959]"
-        >
-          Clear the filters
-        </Button>
+        {hasApplications && (
+          <Button
+            type="button"
+            onClick={onClear}
+            className="h-11 rounded-sm border border-[#344C43]/40 bg-[#344C43] px-5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#EFE7DC] shadow-[4px_4px_0_#B87959] transition-all hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#B87959]"
+          >
+            Clear the filters
+          </Button>
+        )}
         <Link
           href="/tuitions"
-          className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/30 bg-transparent px-5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#344C43] transition-all hover:border-[#B87959] hover:text-[#B87959]"
+          className={cn(
+            "inline-flex h-11 items-center gap-2 rounded-sm border px-5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] transition-all",
+            hasApplications
+              ? "border-[#344C43]/30 bg-transparent text-[#344C43] hover:border-[#B87959] hover:text-[#B87959]"
+              : "border-[#344C43]/40 bg-[#344C43] text-[#EFE7DC] shadow-[4px_4px_0_#B87959] hover:-translate-y-0.5 hover:shadow-[6px_6px_0_#B87959]"
+          )}
         >
           Browse the catalogue
           <ArrowRight aria-hidden="true" className="size-4" strokeWidth={2} />
@@ -486,55 +427,82 @@ function EmptyPigeonhole({ query, onClear }: { query: string; onClear: () => voi
 // ─── Main page ───────────────────────────────────────────────────────────────
 
 export default function MyApplicationsPage() {
+  const applications = useApi<Application[]>("/api/applications/student")
+
   const [query, setQuery] = useState("")
   const [filter, setFilter] = useState<"all" | AppStatus>("all")
   const [sort, setSort] = useState<SortKey>("newest")
-  const [expandedRef, setExpandedRef] = useState<string | null>(null)
-  const [withdrawnRefs, setWithdrawnRefs] = useState<Set<string>>(new Set())
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [withdrawingId, setWithdrawingId] = useState<string | null>(null)
+
+  const apps = useMemo(() => applications.data ?? [], [applications.data])
+  const loading = applications.loading && !applications.data
+  const error = applications.error
 
   const counts = useMemo(
     () => ({
-      all: APPLICATIONS.length,
-      pending: APPLICATIONS.filter((a) => a.status === "pending").length,
-      accepted: APPLICATIONS.filter((a) => a.status === "accepted").length,
-      declined: APPLICATIONS.filter((a) => a.status === "declined").length,
+      all: apps.length,
+      pending: apps.filter((application) => application.status === "pending").length,
+      accepted: apps.filter((application) => application.status === "accepted").length,
+      rejected: apps.filter((application) => application.status === "rejected").length,
     }),
-    []
+    [apps]
   )
 
   const visible = useMemo(() => {
-    let list = APPLICATIONS.filter((a) => {
-      if (filter !== "all" && a.status !== filter) return false
+    let list = apps.filter((application) => {
+      if (filter !== "all" && application.status !== filter) return false
       if (!query.trim()) return true
-      const q = query.trim().toLowerCase()
-      return [a.title, a.subject, a.tutor, a.ref, a.place]
+
+      const term = query.trim().toLowerCase()
+      return [
+        application.tuitionTitle,
+        application.subject,
+        application.tutorEmail,
+        application.preferredSchedule,
+        applicationRef(application),
+      ]
         .join(" ")
         .toLowerCase()
-        .includes(q)
+        .includes(term)
     })
+
     switch (sort) {
       case "oldest":
-        list = [...list].sort((a, b) => a.appliedSort - b.appliedSort)
+        list = [...list].sort(
+          (a, b) => new Date(a.appliedAt).getTime() - new Date(b.appliedAt).getTime()
+        )
         break
       case "feeAsc":
-        list = [...list].sort((a, b) => a.fee - b.fee)
+        list = [...list].sort((a, b) => a.monthlyFee - b.monthlyFee)
         break
       case "feeDesc":
-        list = [...list].sort((a, b) => b.fee - a.fee)
+        list = [...list].sort((a, b) => b.monthlyFee - a.monthlyFee)
         break
       default:
-        list = [...list].sort((a, b) => b.appliedSort - a.appliedSort)
+        list = [...list].sort(
+          (a, b) => new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime()
+        )
     }
-    return list
-  }, [query, filter, sort])
 
-  const toggleWithdraw = (ref: string) =>
-    setWithdrawnRefs((prev) => {
-      const next = new Set(prev)
-      if (next.has(ref)) next.delete(ref)
-      else next.add(ref)
-      return next
-    })
+    return list
+  }, [apps, query, filter, sort])
+
+  const withdraw = async (application: Application) => {
+    setWithdrawingId(application._id)
+
+    try {
+      await apiFetch(`/api/applications/${application._id}`, { method: "DELETE" })
+      toast.success("Application withdrawn")
+      applications.refetch()
+    } catch (cause) {
+      toast.error(
+        cause instanceof ApiError ? cause.message : "Could not withdraw the application"
+      )
+    } finally {
+      setWithdrawingId(null)
+    }
+  }
 
   return (
     <div className="postroom-root relative text-[#344C43]">
@@ -578,7 +546,7 @@ export default function MyApplicationsPage() {
                 {([
                   { key: "pending", n: counts.pending, label: "Pending", tone: "text-[#B87959]" },
                   { key: "accepted", n: counts.accepted, label: "Accepted", tone: "text-[#4A695C]" },
-                  { key: "declined", n: counts.declined, label: "Declined", tone: "text-[#344C43]/55" },
+                  { key: "rejected", n: counts.rejected, label: "Declined", tone: "text-[#344C43]/55" },
                 ] as const).map((s) => (
                   <div key={s.key} className="flex flex-col items-center py-1">
                     <span className={cn("postroom-serif text-5xl font-black leading-none tracking-tight sm:text-6xl", s.tone)}>
@@ -591,7 +559,7 @@ export default function MyApplicationsPage() {
                 ))}
               </div>
               <p className="mt-3 border-t border-dashed border-[#344C43]/25 pt-2 text-center font-mono text-[9px] uppercase tracking-[0.26em] text-[#344C43]/45">
-                6 letters sent · 2 yeses · Avg. reply 4.2 days
+                {counts.all} {counts.all === 1 ? "letter" : "letters"} sent · {counts.accepted} {counts.accepted === 1 ? "yes" : "yeses"}
               </p>
             </div>
           </dl>
@@ -667,25 +635,36 @@ export default function MyApplicationsPage() {
 
         {/* ══ THE REGISTRY — envelopes ═══════════════════════════════════ */}
         <p aria-live="polite" className="mt-4 font-mono text-[10px] uppercase tracking-[0.26em] text-[#344C43]/55">
-          {visible.length} {visible.length === 1 ? "letter" : "letters"} on the table
-          {filter !== "all" && ` · filed under ${filter}`}
+          {loading
+            ? "Reading the ledger…"
+            : `${visible.length} ${visible.length === 1 ? "letter" : "letters"} on the table${filter !== "all" ? ` · filed under ${filter}` : ""}`}
         </p>
 
-        {visible.length === 0 ? (
+        {loading ? (
+          <LoadingLetters />
+        ) : error ? (
+          <LoadError message={error} onRetry={applications.refetch} />
+        ) : visible.length === 0 ? (
           <div className="mt-3">
-            <EmptyPigeonhole query={query.trim()} onClear={() => { setQuery(""); setFilter("all") }} />
+            <EmptyPigeonhole
+              query={query.trim()}
+              hasApplications={apps.length > 0}
+              onClear={() => {
+                setQuery("")
+                setFilter("all")
+              }}
+            />
           </div>
         ) : (
           <ol className="mt-3 space-y-3">
             {visible.map((app) => (
-              <li key={app.ref}>
+              <li key={app._id}>
                 <Envelope
                   app={app}
-                  expanded={expandedRef === app.ref}
-                  onToggle={() => setExpandedRef((cur) => (cur === app.ref ? null : app.ref))}
-                  withdrawn={withdrawnRefs.has(app.ref)}
-                  onWithdraw={() => toggleWithdraw(app.ref)}
-                  onRestore={() => toggleWithdraw(app.ref)}
+                  expanded={expandedId === app._id}
+                  onToggle={() => setExpandedId((current) => (current === app._id ? null : app._id))}
+                  onWithdraw={() => withdraw(app)}
+                  withdrawing={withdrawingId === app._id}
                 />
               </li>
             ))}
