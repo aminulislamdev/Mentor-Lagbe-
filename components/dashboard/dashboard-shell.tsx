@@ -5,6 +5,15 @@ import { usePathname } from "next/navigation"
 import { Sidebar } from "@/components/dashboard/sidebar"
 import { Topbar } from "@/components/dashboard/topbar"
 import type { DashboardRole } from "@/components/dashboard/nav-config"
+import { useSession } from "@/lib/auth-client"
+import { initials } from "@/lib/adapters"
+
+/** "pro" → "Pro", "free" → "Free", anything unknown → "Free". */
+function planLabel(plan: string | undefined): string {
+  if (plan === "pro") return "Pro"
+  if (plan === "admin") return "Admin"
+  return "Free"
+}
 
 /**
  * Reusable dashboard chassis for all MentorLagbe roles.
@@ -22,6 +31,21 @@ export function DashboardShell({
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const pathname = usePathname()
 
+  // Real identity, so the shell never contradicts the page. While the session
+  // is still loading the components keep their demo placeholder.
+  const { data: session } = useSession()
+  const signedInUser = session?.user as
+    | { name?: string; plan?: string }
+    | undefined
+
+  const identity = signedInUser?.name
+    ? {
+        userName: signedInUser.name,
+        initials: initials(signedInUser.name),
+        plan: planLabel(signedInUser.plan),
+      }
+    : undefined
+
   // Close the mobile drawer whenever the route changes (adjust state during render)
   const [prevPathname, setPrevPathname] = React.useState(pathname)
   if (prevPathname !== pathname) {
@@ -36,6 +60,7 @@ export function DashboardShell({
         collapsed={collapsed}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
+        identity={identity}
       />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar
@@ -43,6 +68,7 @@ export function DashboardShell({
           collapsed={collapsed}
           onToggleCollapse={() => setCollapsed((v) => !v)}
           onOpenMobile={() => setMobileOpen(true)}
+          identity={identity}
         />
         <main
           className="min-w-0 flex-1"
