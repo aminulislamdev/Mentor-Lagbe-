@@ -12,7 +12,7 @@ import {
   User,
   LogOut,
 } from "lucide-react"
-import { ROLE_CONFIG, getRouteMeta, type DashboardRole } from "@/components/dashboard/nav-config"
+import { ROLE_CONFIG, getRouteMeta, type DashboardIdentity, type DashboardRole } from "@/components/dashboard/nav-config"
 import { cn } from "@/lib/utils"
 
 interface TopbarProps {
@@ -20,9 +20,10 @@ interface TopbarProps {
   collapsed: boolean
   onToggleCollapse: () => void
   onOpenMobile: () => void
+  identity?: DashboardIdentity
 }
 
-export function Topbar({ role, collapsed, onToggleCollapse, onOpenMobile }: TopbarProps) {
+export function Topbar({ role, collapsed, onToggleCollapse, onOpenMobile, identity }: TopbarProps) {
   const pathname = usePathname()
   const meta = getRouteMeta(pathname, role)
   const cfg = ROLE_CONFIG[role]
@@ -168,7 +169,7 @@ export function Topbar({ role, collapsed, onToggleCollapse, onOpenMobile }: Topb
               aria-hidden="true"
               className="flex size-8 items-center justify-center rounded-full border border-[#B87959]/60 bg-[#344C43] font-mono text-[10px] font-bold text-[#EFE7DC]"
             >
-              {cfg.initials}
+              {identity?.initials ?? cfg.initials}
             </span>
             <ChevronDown
               aria-hidden="true"
@@ -185,9 +186,9 @@ export function Topbar({ role, collapsed, onToggleCollapse, onOpenMobile }: Topb
               className="absolute right-0 z-40 mt-2 w-60 overflow-hidden rounded-sm border border-[#344C43]/25 bg-[#F2ECDF] shadow-[6px_8px_0_rgba(52,76,67,0.22)]"
             >
               <div className="border-b border-[#344C43]/15 bg-[#EFE7DC]/60 px-4 py-3">
-                <p className="text-[13px] font-semibold tracking-tight text-[#344C43]">{cfg.userName}</p>
+                <p className="text-[13px] font-semibold tracking-tight text-[#344C43]">{identity?.userName ?? cfg.userName}</p>
                 <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/55">
-                  {cfg.roleBadge} · Plan: <span className="text-[#B87959]">{cfg.plan}</span>
+                  {cfg.roleBadge} · Plan: <span className="text-[#B87959]">{identity?.plan ?? cfg.plan}</span>
                 </p>
               </div>
               <div className="p-1.5">
