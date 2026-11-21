@@ -337,11 +337,28 @@ export default async function Home() {
           </div>
 
           {/* 6 Equal-Dimension Dynamic Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredTuitions.map((tuition) => (
-              <TuitionCard key={tuition._id} tuition={tuition} />
-            ))}
-          </div>
+          {featuredTuitions.length === 0 ? (
+            <div className="rounded-2xl border border-border bg-card p-10 text-center">
+              <h3 className="font-heading text-lg font-bold text-foreground">
+                No approved batches are listed yet
+              </h3>
+              <p className="mt-1 text-xs text-muted-foreground">
+                New tuitions appear here as soon as an admin approves them.
+              </p>
+              <Link
+                href="/sign-up?role=tutor"
+                className="mt-5 inline-flex px-5 py-2.5 rounded-xl bg-primary hover:bg-[#537363] text-white text-xs font-semibold shadow-xs transition-colors"
+              >
+                Post the first batch
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredTuitions.map((tuition) => (
+                <TuitionCard key={tuition._id} tuition={tuition} />
+              ))}
+            </div>
+          )}
 
           {/* Bottom Banner Strip */}
           <div className="mt-12 p-6 rounded-2xl bg-card border border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
