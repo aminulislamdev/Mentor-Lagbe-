@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Suspense } from "react"
 import { Navbar } from "@/components/navbar"
-import { Footer } from "@/components/footer"
+import { ConditionalFooter } from "@/components/conditional-footer"
 import { Toaster } from "sonner"
 
 const geistSans = Geist({
@@ -38,7 +38,7 @@ export default function RootLayout({
           <Navbar />
         </Suspense>
         <main className="flex-1">{children}</main>
-        <Footer />
+        <ConditionalFooter />
         <Toaster richColors position="top-right" />
       </body>
     </html>
