@@ -24,44 +24,9 @@ import {
   CornerDownRight,
   BadgeCheck,
 } from "lucide-react"
+import type { TuitionDetailDossier } from "@/types/tuition"
 
-interface TuitionDossier {
-  id: string
-  referenceCode: string
-  title: string
-  subtitle: string
-  subject: string
-  academicTier: string
-  mode: "Online" | "Offline"
-  venue: string
-  monthlyInvestment: number
-  feePerSession: number
-  sessionsPerMonth: number
-  daysPerWeek: number
-  weeklyPace: string
-  scheduleSchedule: { day: string; time: string }[]
-  seatAllocation: { total: number; occupied: number; remaining: number }
-  bannerImage: string
-  manifesto: string
-  pedagogicalFocus: { title: string; syllabus: string }[]
-  learnerProfile: string[]
-  tutor: {
-    name: string
-    credential: string
-    institution: string
-    facultyNote: string
-    tenure: string
-    alumniBadge: string
-    rating: number
-    reviewsTotal: number
-    batchesCompleted: number
-    responseCommitment: string
-    directEmail: string
-    initials: string
-  }
-}
-
-const DOSSIER_RECORD: Record<string, TuitionDossier> = {
+const DOSSIER_RECORD: Record<string, TuitionDetailDossier> = {
   "tui-001": {
     id: "tui-001",
     referenceCode: "ML-ACAD-2026-MATH",
