@@ -25,6 +25,7 @@ export interface DashboardIdentity {
   userName: string
   initials: string
   plan: string
+  image?: string
 }
 
 export interface NavItem {
@@ -63,6 +64,8 @@ export const ROLE_CONFIG: Record<DashboardRole, RoleConfig> = {
       { label: "My Applications", href: "/dashboard/student/my-applications", icon: Inbox },
       { label: "Browse Tuitions", href: "/tuitions", icon: BookOpen },
       { label: "My Profile", href: "/dashboard/profile", icon: User },
+      { label: "Settings", href: "/dashboard/student/settings", icon: Settings },
+      { label: "Back to Website", href: "/", icon: Home },
     ],
   },
   tutor: {
@@ -79,6 +82,7 @@ export const ROLE_CONFIG: Record<DashboardRole, RoleConfig> = {
       { label: "Applicants", href: "/dashboard/tutor/applicants", icon: Users },
       { label: "My Profile", href: "/dashboard/profile", icon: User },
       { label: "Settings", href: "/dashboard/tutor/settings", icon: Settings },
+      { label: "Back to Website", href: "/", icon: Home },
     ],
   },
   admin: {
@@ -93,7 +97,8 @@ export const ROLE_CONFIG: Record<DashboardRole, RoleConfig> = {
       { label: "Manage Users", href: "/dashboard/admin/users", icon: UsersRound },
       { label: "Manage Tuitions", href: "/dashboard/admin/tuitions", icon: ShieldCheck },
       { label: "My Profile", href: "/dashboard/profile", icon: User },
-      { label: "Transactions", href: "/dashboard/admin/transactions", icon: Landmark, soon: true },
+      { label: "Transactions", href: "/dashboard/admin/transactions", icon: Landmark },
+      { label: "Settings", href: "/dashboard/admin/settings", icon: Settings },
       { label: "Back to Website", href: "/", icon: Home },
     ],
   },

@@ -25,18 +25,25 @@ export function DashboardShell({
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const pathname = usePathname()
 
+  // ✅ সেশন থেকে সরাসরি ডেটা নেওয়া হচ্ছে
   const { data: session } = useSession()
+
+  // সেশনে image ফিল্ড থাকলে সেটি টাইপে যোগ করুন
   const signedInUser = session?.user as
-    | { name?: string; plan?: string }
+    | { name?: string; plan?: string; image?: string }
     | undefined
 
-  const identity = signedInUser?.name
-    ? {
-        userName: signedInUser.name,
-        initials: initials(signedInUser.name),
-        plan: planLabel(signedInUser.plan),
-      }
-    : undefined
+  // ✅ identity তৈরি করা হচ্ছে (সেশন থেকে)
+  const identity = React.useMemo(() => {
+    if (!signedInUser?.name) return undefined
+
+    return {
+      userName: signedInUser.name,
+      initials: initials(signedInUser.name),
+      plan: planLabel(signedInUser.plan),
+      image: signedInUser.image, // ✅ সেশন থেকে আসা ছবির লিংক
+    }
+  }, [signedInUser])
 
   const [prevPathname, setPrevPathname] = React.useState(pathname)
   if (prevPathname !== pathname) {
@@ -46,7 +53,7 @@ export function DashboardShell({
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar (desktop fixed rail + mobile drawer) */}
+      {/* Sidebar */}
       <Sidebar
         role={role}
         collapsed={collapsed}
@@ -55,9 +62,8 @@ export function DashboardShell({
         identity={identity}
       />
 
-      {/* Main content area beside sidebar */}
+      {/* Main content */}
       <div className="flex min-w-0 flex-1 flex-col">
-        {/* Mobile hamburger button (shown only on small screens) */}
         <div className="sticky top-[72px] z-30 flex h-14 items-center gap-3 border-b border-[#344C43]/20 bg-[#F2ECDF]/90 px-4 backdrop-blur-md lg:hidden">
           <button
             type="button"

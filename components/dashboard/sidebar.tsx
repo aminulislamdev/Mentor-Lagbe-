@@ -3,9 +3,10 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Compass, Home, LogOut, Sparkles, X } from "lucide-react"
+import { Compass, LogOut, Sparkles, X } from "lucide-react"
 import { ROLE_CONFIG, type DashboardIdentity, type DashboardRole } from "@/components/dashboard/nav-config"
 import { cn } from "@/lib/utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface SidebarProps {
   role: DashboardRole
@@ -29,8 +30,6 @@ function NavItems({
   const pathname = usePathname()
   const cfg = ROLE_CONFIG[role]
 
-  // Longest-prefix wins so /dashboard/student/my-applications marks only
-  // "My Applications", never the parent "Overview" entry.
   const bestHref = [...cfg.nav]
     .filter(
       (item) =>
@@ -51,11 +50,7 @@ function NavItems({
                 title={collapsed ? `${item.label} — coming soon` : "Coming soon — the page is not built yet"}
                 className="group relative flex h-11 cursor-not-allowed items-center gap-3 rounded-sm border-l-2 border-transparent px-3 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-[#EFE7DC]/28"
               >
-                <Icon
-                  aria-hidden="true"
-                  strokeWidth={1.75}
-                  className="size-[18px] shrink-0 text-[#EFE7DC]/22"
-                />
+                <Icon aria-hidden="true" strokeWidth={1.75} className="size-[18px] shrink-0 text-[#EFE7DC]/22" />
                 {!collapsed && (
                   <>
                     <span className="min-w-0 truncate">{item.label}</span>
@@ -158,19 +153,27 @@ function IdentityCard({
   identity?: DashboardIdentity
 }) {
   const cfg = ROLE_CONFIG[role]
+
   const userName = identity?.userName ?? cfg.userName
   const initials = identity?.initials ?? cfg.initials
   const plan = identity?.plan ?? cfg.plan
+  const image = identity?.image
+
+  const avatarElement = (sizeClass: string) => (
+    <Avatar className={cn("border-2 border-[#B87959]/70 bg-[#16241F]", sizeClass)}>
+      {image && <AvatarImage src={image} alt={userName} className="object-cover" />}
+      <AvatarFallback className="bg-[#16241F] font-mono text-[10px] font-bold text-[#EFE7DC]">
+        {initials}
+      </AvatarFallback>
+    </Avatar>
+  )
 
   if (collapsed) {
     return (
       <div className="border-b border-[#EFE7DC]/10 px-2 py-4" title={userName}>
-        <span
-          aria-hidden="true"
-          className="mx-auto flex size-10 items-center justify-center rounded-full border-2 border-[#B87959]/70 bg-[#243630] font-mono text-[10px] font-bold text-[#EFE7DC]"
-        >
-          {initials}
-        </span>
+        <div className="mx-auto flex justify-center">
+          {avatarElement("size-8")}
+        </div>
       </div>
     )
   }
@@ -178,12 +181,7 @@ function IdentityCard({
   return (
     <div className="border-b border-[#EFE7DC]/10 p-4">
       <div className="flex items-center gap-3 rounded-sm border border-[#EFE7DC]/10 bg-[#243630]/60 p-3">
-        <span
-          aria-hidden="true"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full border-2 border-[#B87959]/70 bg-[#16241F] font-mono text-[11px] font-bold text-[#EFE7DC]"
-        >
-          {initials}
-        </span>
+        {avatarElement("size-11")}
         <span className="min-w-0">
           <span className="block truncate text-[13px] font-semibold tracking-tight text-[#EFE7DC]">
             {userName}
@@ -266,21 +264,7 @@ function SidebarBody({
         )}
 
         <ul className="space-y-1">
-          <li>
-            <Link
-              href="/"
-              onClick={onNavigate}
-              title={collapsed ? "Back to Website" : undefined}
-              aria-label={collapsed ? "Back to Website" : undefined}
-              className={cn(
-                "group flex h-10 items-center gap-3 rounded-sm px-3 font-mono text-[9px] font-semibold uppercase tracking-[0.2em] text-[#EFE7DC]/55 transition-all hover:bg-[#EFE7DC]/5 hover:text-[#EFE7DC] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C98B6D]",
-                collapsed && "justify-center px-0"
-              )}
-            >
-              <Home aria-hidden="true" className="size-[17px] shrink-0 text-[#7AA890]/70 transition-colors group-hover:text-[#9DBFA9]" strokeWidth={1.75} />
-              {!collapsed && <span>Back to Website</span>}
-            </Link>
-          </li>
+          {/* ✅ শুধু Logout বাটন রাখা হয়েছে, Settings এবং Back to Website বাদ দেওয়া হয়েছে */}
           <li>
             <button
               type="button"
