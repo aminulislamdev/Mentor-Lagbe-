@@ -2,17 +2,15 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation" // ✅ রিডাইরেক্ট করার জন্য যুক্ত করা হলো
 import {
   CheckCircle2,
   XCircle,
   Sparkles,
   ShieldCheck,
-  CreditCard,
   ArrowRight,
   ArrowDownRight,
-  Lock,
   ChevronDown,
-  X,
   Zap,
   GraduationCap,
   BookOpenCheck,
@@ -152,33 +150,19 @@ const FAQS = [
 ]
 
 export default function PricingPage() {
+  const router = useRouter() // ✅ রাউটার ইনিশিয়ালাইজ করা হলো
   const [activeFaq, setActiveFaq] = React.useState<number | null>(0)
-  const [selectedPlanModal, setSelectedPlanModal] = React.useState<{
-    role: "student" | "tutor"
-    name: string
-    price: string
-  } | null>(null)
-  const [paymentSuccess, setPaymentSuccess] = React.useState(false)
 
-  const handleSimulatePayment = (e: React.FormEvent) => {
-    e.preventDefault()
-    setPaymentSuccess(true)
-  }
-
-  const closePaymentModal = () => {
-    setSelectedPlanModal(null)
-    setTimeout(() => {
-      setPaymentSuccess(false)
-    }, 300)
+  // ✅ Stripe-এ যাওয়ার আগে চেকআউট পেজে পাঠানোর ফাংশন
+  const handleUpgrade = (plan: "student" | "tutor") => {
+    router.push(`/checkout?plan=${plan}`)
   }
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground pb-24 selection:bg-primary/20 selection:text-foreground">
-      {/* ─────────────────────────────────────────────────────────────
-          1. CREATIVE EDITORIAL PRICING HERO
-      ────────────────────────────────────────────────────────────── */}
+      {/* 1. CREATIVE EDITORIAL PRICING HERO */}
       <section className="relative overflow-hidden border-b border-border/80 bg-card/40 pt-12 pb-16 sm:pt-16 sm:pb-20">
-        <div className="absolute inset-0 pointer-events-none opacity-15 [background-image:linear-gradient(to_right,rgba(52,76,67,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(52,76,67,0.15)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+        <div className="absolute inset-0 pointer-events-none opacity-15 bg-[linear-gradient(to_right,rgba(52,76,67,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(52,76,67,0.15)_1px,transparent_1px)] bg-size-4rem_4rem]" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-card text-xs font-mono tracking-wider uppercase text-foreground shadow-2xs">
@@ -215,46 +199,30 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          2. AUDIENCE SELECTION — choose your ledger
-      ────────────────────────────────────────────────────────────── */}
+      {/* 2. AUDIENCE SELECTION */}
       <section className="border-b border-border/80 bg-background/60 py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
             Choose your ledger
           </p>
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link
-              href="#student-membership"
-              className="group flex items-center justify-between gap-4 rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4 transition-all duration-200 hover:border-primary/60 hover:bg-primary/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
+            <Link href="#student-membership" className="group flex items-center justify-between gap-4 rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4 transition-all duration-200 hover:border-primary/60 hover:bg-primary/10">
               <span className="flex items-center gap-3">
                 <GraduationCap className="size-7 text-primary" strokeWidth={1.6} />
                 <span>
-                  <span className="block font-heading text-base font-bold text-foreground">
-                    Student Membership
-                  </span>
-                  <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Free to join · Pro $10/mo
-                  </span>
+                  <span className="block font-heading text-base font-bold text-foreground">Student Membership</span>
+                  <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Free to join · Pro $10/mo</span>
                 </span>
               </span>
               <ArrowDownRight className="size-5 text-primary transition-transform duration-200 group-hover:translate-x-1 group-hover:translate-y-1" />
             </Link>
 
-            <Link
-              href="#tutor-membership"
-              className="group flex items-center justify-between gap-4 rounded-2xl border border-[#B87959]/35 bg-[#B87959]/5 px-5 py-4 transition-all duration-200 hover:border-[#B87959]/60 hover:bg-[#B87959]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B87959]"
-            >
+            <Link href="#tutor-membership" className="group flex items-center justify-between gap-4 rounded-2xl border border-[#B87959]/35 bg-[#B87959]/5 px-5 py-4 transition-all duration-200 hover:border-[#B87959]/60 hover:bg-[#B87959]/10">
               <span className="flex items-center gap-3">
                 <BookOpenCheck className="size-7 text-[#B87959]" strokeWidth={1.6} />
                 <span>
-                  <span className="block font-heading text-base font-bold text-foreground">
-                    Tutor Membership
-                  </span>
-                  <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Free to join · Pro $15/mo
-                  </span>
+                  <span className="block font-heading text-base font-bold text-foreground">Tutor Membership</span>
+                  <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Free to join · Pro $15/mo</span>
                 </span>
               </span>
               <ArrowDownRight className="size-5 text-[#B87959] transition-transform duration-200 group-hover:translate-x-1 group-hover:translate-y-1" />
@@ -263,25 +231,17 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* ─────────────────────────────────────────────────────────────
-          3. DUAL-SIDED GUILD PRESENTATION (TUTOR PRO & STUDENT PRO)
-      ────────────────────────────────────────────────────────────── */}
+      {/* 3. DUAL-SIDED GUILD PRESENTATION */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-          {/* LEFT WING: FOR EDUCATORS (Tutor Pro) */}
+          {/* TUTOR PRO */}
           <div id="tutor-membership" className="rounded-3xl border-2 border-[#B87959]/40 bg-card p-6 sm:p-8 shadow-sm flex flex-col justify-between relative overflow-hidden scroll-mt-24">
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#B87959]/5 rounded-bl-full pointer-events-none" />
-
             <div className="space-y-6">
-              {/* Guild Header */}
               <div className="flex items-center justify-between border-b border-border/80 pb-4">
                 <div>
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#B87959] font-bold block">
-                    Instructor Guild
-                  </span>
-                  <h2 className="font-heading text-2xl font-bold text-foreground mt-0.5">
-                    Tutor Pro Membership
-                  </h2>
+                  <span className="font-mono text-xs uppercase tracking-widest text-[#B87959] font-bold block">Instructor Guild</span>
+                  <h2 className="font-heading text-2xl font-bold text-foreground mt-0.5">Tutor Pro Membership</h2>
                 </div>
                 <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-[#B87959]/15 text-[#B87959] border border-[#B87959]/30 font-mono text-xs font-bold">
                   <Sparkles className="size-3.5" />
@@ -289,25 +249,15 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              {/* Price Callout */}
               <div className="space-y-1">
-                <span className="font-mono text-xs text-muted-foreground uppercase block">
-                  Subscription Rate
-                </span>
+                <span className="font-mono text-xs text-muted-foreground uppercase block">Subscription Rate</span>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-mono text-4xl sm:text-5xl font-extrabold text-foreground">
-                    $15
-                  </span>
-                  <span className="font-mono text-sm text-muted-foreground">
-                    USD / month
-                  </span>
+                  <span className="font-mono text-4xl sm:text-5xl font-extrabold text-foreground">$15</span>
+                  <span className="font-mono text-sm text-muted-foreground">USD / month</span>
                 </div>
-                <p className="text-xs text-muted-foreground font-mono pt-1">
-                  Permanently replaces the 2-batch limit with unlimited academic publishing.
-                </p>
+                <p className="text-xs text-muted-foreground font-mono pt-1">Permanently replaces the 2-batch limit with unlimited academic publishing.</p>
               </div>
 
-              {/* Free vs Pro Key Difference Strip */}
               <div className="p-4 rounded-2xl bg-background/80 border border-border/80 space-y-2 text-xs font-mono">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <span>Starter Free Plan:</span>
@@ -319,71 +269,42 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              {/* Feature Checklist */}
               <ul className="space-y-3 text-xs sm:text-sm text-foreground/80">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-[#B87959] shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Unlimited Tuition Listings:</strong> Publish as many subject batches or 1-on-1 slots as your capacity allows.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-[#B87959] shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Gold Pro Tutor Seal:</strong> Prominently badges your instructor profile, signaling institutional commitment.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-[#B87959] shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Featured Index Placement:</strong> Your listings rank higher on the public Browse Tuitions catalog.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-[#B87959] shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Applicant Management Console:</strong> Review student notes, preferred schedules, and update statuses in real time.
-                  </span>
-                </li>
+                {[
+                  "Unlimited Tuition Listings: Publish as many subject batches or 1-on-1 slots as your capacity allows.",
+                  "Gold Pro Tutor Seal: Prominently badges your instructor profile, signaling institutional commitment.",
+                  "Featured Index Placement: Your listings rank higher on the public Browse Tuitions catalog.",
+                  "Applicant Management Console: Review student notes, preferred schedules, and update statuses in real time.",
+                ].map((text, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="size-4 text-[#B87959] shrink-0 mt-0.5" />
+                    <span dangerouslySetInnerHTML={{ __html: text.replace(/(.*?):/, "<strong>$1:</strong>") }} />
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* CTA Trigger */}
             <div className="pt-8 mt-6 border-t border-border/80 space-y-2">
               <button
                 type="button"
-                onClick={() =>
-                  setSelectedPlanModal({
-                    role: "tutor",
-                    name: "Tutor Pro Membership",
-                    price: "$15 / month",
-                  })
-                }
+                onClick={() => handleUpgrade("tutor")} // ✅ এখানে পেজ রিডাইরেক্ট হবে
                 className="w-full py-3.5 px-4 rounded-xl bg-[#B87959] hover:bg-[#9F6446] text-white font-semibold text-sm shadow-sm transition-all duration-200 active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Upgrade to Tutor Pro ($15)</span>
                 <ArrowRight className="size-4" />
               </button>
-              <p className="text-center font-mono text-[10px] text-muted-foreground">
-                🔒 Processed via Stripe • Instant unlock in your tutor dashboard
-              </p>
+              <p className="text-center font-mono text-[10px] text-muted-foreground">🔒 Processed via Stripe • Instant unlock in your tutor dashboard</p>
             </div>
           </div>
 
-          {/* RIGHT WING: FOR SCHOLARS & STUDENTS (Student Pro) */}
+          {/* STUDENT PRO */}
           <div id="student-membership" className="rounded-3xl border-2 border-primary/50 bg-card p-6 sm:p-8 shadow-sm flex flex-col justify-between relative overflow-hidden scroll-mt-24">
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full pointer-events-none" />
-
             <div className="space-y-6">
-              {/* Guild Header */}
               <div className="flex items-center justify-between border-b border-border/80 pb-4">
                 <div>
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold block">
-                    Scholar Guild
-                  </span>
-                  <h2 className="font-heading text-2xl font-bold text-foreground mt-0.5">
-                    Student Pro Membership
-                  </h2>
+                  <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold block">Scholar Guild</span>
+                  <h2 className="font-heading text-2xl font-bold text-foreground mt-0.5">Student Pro Membership</h2>
                 </div>
                 <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-primary/15 text-primary border border-primary/30 font-mono text-xs font-bold">
                   <Zap className="size-3.5" />
@@ -391,25 +312,15 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              {/* Price Callout */}
               <div className="space-y-1">
-                <span className="font-mono text-xs text-muted-foreground uppercase block">
-                  Subscription Rate
-                </span>
+                <span className="font-mono text-xs text-muted-foreground uppercase block">Subscription Rate</span>
                 <div className="flex items-baseline gap-2">
-                  <span className="font-mono text-4xl sm:text-5xl font-extrabold text-foreground">
-                    $10
-                  </span>
-                  <span className="font-mono text-sm text-muted-foreground">
-                    USD / month
-                  </span>
+                  <span className="font-mono text-4xl sm:text-5xl font-extrabold text-foreground">$10</span>
+                  <span className="font-mono text-sm text-muted-foreground">USD / month</span>
                 </div>
-                <p className="text-xs text-muted-foreground font-mono pt-1">
-                  Subsidized rate for serious candidates aiming for competitive admissions.
-                </p>
+                <p className="text-xs text-muted-foreground font-mono pt-1">Subsidized rate for serious candidates aiming for competitive admissions.</p>
               </div>
 
-              {/* Free vs Pro Key Difference Strip */}
               <div className="p-4 rounded-2xl bg-background/80 border border-border/80 space-y-2 text-xs font-mono">
                 <div className="flex items-center justify-between text-muted-foreground">
                   <span>Standard Free Plan:</span>
@@ -421,72 +332,41 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              {/* Feature Checklist */}
               <ul className="space-y-3 text-xs sm:text-sm text-foreground/80">
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-primary shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Top-of-Queue Application Priority:</strong> Your enrollment request appears pinned first in the tutor&apos;s review inbox.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-primary shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Verified Scholar Profile Badge:</strong> Proves authentic commitment to mentors, raising your acceptance likelihood.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-primary shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Early Batch Notification Desk:</strong> Get first-look alerts when coveted mentors open limited-seat cohorts.
-                  </span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <CheckCircle2 className="size-4 text-primary shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Application Ledger Audit:</strong> Dedicated tracking with detailed status history and tutor feedback notes.
-                  </span>
-                </li>
+                {[
+                  "Top-of-Queue Application Priority: Your enrollment request appears pinned first in the tutor's review inbox.",
+                  "Verified Scholar Profile Badge: Proves authentic commitment to mentors, raising your acceptance likelihood.",
+                  "Early Batch Notification Desk: Get first-look alerts when coveted mentors open limited-seat cohorts.",
+                  "Application Ledger Audit: Dedicated tracking with detailed status history and tutor feedback notes.",
+                ].map((text, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <CheckCircle2 className="size-4 text-primary shrink-0 mt-0.5" />
+                    <span dangerouslySetInnerHTML={{ __html: text.replace(/(.*?):/, "<strong>$1:</strong>") }} />
+                  </li>
+                ))}
               </ul>
             </div>
 
-            {/* CTA Trigger */}
             <div className="pt-8 mt-6 border-t border-border/80 space-y-2">
               <button
                 type="button"
-                onClick={() =>
-                  setSelectedPlanModal({
-                    role: "student",
-                    name: "Student Pro Membership",
-                    price: "$10 / month",
-                  })
-                }
+                onClick={() => handleUpgrade("student")} // ✅ এখানে পেজ রিডাইরেক্ট হবে
                 className="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-[#537363] text-white font-semibold text-sm shadow-sm transition-all duration-200 active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Upgrade to Student Pro ($10)</span>
                 <ArrowRight className="size-4" />
               </button>
-              <p className="text-center font-mono text-[10px] text-muted-foreground">
-                🔒 Processed via Stripe • Instant priority activation on all applications
-              </p>
+              <p className="text-center font-mono text-[10px] text-muted-foreground">🔒 Processed via Stripe • Instant priority activation on all applications</p>
             </div>
           </div>
         </div>
 
-        {/* ─────────────────────────────────────────────────────────────
-            3. THE COMPARATIVE MASTER MATRIX (ARCHIVAL PROSPECTUS TABLE)
-        ────────────────────────────────────────────────────────────── */}
+        {/* 3B. THE COMPARATIVE MASTER MATRIX */}
         <section className="mt-20 space-y-6">
           <div className="text-center space-y-2 max-w-2xl mx-auto">
-            <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold">
-              Institutional Specification
-            </span>
-            <h2 className="font-heading text-3xl font-bold text-foreground">
-              Comprehensive Feature Ledger
-            </h2>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              A granular comparison of complimentary standard access versus our dedicated Pro memberships.
-            </p>
+            <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold">Institutional Specification</span>
+            <h2 className="font-heading text-3xl font-bold text-foreground">Comprehensive Feature Ledger</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground">A granular comparison of complimentary standard access versus our dedicated Pro memberships.</p>
           </div>
 
           <div className="rounded-3xl border border-border bg-card overflow-hidden shadow-2xs">
@@ -494,92 +374,33 @@ export default function PricingPage() {
               <table className="w-full text-left text-xs font-mono border-collapse">
                 <thead>
                   <tr className="bg-background/80 border-b border-border/80 text-foreground">
-                    <th className="py-4 px-6 font-semibold uppercase tracking-wider text-[11px] w-2/5">
-                      Platform Capability
-                    </th>
-                    <th className="py-4 px-4 font-semibold uppercase tracking-wider text-[11px] text-center w-1/5">
-                      Student Free
-                    </th>
-                    <th className="py-4 px-4 font-semibold uppercase tracking-wider text-[11px] text-center text-primary w-1/5 bg-primary/5">
-                      Student Pro ($10)
-                    </th>
-                    <th className="py-4 px-4 font-semibold uppercase tracking-wider text-[11px] text-center w-1/5">
-                      Tutor Free
-                    </th>
-                    <th className="py-4 px-4 font-semibold uppercase tracking-wider text-[11px] text-center text-[#B87959] w-1/5 bg-[#B87959]/5">
-                      Tutor Pro ($15)
-                    </th>
+                    <th className="py-4 px-6 font-semibold uppercase tracking-wider text-[11px] w-2/5">Platform Capability</th>
+                    <th className="py-4 px-4 font-semibold uppercase tracking-wider text-[11px] text-center w-1/5">Student Free</th>
+                    <th className="py-4 px-4 font-semibold uppercase tracking-wider text-[11px] text-center text-primary w-1/5 bg-primary/5">Student Pro ($10)</th>
+                    <th className="py-4 px-4 font-semibold uppercase tracking-wider text-[11px] text-center w-1/5">Tutor Free</th>
+                    <th className="py-4 px-4 font-semibold uppercase tracking-wider text-[11px] text-center text-[#B87959] w-1/5 bg-[#B87959]/5">Tutor Pro ($15)</th>
                   </tr>
                 </thead>
-
                 <tbody className="divide-y divide-border/60 font-sans">
                   {COMPARISON_MATRIX.map((group, gIdx) => (
                     <React.Fragment key={gIdx}>
                       <tr className="bg-background/40">
-                        <td
-                          colSpan={5}
-                          className="py-2.5 px-6 font-mono text-[11px] uppercase tracking-wider font-bold text-foreground/80 bg-background/60"
-                        >
-                          {group.category}
-                        </td>
+                        <td colSpan={5} className="py-2.5 px-6 font-mono text-[11px] uppercase tracking-wider font-bold text-foreground/80 bg-background/60">{group.category}</td>
                       </tr>
-
                       {group.features.map((row, rIdx) => (
                         <tr key={rIdx} className="hover:bg-background/30 transition-colors">
-                          <td className="py-3 px-6 text-foreground font-medium text-xs">
-                            {row.feature}
-                          </td>
-
-                          {/* Student Free */}
+                          <td className="py-3 px-6 text-foreground font-medium text-xs">{row.feature}</td>
                           <td className="py-3 px-4 text-center font-mono text-xs">
-                            {typeof row.studentFree === "boolean" ? (
-                              row.studentFree ? (
-                                <CheckCircle2 className="size-4 text-primary mx-auto" />
-                              ) : (
-                                <XCircle className="size-4 text-muted-foreground/40 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-muted-foreground">{row.studentFree}</span>
-                            )}
+                            {typeof row.studentFree === "boolean" ? (row.studentFree ? <CheckCircle2 className="size-4 text-primary mx-auto" /> : <XCircle className="size-4 text-muted-foreground/40 mx-auto" />) : <span className="text-muted-foreground">{row.studentFree}</span>}
                           </td>
-
-                          {/* Student Pro */}
                           <td className="py-3 px-4 text-center font-mono text-xs bg-primary/5">
-                            {typeof row.studentPro === "boolean" ? (
-                              row.studentPro ? (
-                                <CheckCircle2 className="size-4 text-primary mx-auto" />
-                              ) : (
-                                <XCircle className="size-4 text-muted-foreground/40 mx-auto" />
-                              )
-                            ) : (
-                              <span className="font-semibold text-primary">{row.studentPro}</span>
-                            )}
+                            {typeof row.studentPro === "boolean" ? (row.studentPro ? <CheckCircle2 className="size-4 text-primary mx-auto" /> : <XCircle className="size-4 text-muted-foreground/40 mx-auto" />) : <span className="font-semibold text-primary">{row.studentPro}</span>}
                           </td>
-
-                          {/* Tutor Free */}
                           <td className="py-3 px-4 text-center font-mono text-xs">
-                            {typeof row.tutorFree === "boolean" ? (
-                              row.tutorFree ? (
-                                <CheckCircle2 className="size-4 text-primary mx-auto" />
-                              ) : (
-                                <XCircle className="size-4 text-muted-foreground/40 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-muted-foreground">{row.tutorFree}</span>
-                            )}
+                            {typeof row.tutorFree === "boolean" ? (row.tutorFree ? <CheckCircle2 className="size-4 text-primary mx-auto" /> : <XCircle className="size-4 text-muted-foreground/40 mx-auto" />) : <span className="text-muted-foreground">{row.tutorFree}</span>}
                           </td>
-
-                          {/* Tutor Pro */}
                           <td className="py-3 px-4 text-center font-mono text-xs bg-[#B87959]/5">
-                            {typeof row.tutorPro === "boolean" ? (
-                              row.tutorPro ? (
-                                <CheckCircle2 className="size-4 text-[#B87959] mx-auto" />
-                              ) : (
-                                <XCircle className="size-4 text-muted-foreground/40 mx-auto" />
-                              )
-                            ) : (
-                              <span className="font-semibold text-[#B87959]">{row.tutorPro}</span>
-                            )}
+                            {typeof row.tutorPro === "boolean" ? (row.tutorPro ? <CheckCircle2 className="size-4 text-[#B87959] mx-auto" /> : <XCircle className="size-4 text-muted-foreground/40 mx-auto" />) : <span className="font-semibold text-[#B87959]">{row.tutorPro}</span>}
                           </td>
                         </tr>
                       ))}
@@ -591,26 +412,19 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* ─────────────────────────────────────────────────────────────
-            3B. MEMBERSHIP BENEFITS — editorial ledgers
-        ────────────────────────────────────────────────────────────── */}
+        {/* 3C. MEMBERSHIP BENEFITS */}
         <section className="mt-20">
           <div className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-foreground pb-4">
             <div>
-              <span className="font-mono text-xs uppercase tracking-widest text-[#B87959] font-bold">
-                Why the Guild Exists
-              </span>
+              <span className="font-mono text-xs uppercase tracking-widest text-[#B87959] font-bold">Why the Guild Exists</span>
               <h2 className="font-heading text-2xl sm:text-3xl font-bold text-foreground mt-1.5">
                 Membership, <span className="font-serif italic text-primary">on the record.</span>
               </h2>
             </div>
-            <p className="max-w-xs text-[11px] leading-snug text-muted-foreground">
-              Two guilds, one ledger — what each side of the desk gets the moment the seal is affixed.
-            </p>
+            <p className="max-w-xs text-[11px] leading-snug text-muted-foreground">Two guilds, one ledger — what each side of the desk gets the moment the seal is affixed.</p>
           </div>
 
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Students ledger */}
             <article className="flex flex-col rounded-2xl border border-primary/35 bg-card p-6 shadow-2xs">
               <div className="flex items-center justify-between border-b border-border/80 pb-3">
                 <div className="flex items-center gap-2.5">
@@ -635,7 +449,6 @@ export default function PricingPage() {
               </ul>
             </article>
 
-            {/* Tutors ledger */}
             <article className="flex flex-col rounded-2xl border border-[#B87959]/40 bg-card p-6 shadow-2xs">
               <div className="flex items-center justify-between border-b border-border/80 pb-3">
                 <div className="flex items-center gap-2.5">
@@ -660,7 +473,6 @@ export default function PricingPage() {
               </ul>
             </article>
 
-            {/* Why upgrading matters */}
             <article className="flex flex-col rounded-2xl border-2 border-foreground/20 bg-[#344C43] p-6 text-[#EFE7DC] shadow-sm">
               <div className="flex items-center justify-between border-b border-[#EFE7DC]/20 pb-3">
                 <div className="flex items-center gap-2.5">
@@ -690,27 +502,18 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* ─────────────────────────────────────────────────────────────
-            4. INSTITUTIONAL FAQ ACCORDION
-        ────────────────────────────────────────────────────────────── */}
+        {/* 4. INSTITUTIONAL FAQ ACCORDION */}
         <section className="mt-20 pt-12 border-t border-border/80 max-w-4xl mx-auto space-y-6">
           <div className="text-center space-y-2">
-            <span className="font-mono text-xs uppercase tracking-widest text-[#B87959] font-bold">
-              Frequently Clarified Inquiries
-            </span>
-            <h2 className="font-heading text-3xl font-bold text-foreground">
-              Everything You Need to Know
-            </h2>
+            <span className="font-mono text-xs uppercase tracking-widest text-[#B87959] font-bold">Frequently Clarified Inquiries</span>
+            <h2 className="font-heading text-3xl font-bold text-foreground">Everything You Need to Know</h2>
           </div>
 
           <div className="space-y-3 pt-4">
             {FAQS.map((faq, idx) => {
               const isOpen = activeFaq === idx
               return (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-border bg-card overflow-hidden transition-colors"
-                >
+                <div key={idx} className="rounded-2xl border border-border bg-card overflow-hidden transition-colors">
                   <button
                     type="button"
                     onClick={() => setActiveFaq(isOpen ? null : idx)}
@@ -719,20 +522,10 @@ export default function PricingPage() {
                     className="w-full p-5 text-left flex items-center justify-between gap-4 font-heading text-base font-bold text-foreground hover:text-primary transition-colors cursor-pointer"
                   >
                     <span>{faq.q}</span>
-                    <ChevronDown
-                      className={`size-4 text-muted-foreground transition-transform duration-200 shrink-0 ${
-                        isOpen ? "rotate-180 text-primary" : ""
-                      }`}
-                    />
+                    <ChevronDown className={`size-4 text-muted-foreground transition-transform duration-200 shrink-0 ${isOpen ? "rotate-180 text-primary" : ""}`} />
                   </button>
-
                   {isOpen && (
-                    <div
-                      id={`faq-panel-${idx}`}
-                      role="region"
-                      aria-label={faq.q}
-                      className="px-5 pb-5 pt-1 border-t border-border/60 text-xs sm:text-sm text-muted-foreground leading-relaxed font-sans"
-                    >
+                    <div id={`faq-panel-${idx}`} role="region" aria-label={faq.q} className="px-5 pb-5 pt-1 border-t border-border/60 text-xs sm:text-sm text-muted-foreground leading-relaxed font-sans">
                       {faq.a}
                     </div>
                   )}
@@ -743,9 +536,7 @@ export default function PricingPage() {
         </section>
       </main>
 
-      {/* ─────────────────────────────────────────────────────────────
-          5. FINAL SUBSCRIPTION CTA
-      ────────────────────────────────────────────────────────────── */}
+      {/* 5. FINAL SUBSCRIPTION CTA */}
       <section className="border-t border-border/80 bg-[#344C43] py-16 sm:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
           <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-[#C98B6D] font-bold">
@@ -762,16 +553,16 @@ export default function PricingPage() {
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               type="button"
-              onClick={() => setSelectedPlanModal({ role: "student", name: "Student Pro Membership", price: "$10 / month" })}
-              className="w-full sm:w-auto h-13 px-8 py-4 rounded-xl bg-[#B87959] text-[#1E3A2F] font-mono text-[10px] font-bold uppercase tracking-[0.26em] hover:bg-[#C98B6D] transition-all duration-200 shadow-[6px_6px_0_#10181A] hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#10181A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C98B6D] cursor-pointer flex items-center justify-center gap-2"
+              onClick={() => handleUpgrade("student")} // ✅ এখানে পেজ রিডাইরেক্ট হবে
+              className="w-full sm:w-auto h-13 px-8 py-4 rounded-xl bg-[#B87959] text-[#1E3A2F] font-mono text-[10px] font-bold uppercase tracking-[0.26em] hover:bg-[#C98B6D] transition-all duration-200 shadow-[6px_6px_0_#10181A] hover:-translate-y-0.5 hover:shadow-[8px_8px_0_#10181A] focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-[#C98B6D] cursor-pointer flex items-center justify-center gap-2"
             >
               Subscribe — Student Pro · $10
               <ArrowRight className="size-4" />
             </button>
             <button
               type="button"
-              onClick={() => setSelectedPlanModal({ role: "tutor", name: "Tutor Pro Membership", price: "$15 / month" })}
-              className="w-full sm:w-auto h-13 px-8 py-4 rounded-xl bg-transparent border-2 border-[#EFE7DC]/40 text-[#EFE7DC] font-mono text-[10px] font-bold uppercase tracking-[0.26em] hover:border-[#C98B6D] hover:text-[#C98B6D] transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C98B6D] cursor-pointer flex items-center justify-center gap-2"
+              onClick={() => handleUpgrade("tutor")} // ✅ এখানে পেজ রিডাইরেক্ট হবে
+              className="w-full sm:w-auto h-13 px-8 py-4 rounded-xl bg-transparent border-2 border-[#EFE7DC]/40 text-[#EFE7DC] font-mono text-[10px] font-bold uppercase tracking-[0.26em] hover:border-[#C98B6D] hover:text-[#C98B6D] transition-all duration-200 focus-visible:outline focus-visible:outline-offset-4 focus-visible:outline-[#C98B6D] cursor-pointer flex items-center justify-center gap-2"
             >
               Subscribe — Tutor Pro · $15
               <ArrowRight className="size-4" />
@@ -782,156 +573,6 @@ export default function PricingPage() {
           </p>
         </div>
       </section>
-
-      {/* ─────────────────────────────────────────────────────────────
-          6. STRIPE CHECKOUT SIMULATION MODAL (UI Only)
-      ────────────────────────────────────────────────────────────── */}
-      {selectedPlanModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="relative w-full max-w-md rounded-3xl border border-border bg-card p-6 sm:p-7 shadow-2xl text-foreground">
-            <button
-              type="button"
-              onClick={closePaymentModal}
-              className="absolute top-5 right-5 size-8 rounded-full border border-border bg-background flex items-center justify-center text-muted-foreground hover:text-foreground cursor-pointer"
-            >
-              <X className="size-4" />
-            </button>
-
-            {paymentSuccess ? (
-              <div className="py-6 text-center space-y-4">
-                <div className="size-16 rounded-2xl bg-primary/15 text-primary border border-primary/30 flex items-center justify-center mx-auto shadow-xs">
-                  <CheckCircle2 className="size-8" />
-                </div>
-
-                <span className="font-mono text-xs uppercase tracking-widest text-primary font-bold">
-                  Stripe Payment Verified
-                </span>
-
-                <h3 className="font-heading text-2xl font-bold text-foreground">
-                  Pro Plan Activated
-                </h3>
-
-                <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
-                  Your account has been upgraded to <strong>{selectedPlanModal.name}</strong>. The transaction was recorded in the payments ledger.
-                </p>
-
-                <div className="pt-4 flex items-center justify-center gap-3">
-                  <button
-                    type="button"
-                    onClick={closePaymentModal}
-                    className="px-6 py-2.5 rounded-xl bg-primary text-white text-xs font-semibold shadow-xs hover:bg-[#537363] transition-colors cursor-pointer"
-                  >
-                    Close
-                  </button>
-
-                  <Link
-                    href={selectedPlanModal.role === "tutor" ? "/dashboard/tutor" : "/dashboard/student"}
-                    className="px-5 py-2.5 rounded-xl border border-border bg-card hover:bg-background text-xs font-semibold text-foreground transition-colors"
-                  >
-                    Go to Dashboard
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleSimulatePayment} className="space-y-4">
-                <div className="border-b border-border/80 pb-3">
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-[#B87959] font-bold">
-                    Stripe Checkout Gateway
-                  </span>
-                  <h3 className="font-heading text-xl font-bold text-foreground mt-0.5">
-                    {selectedPlanModal.name}
-                  </h3>
-                  <p className="font-mono text-sm font-extrabold text-foreground mt-1">
-                    {selectedPlanModal.price}
-                  </p>
-                </div>
-
-                <div className="space-y-3 text-xs">
-                  <div>
-                    <label className="font-mono uppercase font-semibold text-foreground block mb-1">
-                      Billing Email Address
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="scholar@example.com"
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-mono uppercase font-semibold text-foreground block mb-1">
-                      Card Details
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        required
-                        placeholder="4242 •••• •••• 4242"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-primary font-mono"
-                      />
-                      <CreditCard className="absolute right-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="font-mono uppercase font-semibold text-foreground block mb-1">
-                        Expiry MM/YY
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        placeholder="12/28"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-primary font-mono text-center"
-                      />
-                    </div>
-                    <div>
-                      <label className="font-mono uppercase font-semibold text-foreground block mb-1">
-                        CVC / CVV
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        maxLength={4}
-                        placeholder="•••"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-background text-foreground text-xs focus:outline-none focus:ring-2 focus:ring-primary font-mono text-center"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-3 rounded-xl bg-background border border-border/80 flex items-center gap-2 text-[11px] text-muted-foreground font-mono">
-                  <Lock className="size-3.5 text-primary shrink-0" />
-                  <span>256-Bit Encrypted via Stripe Payments Infrastructure</span>
-                </div>
-
-                <div className="pt-2 flex items-center justify-end gap-3">
-                  <button
-                    type="button"
-                    onClick={closePaymentModal}
-                    className="px-4 py-2.5 rounded-xl border border-border bg-background text-xs font-semibold text-foreground hover:bg-card cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="px-5 py-2.5 rounded-xl bg-primary hover:bg-[#537363] text-white text-xs font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Lock className="size-3.5" />
-                    <span>Authorize Payment</span>
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   )
 }
