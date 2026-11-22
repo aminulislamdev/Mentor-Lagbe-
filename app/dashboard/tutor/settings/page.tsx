@@ -30,6 +30,8 @@ import {
   BadgeCheck,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { DashboardSection } from "@/components/common/dashboard-section"
+import { Panel } from "@/components/common/panel"
 import { Colophon } from "@/components/dashboard/shared"
 
 // ─── Section registry ────────────────────────────────────────────────────────
@@ -415,8 +417,8 @@ export default function TutorSettingsPage() {
 
             {/* 01 — GENERAL PREFERENCES */}
             {active === "general" && (
-              <section aria-labelledby="panel-general" className="border border-[#344C43]/25 bg-[#EFE7DC] p-5 shadow-[5px_6px_0_rgba(52,76,67,0.13)] sm:p-6">
-                <PanelHeading id="panel-general" numeral="01" title="General Preferences" note="Desk defaults" />
+              <Panel aria-labelledby="panel-general" className="sm:p-6">
+                <DashboardSection id="panel-general" numeral="01" title="General Preferences" subtitle="Desk defaults" variant="settings" />
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
                   {selectWrap("f-language", language, setLanguage, LANGUAGES, "Language")}
                   {selectWrap("f-timezone", timezone, setTimezone, TIMEZONES, "Time Zone")}
@@ -491,13 +493,13 @@ export default function TutorSettingsPage() {
                     </button>
                   </div>
                 </fieldset>
-              </section>
+              </Panel>
             )}
 
             {/* 02 — APPEARANCE */}
             {active === "appearance" && (
-              <section aria-labelledby="panel-appearance" className="border border-[#344C43]/25 bg-[#EFE7DC] p-5 shadow-[5px_6px_0_rgba(52,76,67,0.13)] sm:p-6">
-                <PanelHeading id="panel-appearance" numeral="02" title="Appearance" note="The studio light" />
+              <Panel aria-labelledby="panel-appearance" className="sm:p-6">
+                <DashboardSection id="panel-appearance" numeral="02" title="Appearance" subtitle="The studio light" variant="settings" />
                 <p className="mt-4 max-w-md text-[12px] leading-relaxed text-[#344C43]/75">
                   Pick your board. The choice syncs across the atelier — every
                   register, ledger and proof sheet follows.
@@ -511,13 +513,13 @@ export default function TutorSettingsPage() {
                   <Sparkles aria-hidden="true" className="size-3.5 text-[#B87959]" strokeWidth={2} />
                   UI only in this preview — your theme stays exactly as you set it
                 </p>
-              </section>
+              </Panel>
             )}
 
             {/* 03 — NOTIFICATIONS */}
             {active === "notifications" && (
-              <section aria-labelledby="panel-notifications" className="border border-[#344C43]/25 bg-[#EFE7DC] p-5 shadow-[5px_6px_0_rgba(52,76,67,0.13)] sm:p-6">
-                <PanelHeading id="panel-notifications" numeral="03" title="Notifications" note="The desk bell" />
+              <Panel aria-labelledby="panel-notifications" className="sm:p-6">
+                <DashboardSection id="panel-notifications" numeral="03" title="Notifications" subtitle="The desk bell" variant="settings" />
                 <div className="mt-3">
                   {NOTIF_ITEMS.map((item) => (
                     <Toggle
@@ -534,13 +536,13 @@ export default function TutorSettingsPage() {
                   <Bell aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
                   Delivery: in-app ribbons + email digest every Friday
                 </p>
-              </section>
+              </Panel>
             )}
 
             {/* 04 — PRIVACY & SECURITY */}
             {active === "privacy" && (
-              <section aria-labelledby="panel-privacy" className="border border-[#344C43]/25 bg-[#EFE7DC] p-5 shadow-[5px_6px_0_rgba(52,76,67,0.13)] sm:p-6">
-                <PanelHeading id="panel-privacy" numeral="04" title="Privacy & Security" note="The vault" />
+              <Panel aria-labelledby="panel-privacy" className="sm:p-6">
+                <DashboardSection id="panel-privacy" numeral="04" title="Privacy & Security" subtitle="The vault" variant="settings" />
 
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
                   {selectWrap(
@@ -621,13 +623,13 @@ export default function TutorSettingsPage() {
                     Sign out all other sessions
                   </button>
                 </div>
-              </section>
+              </Panel>
             )}
 
             {/* 05 — SUBSCRIPTION */}
             {active === "subscription" && (
-              <section aria-labelledby="panel-subscription" className="border border-[#344C43]/25 bg-[#EFE7DC] p-5 shadow-[5px_6px_0_rgba(52,76,67,0.13)] sm:p-6">
-                <PanelHeading id="panel-subscription" numeral="05" title="Subscription" note="The Guild seat" />
+              <Panel aria-labelledby="panel-subscription" className="sm:p-6">
+                <DashboardSection id="panel-subscription" numeral="05" title="Subscription" subtitle="The Guild seat" variant="settings" />
 
                 {/* Current plan */}
                 <div className="relative mt-5 border border-[#C98B6D]/50 bg-[#243630] p-4 text-[#F2EDDF] sm:p-5" style={{ backgroundImage: "linear-gradient(150deg, rgba(201,139,109,0.14) 0%, transparent 45%)" }}>
@@ -716,7 +718,7 @@ export default function TutorSettingsPage() {
                     </li>
                   </ul>
                 </fieldset>
-              </section>
+              </Panel>
             )}
 
             {/* ── Save / Reset action bar ── */}
@@ -772,28 +774,3 @@ export default function TutorSettingsPage() {
 
 // ─── Panel heading ───────────────────────────────────────────────────────────
 
-function PanelHeading({
-  id,
-  numeral,
-  title,
-  note,
-}: {
-  id: string
-  numeral: string
-  title: string
-  note: string
-}) {
-  return (
-    <div className="flex flex-wrap items-baseline justify-between gap-3 border-b border-[#344C43]/20 pb-3">
-      <h2 id={id} className="flex items-baseline gap-3">
-        <span aria-hidden="true" className="font-mono text-[11px] font-bold tracking-[0.2em] text-[#B87959]">
-          {numeral}
-        </span>
-        <span className="settings-serif text-2xl font-black tracking-tight text-[#344C43] sm:text-3xl">
-          {title}
-        </span>
-      </h2>
-      <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">{note}</p>
-    </div>
-  )
-}
