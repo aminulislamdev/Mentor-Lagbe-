@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
 import { useSession } from "@/lib/auth-client"
@@ -13,15 +14,20 @@ export default function ProfileDashboardLayout({
   const { data: session, isPending } = useSession()
   const router = useRouter()
 
-  if (isPending) {
-    return <div className="p-8 text-center">Loading...</div>
-  }
+  // Redirect only — children are always rendered so Next.js can validate them.
+  useEffect(() => {
+    if (!isPending && !session?.user) {
+      router.replace("/sign-in")
+    }
+  }, [isPending, session, router])
 
-  const role = ((session?.user as { role?: string } | undefined)?.role || "student").toLowerCase() as DashboardRole
-  if (!session?.user) {
-    router.push("/sign-in")
-    return null
-  }
+  const role = (
+    (session?.user as { role?: string } | undefined)?.role || "student"
+  ).toLowerCase() as DashboardRole
 
-  return <DashboardShell role={role}>{children}</DashboardShell>
+  return (
+    <DashboardShell role={role}>
+      {children}
+    </DashboardShell>
+  )
 }

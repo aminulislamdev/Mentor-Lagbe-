@@ -25,8 +25,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { useApi } from "@/lib/hooks/use-api"
+import { LoadingState } from "@/components/common/loading-state"
+import { DashboardSection } from "@/components/common/dashboard-section"
+import { FormField } from "@/components/common/form-field"
+import { Panel } from "@/components/common/panel"
 import { apiFetch, uploadImage } from "@/lib/api"
+import { useSession } from "@/lib/auth-client"
 import type { CurrentUser } from "@/lib/api-types"
 
 // ─── Scoped identity-desk styles ─────────────────────────────────────────────
@@ -173,9 +177,9 @@ function IdentityCard({ user }: { user: CurrentUser }) {
   )
 }
 
-// ─── Main page ───────────────────────────────────────────────────────────────
+// ─── Child Component: The Form (only mounts when user is available) ───────────
 
-export default function ProfilePage() {
+function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Promise<void> }) {
   const [portraitRemoved, setPortraitRemoved] = useState(false)
   const [savedFlash, setSavedFlash] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -183,25 +187,16 @@ export default function ProfilePage() {
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const profile = useApi<CurrentUser>("/api/auth/me")
-  const user = profile.data
-
-  const [form, setForm] = useState({ name: "", phone: "", bio: "", image: "" })
-  const [initialized, setInitialized] = useState(false)
-
-  // Initialize form when profile loads
-  if (user && !initialized) {
-    setForm({
-      name: user.name ?? "",
-      phone: user.phone ?? "",
-      bio: user.bio ?? "",
-      image: user.image ?? "",
-    })
-    setInitialized(true)
-  }
+  // ✅ সরাসরি প্রপ থেকে state ইনিশিয়ালাইজ করা হচ্ছে, কোনো useEffect নেই
+  const [form, setForm] = useState({
+    name: user.name ?? "",
+    phone: user.phone ?? "",
+    bio: user.bio ?? "",
+    image: user.image ?? "",
+  })
 
   const dirty =
-    user !== null &&
+    !!user &&
     (form.name !== (user.name ?? "") ||
       form.phone !== (user.phone ?? "") ||
       form.bio !== (user.bio ?? "") ||
@@ -239,7 +234,9 @@ export default function ProfilePage() {
       })
       setSavedFlash(true)
       window.setTimeout(() => setSavedFlash(false), 2600)
-      profile.refetch()
+
+      await refetch()
+
       if (portraitRemoved) {
         setPortraitRemoved(false)
         setForm((prev) => ({ ...prev, image: "" }))
@@ -273,15 +270,354 @@ export default function ProfilePage() {
   }
 
   const fieldLabel = "font-mono text-[9px] font-bold uppercase tracking-[0.24em] text-[#344C43]/60"
-  const wellField =
-    "h-11 w-full rounded-sm border border-[#344C43]/25 bg-[#F2ECDF] px-3 text-[13px] text-[#344C43] outline-none transition-all placeholder:text-[#344C43]/35 hover:border-[#344C43]/45 focus:border-[#668B78] focus:bg-[#EFE7DC] focus:ring-2 focus:ring-[#668B78]/20"
+
+  return (
+    <div className="mt-6 grid gap-6 lg:grid-cols-12 lg:items-start">
+      {/* ── LEFT — the plate, completion seal, plan ── */}
+      <div className="space-y-5 lg:col-span-5">
+        <IdentityCard user={user} />
+
+        {/* Profile completion */}
+        <Panel aria-labelledby="completion-heading">
+          <h2 id="completion-heading" className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#344C43]/60">
+            The Seal of Completeness
+          </h2>
+          <div className="mt-4 flex items-center gap-5">
+            <CompletionRing percent={86} />
+            <ul className="min-w-0 flex-1 space-y-1.5">
+              {[
+                { label: "Identity verified", done: true },
+                { label: "Portrait uploaded", done: !!user.image, hint: "+4%" },
+                { label: "Email confirmed", done: true },
+                { label: "Phone confirmed", done: !!user.phone, hint: "+6%" },
+                { label: "Bio written", done: !!user.bio, hint: "+4%" },
+              ].map((item) => (
+                <li key={item.label} className="flex items-start gap-2 text-[10.5px] leading-snug">
+                  {item.done ? (
+                    <CheckCircle2 aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-[#668B78]" strokeWidth={2} />
+                  ) : (
+                    <span aria-hidden="true" className="mt-0.5 flex size-3.5 shrink-0 items-center justify-center rounded-full border border-[#B87959]/55 font-mono text-[10px] font-bold text-[#B87959]">
+                      +
+                    </span>
+                  )}
+                  <span className={cn("tracking-tight", item.done ? "text-[#344C43]/80" : "font-semibold text-[#344C43]")}>
+                    {item.label}
+                    {item.hint && <span className="ml-1 font-mono text-[9px] text-[#B87959]">{item.hint}</span>}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Panel>
+
+        <section aria-labelledby="plan-heading" className="relative overflow-hidden border border-[#C98B6D]/50 bg-[#243630] p-5 text-[#F2EDDF]" style={{ backgroundImage: "linear-gradient(150deg, rgba(201,139,109,0.16) 0%, transparent 45%)" }}>
+          <span aria-hidden="true" className="absolute right-4 top-4 select-none text-xl leading-none text-[#C98B6D]/75">✦</span>
+          <h2 id="plan-heading" className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#C98B6D]">
+            <Crown aria-hidden="true" className="size-4" strokeWidth={1.75} />
+            Your Guild Seat
+          </h2>
+          <p className="identity-serif mt-2 text-3xl font-black leading-none tracking-tight text-[#F2EDDF]">
+            {user.plan === "pro" ? "Pro" : "Free"}<span className="text-base font-bold text-[#F2EDDF]/55"> · {user.plan === "pro" ? "$15 / mo" : "$0 / mo"}</span>
+          </p>
+          <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.22em] text-[#9DBFA9]">
+            {user.plan === "pro" ? "Active · Pro Member" : "Free Plan · Upgrade anytime"}
+          </p>
+          <ul className="mt-3 space-y-1 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[9px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/70">
+            <li className="flex items-center gap-1.5">
+              <CheckCircle2 aria-hidden="true" className="size-3.5 text-[#C98B6D]" strokeWidth={2} />
+              {user.plan === "pro" ? "Unlimited batch listings" : "Up to 2 active listings"}
+            </li>
+            <li className="flex items-center gap-1.5">
+              <CheckCircle2 aria-hidden="true" className="size-3.5 text-[#C98B6D]" strokeWidth={2} />
+              {user.plan === "pro" ? "Verified seal + featured index" : "Verified seal on approval"}
+            </li>
+          </ul>
+          <Link
+            href="/pricing"
+            className="group mt-3 inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#C98B6D] transition-colors hover:text-[#E0A57E]"
+          >
+            {user.plan === "pro" ? "Manage" : "Upgrade"}
+            <ChevronRight aria-hidden="true" className="size-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
+          </Link>
+        </section>
+      </div>
+
+      {/* ── RIGHT — the intake desk ── */}
+      <form
+        className="space-y-5 lg:col-span-7"
+        onSubmit={(e) => { e.preventDefault(); handleSave() }}
+        noValidate
+        aria-label="Update profile"
+      >
+        {/* 01 — Personal details */}
+        <Panel aria-labelledby="details-heading" className="sm:p-6">
+          <DashboardSection id="details-heading" numeral="01" title="The Details" subtitle="What the board reads" />
+
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            <FormField
+              className="sm:col-span-2"
+              label="Full Name"
+              htmlFor="f-name"
+              icon={UserRound}
+              value={form.name}
+              onChange={set("name")}
+              inputClassName="font-semibold"
+              autoComplete="name"
+            />
+
+            <div className="sm:col-span-2">
+              <Label htmlFor="f-email" className={cn(fieldLabel, "mb-1.5 block")}>
+                Email Address <span className="normal-case tracking-normal text-[#344C43]/45">(locked)</span>
+              </Label>
+              <div className="relative">
+                <Mail aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#668B78]/70" strokeWidth={1.75} />
+                <input
+                  id="f-email"
+                  type="email"
+                  value={user.email}
+                  readOnly
+                  aria-readonly="true"
+                  tabIndex={0}
+                  className="h-11 w-full cursor-not-allowed rounded-sm border border-[#344C43]/20 bg-[#344C43]/5 pl-9 pr-24 font-mono text-[12px] text-[#344C43]/65 outline-none"
+                />
+                <span className="pointer-events-none absolute right-2 top-1/2 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-sm border border-[#668B78]/45 bg-[#668B78]/10 px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#4A695C]">
+                  <BadgeCheck aria-hidden="true" className="size-3" strokeWidth={2.5} />
+                  Verified
+                </span>
+              </div>
+            </div>
+
+            <FormField
+              label="Phone Number"
+              htmlFor="f-phone"
+              icon={Phone}
+              type="tel"
+              value={form.phone}
+              onChange={set("phone")}
+              inputClassName="font-mono"
+              autoComplete="tel"
+            />
+            <div>
+              <Label htmlFor="f-location" className={cn(fieldLabel, "mb-1.5 block")}>Studio Area</Label>
+              <div className="relative">
+                <MapPin aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#668B78]" strokeWidth={1.75} />
+                <Input
+                  id="f-location"
+                  type="text"
+                  value=""
+                  readOnly
+                  aria-readonly="true"
+                  className="h-11 w-full cursor-not-allowed rounded-sm border border-[#344C43]/20 bg-[#344C43]/5 pl-9 text-[13px] text-[#344C43]/65 outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="sm:col-span-2">
+              <Label htmlFor="f-bio" className={cn(fieldLabel, "mb-1.5 block")}>Bio — Your Board Note</Label>
+              <textarea
+                id="f-bio"
+                rows={3}
+                value={form.bio}
+                onChange={set("bio")}
+                maxLength={220}
+                className="w-full resize-none rounded-sm border border-[#344C43]/25 bg-[#F2ECDF] px-3 py-2.5 text-[13px] leading-relaxed text-[#344C43] outline-none transition-all placeholder:text-[#344C43]/35 hover:border-[#344C43]/45 focus:border-[#668B78] focus:bg-[#EFE7DC] focus:ring-2 focus:ring-[#668B78]/20"
+              />
+              <p className="mt-1.5 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/45">
+                <span>Scholars read this before they apply</span>
+                <span className="tabular-nums">{form.bio.length} / 220</span>
+              </p>
+            </div>
+          </div>
+        </Panel>
+
+        {/* 02 — The Portrait */}
+        <Panel aria-labelledby="portrait-heading" className="sm:p-6">
+          <DashboardSection id="portrait-heading" numeral="02" title="The Portrait" subtitle="Your face, on record" />
+
+          <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
+            {/* Preview */}
+            <div className="relative mx-auto shrink-0 sm:mx-0">
+              {portraitRemoved || !form.image ? (
+                <div className="flex size-32 flex-col items-center justify-center gap-1.5 rounded-full border-2 border-dashed border-[#344C43]/30 bg-[#344C43]/5 text-[#344C43]/40 sm:size-36">
+                  <ImageOff aria-hidden="true" className="size-6" strokeWidth={1.5} />
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em]">No portrait</span>
+                </div>
+              ) : (
+                <div className="flex size-32 items-center justify-center rounded-full border-4 border-[#C98B6D]/60 bg-[#243630] shadow-[0_10px_28px_rgba(0,0,0,0.3)] sm:size-36 overflow-hidden">
+                  <img src={form.image} alt="Portrait" className="size-full object-cover" />
+                </div>
+              )}
+              <span aria-hidden="true" className="absolute -bottom-1 -right-1 flex size-9 items-center justify-center rounded-full border-2 border-[#EFE7DC] bg-[#668B78] text-[#F2EDDF]">
+                <Check className="size-4" strokeWidth={3} />
+              </span>
+            </div>
+
+            {/* Dropzone + buttons */}
+            <div className="min-w-0 flex-1">
+              <div
+                role="button"
+                tabIndex={0}
+                aria-label="Upload portrait image"
+                className="flex flex-col items-center justify-center gap-1.5 border-2 border-dashed border-[#344C43]/30 bg-[#F2ECDF] px-4 py-5 text-center transition-colors hover:border-[#668B78]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                onClick={() => fileInputRef.current?.click()}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click() }}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  className="sr-only"
+                  onChange={handlePhotoChange}
+                />
+                <Upload aria-hidden="true" className="size-6 text-[#668B78]" strokeWidth={1.75} />
+                <p className="font-mono text-[10px] font-bold uppercase leading-relaxed tracking-[0.2em] text-[#344C43]">
+                  {uploading ? "Uploading…" : "Drag portrait here"}<br />
+                  <span className="font-medium text-[#344C43]/55">or browse files</span>
+                </p>
+                <p className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/45">
+                  PNG · JPG · ≤ 5 MB
+                </p>
+              </div>
+              <div className="mt-2.5 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#344C43]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                >
+                  <Camera aria-hidden="true" className="size-4" strokeWidth={1.75} />
+                  Change Photo
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRemovePortrait}
+                  className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#A34343]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
+                >
+                  <ImageOff aria-hidden="true" className="size-4" strokeWidth={1.75} />
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </Panel>
+
+        {/* 03 — How the board sees you */}
+        <Panel aria-labelledby="preview-heading" className="sm:p-6">
+          <DashboardSection id="preview-heading" numeral="03" title="How The Board Sees You" subtitle="Live preview" />
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-sm border border-[#344C43]/20 bg-[#F2ECDF] p-3">
+              <span
+                aria-hidden="true"
+                className="flex size-14 shrink-0 items-center justify-center rounded-full border border-[#C98B6D]/55 bg-[#243630] font-mono text-sm font-bold text-[#C98B6D] overflow-hidden"
+              >
+                {portraitRemoved || !form.image ? (form.name ? form.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase() : "—") : <img src={form.image} alt="" className="size-full object-cover" />}
+              </span>
+              <span className="min-w-0">
+                <span className="flex items-center gap-1.5">
+                  <span className="truncate text-[13px] font-bold tracking-tight text-[#344C43]">{form.name || "Unnamed Mentor"}</span>
+                  <BadgeCheck aria-hidden="true" className="size-3.5 shrink-0 text-[#668B78]" strokeWidth={2} />
+                </span>
+                <span className="mt-0.5 block truncate font-mono text-[10px] uppercase tracking-[0.18em] text-[#B87959]">
+                  {user.role} · Verified · {user.plan === "pro" ? "Pro" : "Free"} Plan
+                </span>
+                <span className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-[#344C43]/70">
+                  {form.bio || "—"}
+                </span>
+              </span>
+            </div>
+            <div className="shrink-0 border-l border-[#344C43]/15 pl-4 text-right">
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#344C43]/50">Member since</p>
+              <p className="mt-0.5 flex items-center justify-end gap-1.5 font-mono text-[9px] font-bold text-[#344C43]">
+                <CalendarDays aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
+                {user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
+              </p>
+              <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.24em] text-[#344C43]/50">Email</p>
+              <p className="mt-0.5 flex items-center justify-end gap-1.5 font-mono text-[9px] font-bold text-[#344C43]">
+                <Mail aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
+                {user.email}
+              </p>
+            </div>
+          </div>
+        </Panel>
+
+        {/* ── Save bar ── */}
+        <div className="flex flex-col-reverse gap-2.5 border border-[#344C43]/25 bg-[#F2ECDF]/60 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col items-start gap-1.5">
+            {dirty && !savedFlash ? (
+              <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#B87959]/50 bg-[#B87959]/10 px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#B87959]">
+                <span aria-hidden="true" className="size-2 rounded-full bg-[#B87959]" />
+                Unsaved changes on the desk
+              </span>
+            ) : savedFlash ? (
+              <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#668B78]/50 bg-[#668B78]/10 px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#4A695C]">
+                <CheckCircle2 aria-hidden="true" className="size-3.5" strokeWidth={2} />
+                Saved to your desk
+              </span>
+            ) : (
+              <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/45">
+                Everything as the board left it
+              </span>
+            )}
+            {saveError && (
+              <span role="alert" className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#A34343]">
+                {saveError}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/30 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+            >
+              <RotateCcw aria-hidden="true" className="size-4" strokeWidth={1.75} />
+              Cancel Changes
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={!dirty || saving}
+            className={cn(
+              "inline-flex h-12 items-center justify-center gap-2 rounded-sm border px-6 font-mono text-[9px] font-bold uppercase tracking-[0.26em] transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
+              savedFlash
+                ? "border-[#668B78] bg-[#668B78] text-[#F2EDDF]"
+                : dirty
+                  ? "border-[#A6683F]/60 bg-[#B87959] text-[#1E3A2F] shadow-[4px_4px_0_#344C43] hover:-translate-y-0.5 hover:bg-[#C98B6D]"
+                  : "cursor-not-allowed border-[#344C43]/15 bg-[#344C43]/5 text-[#344C43]/35"
+            )}
+          >
+            {saving ? (
+              <>
+                <RefreshCw aria-hidden="true" className="size-4 animate-spin" strokeWidth={1.75} />
+                Saving…
+              </>
+            ) : savedFlash ? (
+              <>
+                <CheckCircle2 aria-hidden="true" className="size-4" strokeWidth={2} />
+                Saved to Your Desk
+              </>
+            ) : (
+              <>
+                <Save aria-hidden="true" className="size-4" strokeWidth={1.75} />
+                Save Changes
+              </>
+            )}
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+// ─── Main Page Component ──────────────────────────────────────────────────────
+
+export default function ProfilePage() {
+  const { data: session, isPending, refetch } = useSession()
+  const user = session?.user as CurrentUser | undefined
 
   return (
     <div className="identity-root relative text-[#344C43]">
       <style>{identityStyles}</style>
 
       <div className="relative mx-auto max-w-[1280px] px-4 pb-10 pt-5 sm:px-6 sm:pt-6 lg:px-8">
-
         {/* ══ MASTHEAD ═══════════════════════════════════════════════════ */}
         <header className="border-b-2 border-[#344C43] pb-5 sm:pb-6">
           <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[#B87959] sm:text-[10px]">
@@ -320,29 +656,9 @@ export default function ProfilePage() {
           </div>
         </header>
 
-        {/* ══ Loading state ═══════════════════════════════════════════════ */}
-        {profile.loading && !user ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <div className="h-8 w-8 mx-auto rounded-full border-2 border-[#344C43]/30 border-t-[#B87959] animate-spin" />
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[#344C43]/60">Reading your identity…</p>
-            </div>
-          </div>
-        ) : profile.error ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#A34343]">The desk could not be opened.</p>
-              <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/60">{profile.error}</p>
-              <button
-                type="button"
-                onClick={() => profile.refetch()}
-                className="mt-3 h-9 rounded-sm border border-[#344C43] bg-[#344C43] px-4 font-mono text-[9px] font-bold uppercase tracking-[0.18em] text-[#F2EDDF] hover:bg-[#2A3E36]"
-              >
-                <RefreshCw aria-hidden="true" className="mr-1.5 size-3.5" strokeWidth={2} />
-                Retry
-              </button>
-            </div>
-          </div>
+        {/* ══ Loading / Error state ═══════════════════════════════════════ */}
+        {isPending && !user ? (
+          <LoadingState message="Reading your identity…" />
         ) : !user ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
@@ -351,364 +667,8 @@ export default function ProfilePage() {
             </div>
           </div>
         ) : (
-          <div className="mt-6 grid gap-6 lg:grid-cols-12 lg:items-start">
-            {/* ── LEFT — the plate, completion seal, plan ── */}
-            <div className="space-y-5 lg:col-span-5">
-              <IdentityCard user={user} />
-
-              {/* Profile completion */}
-              <section aria-labelledby="completion-heading" className="border border-[#344C43]/25 bg-[#EFE7DC] p-5 shadow-[5px_6px_0_rgba(52,76,67,0.13)]">
-                <h2 id="completion-heading" className="font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#344C43]/60">
-                  The Seal of Completeness
-                </h2>
-                <div className="mt-4 flex items-center gap-5">
-                  <CompletionRing percent={86} />
-                  <ul className="min-w-0 flex-1 space-y-1.5">
-                    {[
-                      { label: "Identity verified", done: true },
-                      { label: "Portrait uploaded", done: !!user.image, hint: "+4%" },
-                      { label: "Email confirmed", done: true },
-                      { label: "Phone confirmed", done: !!user.phone, hint: "+6%" },
-                      { label: "Bio written", done: !!user.bio, hint: "+4%" },
-                    ].map((item) => (
-                      <li key={item.label} className="flex items-start gap-2 text-[10.5px] leading-snug">
-                        {item.done ? (
-                          <CheckCircle2 aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-[#668B78]" strokeWidth={2} />
-                        ) : (
-                          <span aria-hidden="true" className="mt-0.5 flex size-3.5 shrink-0 items-center justify-center rounded-full border border-[#B87959]/55 font-mono text-[10px] font-bold text-[#B87959]">
-                            +
-                          </span>
-                        )}
-                        <span className={cn("tracking-tight", item.done ? "text-[#344C43]/80" : "font-semibold text-[#344C43]")}>
-                          {item.label}
-                          {item.hint && <span className="ml-1 font-mono text-[9px] text-[#B87959]">{item.hint}</span>}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-
-              <section aria-labelledby="plan-heading" className="relative overflow-hidden border border-[#C98B6D]/50 bg-[#243630] p-5 text-[#F2EDDF]" style={{ backgroundImage: "linear-gradient(150deg, rgba(201,139,109,0.16) 0%, transparent 45%)" }}>
-                <span aria-hidden="true" className="absolute right-4 top-4 select-none text-xl leading-none text-[#C98B6D]/75">✦</span>
-                <h2 id="plan-heading" className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#C98B6D]">
-                  <Crown aria-hidden="true" className="size-4" strokeWidth={1.75} />
-                  Your Guild Seat
-                </h2>
-                <p className="identity-serif mt-2 text-3xl font-black leading-none tracking-tight text-[#F2EDDF]">
-                  {user.plan === "pro" ? "Pro" : "Free"}<span className="text-base font-bold text-[#F2EDDF]/55"> · {user.plan === "pro" ? "$15 / mo" : "$0 / mo"}</span>
-                </p>
-                <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.22em] text-[#9DBFA9]">
-                  {user.plan === "pro" ? "Active · Pro Member" : "Free Plan · Upgrade anytime"}
-                </p>
-                <ul className="mt-3 space-y-1 border-t border-[#F2EDDF]/12 pt-3 font-mono text-[9px] uppercase leading-snug tracking-[0.16em] text-[#F2EDDF]/70">
-                  <li className="flex items-center gap-1.5">
-                    <CheckCircle2 aria-hidden="true" className="size-3.5 text-[#C98B6D]" strokeWidth={2} />
-                    {user.plan === "pro" ? "Unlimited batch listings" : "Up to 2 active listings"}
-                  </li>
-                  <li className="flex items-center gap-1.5">
-                    <CheckCircle2 aria-hidden="true" className="size-3.5 text-[#C98B6D]" strokeWidth={2} />
-                    {user.plan === "pro" ? "Verified seal + featured index" : "Verified seal on approval"}
-                  </li>
-                </ul>
-                <Link
-                  href="/pricing"
-                  className="group mt-3 inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#C98B6D] transition-colors hover:text-[#E0A57E]"
-                >
-                  {user.plan === "pro" ? "Manage" : "Upgrade"}
-                  <ChevronRight aria-hidden="true" className="size-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
-                </Link>
-              </section>
-            </div>
-
-            {/* ── RIGHT — the intake desk ── */}
-            <form
-              className="space-y-5 lg:col-span-7"
-              onSubmit={(e) => { e.preventDefault(); handleSave() }}
-              noValidate
-              aria-label="Update profile"
-            >
-              {/* 01 — Personal details */}
-              <section aria-labelledby="details-heading" className="border border-[#344C43]/25 bg-[#EFE7DC] p-5 shadow-[5px_6px_0_rgba(52,76,67,0.13)] sm:p-6">
-                <h2 id="details-heading" className="flex items-baseline justify-between gap-3 border-b border-[#344C43]/20 pb-2">
-                  <span className="flex items-baseline gap-3">
-                    <span aria-hidden="true" className="font-mono text-[10px] font-bold tracking-[0.2em] text-[#B87959]">01</span>
-                    <span className="identity-serif text-2xl font-black tracking-tight text-[#344C43]">The Details</span>
-                  </span>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">What the board reads</span>
-                </h2>
-
-                <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                  <div className="sm:col-span-2">
-                    <Label htmlFor="f-name" className={cn(fieldLabel, "mb-1.5 block")}>Full Name</Label>
-                    <div className="relative">
-                      <UserRound aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#668B78]" strokeWidth={1.75} />
-                      <Input
-                        id="f-name"
-                        value={form.name}
-                        onChange={set("name")}
-                        className={cn(wellField, "pl-9 font-semibold")}
-                        autoComplete="name"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <Label htmlFor="f-email" className={cn(fieldLabel, "mb-1.5 block")}>
-                      Email Address <span className="normal-case tracking-normal text-[#344C43]/45">(locked)</span>
-                    </Label>
-                    <div className="relative">
-                      <Mail aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#668B78]/70" strokeWidth={1.75} />
-                      <input
-                        id="f-email"
-                        type="email"
-                        value={user.email}
-                        readOnly
-                        aria-readonly="true"
-                        tabIndex={0}
-                        className="h-11 w-full cursor-not-allowed rounded-sm border border-[#344C43]/20 bg-[#344C43]/5 pl-9 pr-24 font-mono text-[12px] text-[#344C43]/65 outline-none"
-                      />
-                      <span className="pointer-events-none absolute right-2 top-1/2 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-sm border border-[#668B78]/45 bg-[#668B78]/10 px-2 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#4A695C]">
-                        <BadgeCheck aria-hidden="true" className="size-3" strokeWidth={2.5} />
-                        Verified
-                      </span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="f-phone" className={cn(fieldLabel, "mb-1.5 block")}>Phone Number</Label>
-                    <div className="relative">
-                      <Phone aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#668B78]" strokeWidth={1.75} />
-                      <Input
-                        id="f-phone"
-                        type="tel"
-                        value={form.phone}
-                        onChange={set("phone")}
-                        className={cn(wellField, "pl-9 font-mono")}
-                        autoComplete="tel"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="f-location" className={cn(fieldLabel, "mb-1.5 block")}>Studio Area</Label>
-                    <div className="relative">
-                      <MapPin aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#668B78]" strokeWidth={1.75} />
-                      <Input
-                        id="f-location"
-                        type="text"
-                        value=""
-                        readOnly
-                        aria-readonly="true"
-                        className="h-11 w-full cursor-not-allowed rounded-sm border border-[#344C43]/20 bg-[#344C43]/5 pl-9 text-[13px] text-[#344C43]/65 outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <Label htmlFor="f-bio" className={cn(fieldLabel, "mb-1.5 block")}>Bio — Your Board Note</Label>
-                    <textarea
-                      id="f-bio"
-                      rows={3}
-                      value={form.bio}
-                      onChange={set("bio")}
-                      maxLength={220}
-                      className="w-full resize-none rounded-sm border border-[#344C43]/25 bg-[#F2ECDF] px-3 py-2.5 text-[13px] leading-relaxed text-[#344C43] outline-none transition-all placeholder:text-[#344C43]/35 hover:border-[#344C43]/45 focus:border-[#668B78] focus:bg-[#EFE7DC] focus:ring-2 focus:ring-[#668B78]/20"
-                    />
-                    <p className="mt-1.5 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.2em] text-[#344C43]/45">
-                      <span>Scholars read this before they apply</span>
-                      <span className="tabular-nums">{form.bio.length} / 220</span>
-                    </p>
-                  </div>
-                </div>
-              </section>
-
-              {/* 02 — The Portrait */}
-              <section aria-labelledby="portrait-heading" className="border border-[#344C43]/25 bg-[#EFE7DC] p-5 shadow-[5px_6px_0_rgba(52,76,67,0.13)] sm:p-6">
-                <h2 id="portrait-heading" className="flex items-baseline justify-between gap-3 border-b border-[#344C43]/20 pb-2">
-                  <span className="flex items-baseline gap-3">
-                    <span aria-hidden="true" className="font-mono text-[10px] font-bold tracking-[0.2em] text-[#B87959]">02</span>
-                    <span className="identity-serif text-2xl font-black tracking-tight text-[#344C43]">The Portrait</span>
-                  </span>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">Your face, on record</span>
-                </h2>
-
-                <div className="mt-5 flex flex-col gap-5 sm:flex-row sm:items-center">
-                  {/* Preview */}
-                  <div className="relative mx-auto shrink-0 sm:mx-0">
-                    {portraitRemoved || !form.image ? (
-                      <div className="flex size-32 flex-col items-center justify-center gap-1.5 rounded-full border-2 border-dashed border-[#344C43]/30 bg-[#344C43]/5 text-[#344C43]/40 sm:size-36">
-                        <ImageOff aria-hidden="true" className="size-6" strokeWidth={1.5} />
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em]">No portrait</span>
-                      </div>
-                    ) : (
-                      <div className="flex size-32 items-center justify-center rounded-full border-4 border-[#C98B6D]/60 bg-[#243630] shadow-[0_10px_28px_rgba(0,0,0,0.3)] sm:size-36 overflow-hidden">
-                        <img src={form.image} alt="Portrait" className="size-full object-cover" />
-                      </div>
-                    )}
-                    <span aria-hidden="true" className="absolute -bottom-1 -right-1 flex size-9 items-center justify-center rounded-full border-2 border-[#EFE7DC] bg-[#668B78] text-[#F2EDDF]">
-                      <Check className="size-4" strokeWidth={3} />
-                    </span>
-                  </div>
-
-                  {/* Dropzone + buttons */}
-                  <div className="min-w-0 flex-1">
-                    <div
-                      role="button"
-                      tabIndex={0}
-                      aria-label="Upload portrait image"
-                      className="flex flex-col items-center justify-center gap-1.5 border-2 border-dashed border-[#344C43]/30 bg-[#F2ECDF] px-4 py-5 text-center transition-colors hover:border-[#668B78]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
-                      onClick={() => fileInputRef.current?.click()}
-                      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click() }}
-                    >
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp"
-                        className="sr-only"
-                        onChange={handlePhotoChange}
-                      />
-                      <Upload aria-hidden="true" className="size-6 text-[#668B78]" strokeWidth={1.75} />
-                      <p className="font-mono text-[10px] font-bold uppercase leading-relaxed tracking-[0.2em] text-[#344C43]">
-                        {uploading ? "Uploading…" : "Drag portrait here"}<br />
-                        <span className="font-medium text-[#344C43]/55">or browse files</span>
-                      </p>
-                      <p className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/45">
-                        PNG · JPG · ≤ 5 MB
-                      </p>
-                    </div>
-                    <div className="mt-2.5 flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#344C43]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
-                      >
-                        <Camera aria-hidden="true" className="size-4" strokeWidth={1.75} />
-                        Change Photo
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleRemovePortrait}
-                        className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#A34343]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
-                      >
-                        <ImageOff aria-hidden="true" className="size-4" strokeWidth={1.75} />
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                  </div>
-                </section>
-
-                {/* 03 — How the board sees you */}
-                <section aria-labelledby="preview-heading" className="border border-[#344C43]/25 bg-[#EFE7DC] p-5 shadow-[5px_6px_0_rgba(52,76,67,0.13)] sm:p-6">
-                  <h2 id="preview-heading" className="flex items-baseline justify-between gap-3 border-b border-[#344C43]/20 pb-2">
-                    <span className="flex items-baseline gap-3">
-                      <span aria-hidden="true" className="font-mono text-[10px] font-bold tracking-[0.2em] text-[#B87959]">03</span>
-                      <span className="identity-serif text-2xl font-black tracking-tight text-[#344C43]">How The Board Sees You</span>
-                    </span>
-                    <span className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#344C43]/55">Live preview</span>
-                  </h2>
-                  <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
-                    <div className="flex min-w-0 flex-1 items-center gap-3 rounded-sm border border-[#344C43]/20 bg-[#F2ECDF] p-3">
-                      <span
-                        aria-hidden="true"
-                        className="flex size-14 shrink-0 items-center justify-center rounded-full border border-[#C98B6D]/55 bg-[#243630] font-mono text-sm font-bold text-[#C98B6D] overflow-hidden"
-                      >
-                        {portraitRemoved || !form.image ? (form.name ? form.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase() : "—") : <img src={form.image} alt="" className="size-full object-cover" />}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="flex items-center gap-1.5">
-                          <span className="truncate text-[13px] font-bold tracking-tight text-[#344C43]">{form.name || "Unnamed Mentor"}</span>
-                          <BadgeCheck aria-hidden="true" className="size-3.5 shrink-0 text-[#668B78]" strokeWidth={2} />
-                        </span>
-                        <span className="mt-0.5 block truncate font-mono text-[10px] uppercase tracking-[0.18em] text-[#B87959]">
-                          {user.role} · Verified · {user.plan === "pro" ? "Pro" : "Free"} Plan
-                        </span>
-                        <span className="mt-1 line-clamp-2 text-[10.5px] leading-snug text-[#344C43]/70">
-                          {form.bio || "—"}
-                        </span>
-                      </span>
-                    </div>
-                    <div className="shrink-0 border-l border-[#344C43]/15 pl-4 text-right">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#344C43]/50">Member since</p>
-                      <p className="mt-0.5 flex items-center justify-end gap-1.5 font-mono text-[9px] font-bold text-[#344C43]">
-                        <CalendarDays aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
-                        {user.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
-                      </p>
-                      <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.24em] text-[#344C43]/50">Email</p>
-                      <p className="mt-0.5 flex items-center justify-end gap-1.5 font-mono text-[9px] font-bold text-[#344C43]">
-                        <Mail aria-hidden="true" className="size-3.5 text-[#668B78]" strokeWidth={2} />
-                        {user.email}
-                      </p>
-                    </div>
-                  </div>
-                </section>
-
-                {/* ── Save bar ── */}
-                <div className="flex flex-col-reverse gap-2.5 border border-[#344C43]/25 bg-[#F2ECDF]/60 p-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex flex-col items-start gap-1.5">
-                    {dirty && !savedFlash ? (
-                      <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#B87959]/50 bg-[#B87959]/10 px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#B87959]">
-                        <span aria-hidden="true" className="size-2 rounded-full bg-[#B87959]" />
-                        Unsaved changes on the desk
-                      </span>
-                    ) : savedFlash ? (
-                      <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#668B78]/50 bg-[#668B78]/10 px-2.5 py-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#4A695C]">
-                        <CheckCircle2 aria-hidden="true" className="size-3.5" strokeWidth={2} />
-                        Saved to your desk
-                      </span>
-                    ) : (
-                      <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#344C43]/45">
-                        Everything as the board left it
-                      </span>
-                    )}
-                    {saveError && (
-                      <span role="alert" className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#A34343]">
-                        {saveError}
-                      </span>
-                    )}
-                    <button
-                      type="button"
-                      onClick={handleCancel}
-                      className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/30 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
-                    >
-                      <RotateCcw aria-hidden="true" className="size-4" strokeWidth={1.75} />
-                      Cancel Changes
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleSave}
-                    disabled={!dirty || saving}
-                    className={cn(
-                      "inline-flex h-12 items-center justify-center gap-2 rounded-sm border px-6 font-mono text-[9px] font-bold uppercase tracking-[0.26em] transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
-                      savedFlash
-                        ? "border-[#668B78] bg-[#668B78] text-[#F2EDDF]"
-                        : dirty
-                          ? "border-[#A6683F]/60 bg-[#B87959] text-[#1E3A2F] shadow-[4px_4px_0_#344C43] hover:-translate-y-0.5 hover:bg-[#C98B6D]"
-                          : "cursor-not-allowed border-[#344C43]/15 bg-[#344C43]/5 text-[#344C43]/35"
-                    )}
-                  >
-                    {saving ? (
-                      <>
-                        <RefreshCw aria-hidden="true" className="size-4 animate-spin" strokeWidth={1.75} />
-                        Saving…
-                      </>
-                    ) : savedFlash ? (
-                      <>
-                        <CheckCircle2 aria-hidden="true" className="size-4" strokeWidth={2} />
-                        Saved to Your Desk
-                      </>
-                    ) : (
-                      <>
-                        <Save aria-hidden="true" className="size-4" strokeWidth={1.75} />
-                        Save Changes
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
+          <ProfileForm user={user} refetch={refetch} />
+        )}
       </div>
     </div>
   )
