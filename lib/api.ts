@@ -140,3 +140,12 @@ export async function uploadImage(file: File): Promise<string> {
 
   return payload.data.url
 }
+
+// Stripe checkout session creation. The server will return a URL to redirect the user to.
+export async function createCheckoutSession(plan: "student" | "tutor") {
+  const result = await apiFetch<{ url: string }>("/api/payments/create-checkout-session", {
+    method: "POST",
+    body: { plan },
+  });
+  return result.data.url;
+}
