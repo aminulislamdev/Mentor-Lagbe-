@@ -48,12 +48,12 @@ const TIMELINE: Array<{
   Icon: typeof PenLine
   tone: "sage" | "terra" | "pine"
 }> = [
-  { day: "Today", time: "6:12 AM", title: "Sealed Chapter 4 — Integration by Parts", detail: "12 margin notes filed to your Physics dossier.", Icon: PenLine, tone: "sage" },
-  { day: "Yesterday", time: "9:40 PM", title: "Dr. Nasrin accepted your application", detail: "HSC Physics — Seat 07 is yours. Batch letter sent to your inbox.", Icon: BadgeCheck, tone: "sage" },
-  { day: "17 Nov", time: "4:03 PM", title: "Higher Maths application submitted", detail: "Mr. Tanvir (BUET'28) — awaiting review. A 2-line note lifts acceptance odds.", Icon: Send, tone: "terra" },
-  { day: "12 Nov", time: "11:28 AM", title: "Profile sketch reached 92%", detail: "Two fields short of Verified Scholar trust score.", Icon: Sparkles, tone: "pine" },
-  { day: "08 Nov", time: "7:00 PM", title: "Batch reminder — ICT Practical", detail: "Thursday 6 PM with Ms. Rumana. Seat 09 held, lab notebook required.", Icon: Bell, tone: "terra" },
-]
+    { day: "Today", time: "6:12 AM", title: "Sealed Chapter 4 — Integration by Parts", detail: "12 margin notes filed to your Physics dossier.", Icon: PenLine, tone: "sage" },
+    { day: "Yesterday", time: "9:40 PM", title: "Dr. Nasrin accepted your application", detail: "HSC Physics — Seat 07 is yours. Batch letter sent to your inbox.", Icon: BadgeCheck, tone: "sage" },
+    { day: "17 Nov", time: "4:03 PM", title: "Higher Maths application submitted", detail: "Mr. Tanvir (BUET'28) — awaiting review. A 2-line note lifts acceptance odds.", Icon: Send, tone: "terra" },
+    { day: "12 Nov", time: "11:28 AM", title: "Profile sketch reached 92%", detail: "Two fields short of Verified Scholar trust score.", Icon: Sparkles, tone: "pine" },
+    { day: "08 Nov", time: "7:00 PM", title: "Batch reminder — ICT Practical", detail: "Thursday 6 PM with Ms. Rumana. Seat 09 held, lab notebook required.", Icon: Bell, tone: "terra" },
+  ]
 
 const FUNNEL = [
   { label: "Sent", count: "4", width: "100%", tone: "#344C43" },
