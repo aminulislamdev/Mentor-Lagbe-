@@ -17,15 +17,16 @@ import {
 import { cn } from "@/lib/utils"
 
 // ─── Static cancellation ledger (UI only — nothing was charged) ───────────────
+// Stripe Cancel URL-এ সাধারণত session_id থাকে না, তাই এখানে জেনেরিক তথ্য দেওয়া হলো।
 
 const CANCELLATION = {
-  plan: "Tutor Pro — Mentor's Guild",
-  planShort: "Tutor Pro",
-  amount: "$15.00",
-  currency: "USD / month",
+  plan: "MentorLagbe Pro Membership",
+  planShort: "Pro Plan",
+  amount: "Subscription",
+  currency: "Monthly",
   status: "Cancelled",
-  reference: "ch_3Qk8sL2eZvKYlo2C0mNtP9wQa",
-  note: "No charge was made — the Stripe session expired before authorization.",
+  reference: "Stripe Checkout Session",
+  note: "No charge was made — the Stripe session was cancelled before authorization.",
 }
 
 // ─── Scoped pause styles ─────────────────────────────────────────────────────
@@ -137,7 +138,7 @@ export default function PaymentCancelPage() {
               {[
                 ["Selected Plan", CANCELLATION.plan],
                 ["Subscription", "Monthly · auto-renew"],
-                ["Intended Amount", `${CANCELLATION.amount} ${CANCELLATION.currency}`],
+                ["Intended Amount", CANCELLATION.amount],
                 ["Payment Status", "Cancelled — no charge"],
                 ["Transaction", CANCELLATION.reference],
                 ["Activation", "Not activated"],
@@ -214,7 +215,7 @@ export default function PaymentCancelPage() {
             {[
               { Icon: Wallet, title: "Try Again", desc: "Reopen the checkout exactly where you left off — seats and pricing held for you", href: "/pricing", cta: "Resume Checkout", tone: "primary" as const },
               { Icon: Sparkles, title: "Explore Pricing", desc: "Read the full guild ledger — student memberships, mentor memberships, everything included", href: "/pricing", cta: "View Plans", tone: "outline" as const },
-              { Icon: LayoutDashboard, title: "Return to Dashboard", desc: "Back to your studio — applications, listings and your Pro upgrade path", href: "/dashboard/tutor", cta: "Go to Dashboard", tone: "outline" as const },
+              { Icon: LayoutDashboard, title: "Return to Dashboard", desc: "Back to your studio — applications, listings and your Pro upgrade path", href: "/dashboard", cta: "Go to Dashboard", tone: "outline" as const },
               { Icon: House, title: "Back to Home", desc: "Return to the atelier front page — browse featured batches and the community", href: "/", cta: "Go Home", tone: "ghost" as const },
             ].map(({ Icon, title, desc, href, cta, tone }) => (
               <Link

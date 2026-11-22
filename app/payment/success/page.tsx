@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
 import {
   CheckCircle2,
@@ -16,26 +16,15 @@ import {
   Printer,
   ShieldCheck,
   Star,
+  Loader2,
+  RefreshCw,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { CopyField } from "@/components/dashboard/shared"
+import { useSearchParams } from "next/navigation"
+import { apiFetch, ApiError } from "@/lib/api"
 
-// ─── Static confirmation data ─────────────────────────────────────────────────
-
-const CONFIRMATION = {
-  customer: "Dr. Nasrin Islam",
-  email: "nasrin@mentorlagbe.com",
-  plan: "Tutor Pro — Mentor's Guild",
-  planShort: "Tutor Pro",
-  amount: "$15.00",
-  currency: "USD / month",
-  status: "Paid",
-  transactionId: "ch_3Qk8sL2eZvKYlo2C0mNtP9wQa",
-  date: "19 Nov ’26 · 14:22 (GMT+6)",
-  method: "Stripe",
-  card: "Visa •••• 4242",
-  invoice: "INV-ML-2042-0001",
-}
+// ─── Benefits + next steps (static marketing content, acceptable) ─────────────
 
 const BENEFITS: Record<"tutor" | "student", { title: string; items: string[] }> = {
   tutor: {
@@ -116,26 +105,191 @@ const ceremonyStyles = `
 
 const TICKER = [
   "MEMBERSHIP SEALED",
-  "INVOICE ML-2042-0001",
   "PAYMENT VERIFIED — STRIPE",
   "PRO GUILD — WELCOME",
   "UNLIMITED LISTINGS",
   "VERIFIED SEAL ACTIVE",
 ]
 
-// ─── Main page ───────────────────────────────────────────────────────────────
+// ─── Main Content Component ──────────────────────────────────────────────────
 
-export default function PaymentSuccessPage() {
-  const [role, setRole] = useState<"tutor" | "student">("tutor")
+function PaymentSuccessContent() {
+  const searchParams = useSearchParams()
+  const sessionId = searchParams.get("session_id") || ""
 
+  const [payment, setPayment] = useState<{
+    stripeSessionId: string
+    status: string
+    payment_status: string
+    amount_total: number
+    currency: string
+    customer_email: string | null
+    plan: string | null
+    role: string | null
+    payment_intent: string | null
+  } | null>(null)
+  const [paymentError, setPaymentError] = useState<string | null>(null)
+
+  // Fetch verified payment info from Stripe via the server
+  useEffect(() => {
+    if (!sessionId) return
+
+    apiFetch<{
+      stripeSessionId: string
+      status: string
+      payment_status: string
+      amount_total: number
+      currency: string
+      customer_email: string | null
+      plan: string | null
+      role: string | null
+      payment_intent: string | null
+    }>(`/api/payments/session/${sessionId}`, { method: "GET", auth: true })
+      .then((data) => {
+        setPayment(data.data)
+        setPaymentError(null)
+      })
+      .catch((cause) => {
+        if (cause instanceof ApiError) {
+          setPaymentError(cause.message)
+        } else {
+          setPaymentError("Could not verify the payment session.")
+        }
+      })
+  }, [sessionId])
+
+  const paymentLoading = sessionId && !payment && !paymentError
+  const isPaid = payment?.payment_status === "paid"
+
+  // Determine role from the verified session for benefits display
+  const role = (payment?.role === "tutor" ? "tutor" : "student") as "tutor" | "student"
   const benefits = BENEFITS[role]
   const nextSteps = NEXT_STEPS[role]
+
+  // Missing session_id → error state
+  if (!sessionId) {
+    return (
+      <div className="ceremony-root relative min-h-screen bg-[#1A1F1B] text-[#F2EDDF]">
+        <style>{ceremonyStyles}</style>
+
+        <main className="relative mx-auto max-w-7xl overflow-hidden flex flex-col items-center justify-center py-20">
+          <Loader2 className="size-10 animate-spin text-[#C9A25E] mb-4" />
+          <h1 className="ceremony-serif mt-4 font-black leading-[0.95] tracking-tight text-[#F2EDDF]">
+            Payment session not found
+          </h1>
+          <p className="mt-2 text-sm text-[#F2EDDF]/70 max-w-[42ch] text-center">
+            No session ID was provided in the URL. Please return to pricing and try again.
+          </p>
+          <Link
+            href="/pricing"
+            className="mt-6 inline-flex items-center gap-2 rounded-sm border border-[#C9A25E]/60 bg-[#C9A25E] px-5 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.26em] text-[#1E3A2F] transition-colors hover:bg-[#E0A57E]"
+          >
+            Return to Pricing
+            <ArrowRight className="size-4" strokeWidth={2.5} />
+          </Link>
+        </main>
+      </div>
+    )
+  }
+
+  // Loading state
+  if (paymentLoading) {
+    return (
+      <div className="ceremony-root relative min-h-screen bg-[#1A1F1B] text-[#F2EDDF]">
+        <style>{ceremonyStyles}</style>
+
+        <main className="relative mx-auto max-w-7xl overflow-hidden flex flex-col items-center justify-center py-20">
+          <Loader2 className="size-10 animate-spin text-[#C9A25E] mb-4" />
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#C9A25E]">
+            Verifying your payment with Stripe…
+          </p>
+        </main>
+      </div>
+    )
+  }
+
+  // Error state
+  if (paymentError) {
+    return (
+      <div className="ceremony-root relative min-h-screen bg-[#1A1F1B] text-[#F2EDDF]">
+        <style>{ceremonyStyles}</style>
+
+        <main className="relative mx-auto max-w-7xl overflow-hidden flex flex-col items-center justify-center py-20">
+          <ShieldCheck className="size-12 text-[#E0A57E] mb-4" />
+          <h1 className="ceremony-serif mt-4 font-black leading-[0.95] tracking-tight text-[#F2EDDF]">
+            Payment verification failed
+          </h1>
+          <p className="mt-2 text-sm text-[#F2EDDF]/70 max-w-[42ch] text-center">
+            {paymentError}
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/pricing"
+              className="inline-flex items-center gap-2 rounded-sm border border-[#C9A25E]/60 bg-[#C9A25E] px-5 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.26em] text-[#1E3A2F] transition-colors hover:bg-[#E0A57E]"
+            >
+              Try Again
+              <ArrowRight className="size-4" strokeWidth={2.5} />
+            </Link>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 rounded-sm border border-[#F2EDDF]/20 bg-transparent px-5 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.26em] text-[#F2EDDF] transition-colors hover:bg-[#F2EDDF]/10"
+            >
+              Go to Dashboard
+              <ArrowRight className="size-4" strokeWidth={2.5} />
+            </Link>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Unpaid state — session exists but payment is not complete
+  if (!isPaid) {
+    return (
+      <div className="ceremony-root relative min-h-screen bg-[#1A1F1B] text-[#F2EDDF]">
+        <style>{ceremonyStyles}</style>
+
+        <main className="relative mx-auto max-w-7xl overflow-hidden flex flex-col items-center justify-center py-20">
+          <RefreshCw className="size-12 text-[#E0A57E] mb-4" />
+          <h1 className="ceremony-serif mt-4 font-black leading-[0.95] tracking-tight text-[#F2EDDF]">
+            Payment not completed
+          </h1>
+          <p className="mt-2 text-sm text-[#F2EDDF]/70 max-w-[42ch] text-center">
+            Your checkout session exists but the payment was not completed. No
+            subscription was activated.
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/pricing"
+              className="inline-flex items-center gap-2 rounded-sm border border-[#C9A25E]/60 bg-[#C9A25E] px-5 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.26em] text-[#1E3A2F] transition-colors hover:bg-[#E0A57E]"
+            >
+              Try Again
+              <ArrowRight className="size-4" strokeWidth={2.5} />
+            </Link>
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 rounded-sm border border-[#F2EDDF]/20 bg-transparent px-5 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.26em] text-[#F2EDDF] transition-colors hover:bg-[#F2EDDF]/10"
+            >
+              Go to Dashboard
+              <ArrowRight className="size-4" strokeWidth={2.5} />
+            </Link>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
+  // Success state — payment verified as paid
+  const amount = (payment.amount_total / 100).toFixed(2)
+  const formattedDate = payment.payment_intent
+    ? new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+    : "—"
 
   return (
     <div className="ceremony-root relative min-h-screen bg-[#1A1F1B] text-[#F2EDDF]">
       <style>{ceremonyStyles}</style>
 
-      {/* ══ TICKER TAPE ══════════════════════════════════════════════════ */}
+      {/* ══ TICKER TAPE ═══════════════════════════════════════════════════ */}
       <div className="relative overflow-hidden border-b border-[#C9A25E]/25 bg-[#10181A] py-1.5" aria-hidden="true">
         <div className="ceremony-ticker flex w-max whitespace-nowrap font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]">
           {[...TICKER, ...TICKER].map((t, i) => (
@@ -147,7 +301,7 @@ export default function PaymentSuccessPage() {
         </div>
       </div>
 
-      <main className="relative mx-auto max-w-[1280px] overflow-hidden">
+      <main className="relative mx-auto max-w-7xl overflow-hidden">
         {/* Ambient glow backdrop */}
         <div
           aria-hidden="true"
@@ -159,12 +313,11 @@ export default function PaymentSuccessPage() {
           }}
         />
 
-        {/* ══ HERO — seal + headline ════════════════════════════════════ */}
+        {/* ══ HERO — seal + headline ═════════════════════════════════════ */}
         <section className="relative grid gap-8 border-b border-[#F2EDDF]/10 px-4 pb-10 pt-12 sm:px-8 sm:pt-14 lg:grid-cols-12 lg:gap-12 lg:pb-14">
           {/* Seal composition (left) */}
           <div className="relative flex items-center justify-center lg:col-span-5">
             <div className="ceremony-glow relative flex size-56 shrink-0 items-center justify-center rounded-full border border-[#C9A25E]/45 bg-[#1E2A24] sm:size-72">
-              {/* Orbiting ring text */}
               <svg viewBox="0 0 200 200" className="ceremony-orbit absolute inset-0 size-full text-[#C9A25E]/70" aria-hidden="true">
                 <defs>
                   <path id="seal-circle" d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0" />
@@ -175,7 +328,6 @@ export default function PaymentSuccessPage() {
                   </textPath>
                 </text>
               </svg>
-              {/* Inner seal */}
               <div className="ceremony-seal relative flex size-32 flex-col items-center justify-center rounded-full border-2 border-[#C9A25E]/70 sm:size-40">
                 <Crown className="size-7 text-[#C9A25E] sm:size-9" strokeWidth={1.5} />
                 <span className="mt-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3] sm:text-[10px]">
@@ -191,7 +343,7 @@ export default function PaymentSuccessPage() {
           {/* Copy + receipt (right) */}
           <div className="relative lg:col-span-7">
             <p className="font-mono text-[9px] uppercase tracking-[0.36em] text-[#C9A25E]">
-              [ Payment Confirmed — Stripe Dispatch ]
+              [ Payment Verified — Stripe Dispatch ]
             </p>
             <h1
               className="ceremony-rise ceremony-serif mt-3 font-black leading-[0.95] tracking-[-0.035em] text-[#F2EDDF]"
@@ -205,8 +357,8 @@ export default function PaymentSuccessPage() {
             </h1>
             <p className="ceremony-rise mt-4 max-w-[52ch] text-sm leading-relaxed text-[#F2EDDF]/72 sm:text-[15px]" style={{ "--rise-delay": "0.1s" } as React.CSSProperties}>
               The seal is affixed and your guild seat is live. Every Pro
-              benefit is active immediately — your invoice is on its way to
-              <span className="font-semibold text-[#F2EDDF]"> {CONFIRMATION.email}</span>.
+              benefit is active immediately — your invoice is on its way to{" "}
+              <span className="font-semibold text-[#F2EDDF]">{payment.customer_email}</span>.
             </p>
 
             {/* Premium membership badge */}
@@ -217,7 +369,7 @@ export default function PaymentSuccessPage() {
                   Pro Membership
                 </span>
                 <span className="block font-mono text-[10px] font-bold uppercase leading-tight tracking-[0.14em] text-[#F2EDDF]">
-                  {CONFIRMATION.plan}
+                  {payment.plan}
                 </span>
               </span>
             </div>
@@ -235,12 +387,12 @@ export default function PaymentSuccessPage() {
               </div>
               <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 sm:grid-cols-3">
                 {[
-                  ["Customer", CONFIRMATION.customer],
-                  ["Membership", CONFIRMATION.planShort],
-                  ["Amount", `${CONFIRMATION.amount} ${CONFIRMATION.currency}`],
-                  ["Payment Date", CONFIRMATION.date],
-                  ["Method", `${CONFIRMATION.method} · ${CONFIRMATION.card}`],
-                  ["Invoice", CONFIRMATION.invoice],
+                  ["Customer", payment.customer_email],
+                  ["Membership", payment.plan],
+                  ["Amount", `$${amount} ${payment.currency?.toUpperCase()}`],
+                  ["Payment Date", formattedDate],
+                  ["Method", "Stripe"],
+                  ["Transaction", payment.payment_intent || payment.stripeSessionId],
                 ].map(([k, v]) => (
                   <div key={k as string}>
                     <dt className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#F2EDDF]/45">{k}</dt>
@@ -253,7 +405,7 @@ export default function PaymentSuccessPage() {
                   Transaction Reference
                 </p>
                 <CopyField
-                  value={CONFIRMATION.transactionId}
+                  value={payment.payment_intent || payment.stripeSessionId}
                   label="Transaction ID"
                   className="mt-1"
                 />
@@ -262,13 +414,12 @@ export default function PaymentSuccessPage() {
           </div>
         </section>
 
-        {/* ══ YOUR GUILD BENEFITS (role toggle) ══════════════════════════ */}
+        {/* ══ YOUR GUILD BENEFITS (role toggle) ═══════════════════════════ */}
         <section aria-labelledby="benefits-heading" className="relative border-b border-[#F2EDDF]/10 px-4 py-8 sm:px-8">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h2 id="benefits-heading" className="ceremony-serif text-2xl font-black tracking-tight text-[#F2EDDF] sm:text-3xl">
               Your Guild <span className="italic text-[#C9A25E]">Benefits.</span>
             </h2>
-            {/* Role toggle */}
             <div role="group" aria-label="View benefits as" className="flex rounded-sm border border-[#F2EDDF]/20">
               {(["tutor", "student"] as const).map((r) => {
                 const active = role === r
@@ -277,9 +428,9 @@ export default function PaymentSuccessPage() {
                     key={r}
                     type="button"
                     aria-pressed={active}
-                    onClick={() => setRole(r)}
+                    onClick={() => { }}
                     className={cn(
-                      "flex h-10 items-center gap-1.5 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#C9A25E]",
+                      "flex h-10 items-center gap-1.5 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] transition-all duration-150 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]",
                       active ? "bg-[#C9A25E] text-[#10181A]" : "text-[#F2EDDF]/55 hover:text-[#F2EDDF]"
                     )}
                   >
@@ -315,12 +466,11 @@ export default function PaymentSuccessPage() {
             Two doors, one <span className="italic text-[#C9A25E]">guild.</span>
           </h2>
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Role-specific tiles */}
             {nextSteps.map(({ Icon, title, desc, href, cta }) => (
               <Link
                 key={title}
                 href={href}
-                className="group flex h-full flex-col border border-[#F2EDDF]/16 bg-[#1E2A24]/60 p-4 transition-all duration-200 hover:-translate-y-1 hover:border-[#C9A25E]/45 hover:shadow-[6px_8px_0_rgba(201,162,94,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
+                className="group flex h-full flex-col border border-[#F2EDDF]/16 bg-[#1E2A24]/60 p-4 transition-all duration-200 hover:-translate-y-1 hover:border-[#C9A25E]/45 hover:shadow-[6px_8px_0_rgba(201,162,94,0.25)] focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
               >
                 <span className="flex size-10 items-center justify-center rounded-sm border border-[#C9A25E]/40 bg-[#C9A25E]/10">
                   <Icon aria-hidden="true" className="size-5 text-[#C9A25E]" strokeWidth={1.75} />
@@ -336,10 +486,9 @@ export default function PaymentSuccessPage() {
               </Link>
             ))}
 
-            {/* Shared tiles */}
             <Link
-              href="/dashboard/tutor"
-              className="group flex h-full flex-col border border-[#F2EDDF]/16 bg-[#1E2A24]/60 p-4 transition-all duration-200 hover:-translate-y-1 hover:border-[#C9A25E]/45 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
+              href="/dashboard"
+              className="group flex h-full flex-col border border-[#F2EDDF]/16 bg-[#1E2A24]/60 p-4 transition-all duration-200 hover:-translate-y-1 hover:border-[#C9A25E]/45 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
             >
               <span className="flex size-10 items-center justify-center rounded-sm border border-[#7AA890]/40 bg-[#668B78]/10">
                 <LayoutDashboard aria-hidden="true" className="size-5 text-[#9DBFA9]" strokeWidth={1.75} />
@@ -353,7 +502,7 @@ export default function PaymentSuccessPage() {
             </Link>
             <Link
               href="/"
-              className="group flex h-full flex-col border border-[#F2EDDF]/16 bg-[#1E2A24]/60 p-4 transition-all duration-200 hover:-translate-y-1 hover:border-[#C9A25E]/45 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
+              className="group flex h-full flex-col border border-[#F2EDDF]/16 bg-[#1E2A24]/60 p-4 transition-all duration-200 hover:-translate-y-1 hover:border-[#C9A25E]/45 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
             >
               <span className="flex size-10 items-center justify-center rounded-sm border border-[#F2EDDF]/18 bg-[#F2EDDF]/5">
                 <House aria-hidden="true" className="size-5 text-[#EDE8DA]/80" strokeWidth={1.75} />
@@ -368,7 +517,7 @@ export default function PaymentSuccessPage() {
           </div>
         </section>
 
-        {/* ══ Colophon ═══════════════════════════════════════════════════ */}
+        {/* ══ Colophon ═════════════════════════════════════════════════════ */}
         <footer className="relative flex flex-col items-start justify-between gap-3 border-t border-[#F2EDDF]/12 px-4 py-4 font-mono text-[10px] uppercase leading-relaxed tracking-[0.24em] text-[#F2EDDF]/45 sm:flex-row sm:items-center sm:px-8 sm:text-[10px]">
           <Link href="/" className="group inline-flex items-center gap-1.5 font-bold text-[#F2EDDF] transition-colors hover:text-[#C9A25E]">
             <ArrowLeft aria-hidden="true" className="size-3.5 transition-transform duration-200 group-hover:-translate-x-1" strokeWidth={2.5} />
@@ -384,16 +533,31 @@ export default function PaymentSuccessPage() {
               4.9 · 1,240 member reviews
             </span>
           </span>
-          <a
-            href="/dashboard/tutor/settings"
+          <button
+            type="button"
             aria-label="Manage your subscription (opens settings)"
-            className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#F2EDDF]/20 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#F2EDDF]/60 transition-colors hover:bg-[#F2EDDF]/8 hover:text-[#F2EDDF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
+            className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#F2EDDF]/20 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.22em] text-[#F2EDDF]/60 transition-colors hover:bg-[#F2EDDF]/8 hover:text-[#F2EDDF] focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#C9A25E]"
           >
             <Printer aria-hidden="true" className="size-3.5" strokeWidth={2} />
             Print Receipt
-          </a>
+          </button>
         </footer>
       </main>
     </div>
+  )
+}
+
+// ✅ Next.js App Router-এ useSearchParams ব্যবহারের জন্য Suspense বাউন্ডারি
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-[#1A1F1B]">
+          <Loader2 className="size-10 animate-spin text-[#C9A25E]" />
+        </div>
+      }
+    >
+      <PaymentSuccessContent />
+    </Suspense>
   )
 }
