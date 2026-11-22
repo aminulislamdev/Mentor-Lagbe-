@@ -91,10 +91,27 @@ export interface AdminStats {
   totalUsers: number
   totalStudents: number
   totalTutors: number
+  totalAdmins?: number
   totalTuitions: number
   pendingTuitions: number
   approvedTuitions: number
   totalApplications: number
+  totalRevenue?: number
+}
+
+export interface PaymentTransaction {
+  _id: string
+  userEmail: string
+  userName: string
+  userRole: string
+  planName: string
+  amount: number
+  currency: string
+  transactionId: string
+  stripeSessionId?: string
+  paymentStatus: string
+  paidAt?: string
+  createdAt?: string
 }
 
 export type DashboardStats = StudentStats | TutorStats | AdminStats
