@@ -7,6 +7,7 @@ const client = new MongoClient(process.env.MONGODB_URI!)
 const db = client.db("mentorlagbe")
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL,
   // usePlural keeps BetterAuth in sync with the Express models:
   // users / sessions / accounts / verifications (Mongoose maps User -> "users").
   // Without it BetterAuth writes a singular "user" collection and the server can
@@ -25,4 +26,10 @@ export const auth = betterAuth({
   plugins: [
     jwt(), 
   ],
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
+  }
 })
