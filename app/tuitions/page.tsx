@@ -127,38 +127,38 @@ export default function BrowseTuitionsPage() {
           1. CREATIVE EDITORIAL PAGE HEADER
       ────────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-b border-border/80 bg-card/40 pt-10 pb-12 sm:pt-14 sm:pb-16">
-        <div className="absolute inset-0 pointer-events-none opacity-15 [background-image:linear-gradient(to_right,rgba(52,76,67,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(52,76,67,0.15)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem]" />
+        <div className="absolute inset-0 pointer-events-none opacity-15 bg-[linear-gradient(to_right,rgba(52,76,67,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(52,76,67,0.15)_1px,transparent_1px)] bg-size-[3.5rem_3.5rem]" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
             <div className="space-y-3 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-card text-xs font-mono tracking-wider uppercase text-foreground shadow-2xs">
-                <Compass className="size-3.5 text-primary" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-card text-sm font-mono tracking-wider uppercase text-foreground shadow-2xs">
+                <Compass className="size-4 text-primary" />
                 <span>Academic Catalog • Volume 2026</span>
                 <span className="text-muted-foreground">•</span>
                 <span className="text-[#B87959] font-bold">Approved Listings</span>
               </div>
 
-              <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight leading-tight">
+              <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground tracking-tight leading-tight">
                 The Tuition & Mentorship{" "}
                 <span className="text-primary italic font-serif">Ledger</span>.
               </h1>
 
-              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-muted-foreground leading-relaxed">
                 Discover verified subject-wise batches, olympiad masterclasses, and 1-on-1 mentorship programs moderated by our academic board.
               </p>
             </div>
 
             {/* Quick Archival Badge */}
-            <div className="flex items-center gap-3 self-start lg:self-auto p-3 rounded-2xl bg-card border border-border shadow-2xs font-mono text-xs">
-              <div className="flex size-9 rounded-xl bg-primary/10 text-primary items-center justify-center font-bold">
+            <div className="flex items-center gap-3 self-start lg:self-auto p-3 rounded-2xl bg-card border border-border shadow-2xs font-mono text-sm">
+              <div className="flex size-11 rounded-xl bg-primary/10 text-primary items-center justify-center font-bold text-base">
                 {loading && !data ? "…" : total}
               </div>
               <div>
                 <p className="font-semibold text-foreground">
                   {total} {total === 1 ? "Batch" : "Batches"} Enrolling
                 </p>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Zero Application Surcharge
                 </p>
               </div>
@@ -180,13 +180,12 @@ export default function BrowseTuitionsPage() {
                     setSelectedCategory(cat.name)
                     setCurrentPage(1)
                   }}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer shadow-2xs ${
-                    isSelected
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer shadow-2xs ${isSelected
                       ? "bg-primary text-white border border-primary shadow-xs"
                       : "bg-card hover:bg-card/90 text-foreground border border-border hover:border-primary/40"
-                  }`}
+                    }`}
                 >
-                  <Icon className={`size-3.5 ${isSelected ? "text-white" : "text-primary"}`} />
+                  <Icon className={`size-4 ${isSelected ? "text-white" : "text-primary"}`} />
                   <span>{cat.name}</span>
                 </button>
               )
@@ -212,7 +211,7 @@ export default function BrowseTuitionsPage() {
                   setCurrentPage(1)
                 }}
                 placeholder="Search by subject, title, tutor name, or neighborhood..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-card text-xs sm:text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary shadow-2xs transition-all"
+                className="w-full pl-10 pr-16 py-3 rounded-xl border border-border bg-card text-sm sm:text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary shadow-2xs transition-all"
               />
               {searchQuery && (
                 <button
@@ -221,7 +220,7 @@ export default function BrowseTuitionsPage() {
                     setSearchQuery("")
                     setCurrentPage(1)
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground hover:text-foreground cursor-pointer"
                 >
                   Clear
                 </button>
@@ -229,7 +228,7 @@ export default function BrowseTuitionsPage() {
             </div>
 
             {/* Filter Dropdowns & Mode Switcher */}
-            <div className="flex flex-wrap items-center gap-2 text-xs">
+            <div className="flex flex-wrap items-center gap-2 text-sm">
               {/* Mode Toggle */}
               <div className="flex items-center p-1 rounded-xl bg-card border border-border shadow-2xs">
                 {(["all", "Online", "Offline"] as const).map((mode) => (
@@ -240,11 +239,10 @@ export default function BrowseTuitionsPage() {
                       setSelectedMode(mode)
                       setCurrentPage(1)
                     }}
-                    className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer capitalize ${
-                      selectedMode === mode
+                    className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer capitalize ${selectedMode === mode
                         ? "bg-primary text-white font-semibold shadow-2xs"
                         : "text-foreground hover:text-primary"
-                    }`}
+                      }`}
                   >
                     {mode === "all" ? "All Modes" : mode}
                   </button>
@@ -259,7 +257,7 @@ export default function BrowseTuitionsPage() {
                     setSelectedLevel(e.target.value)
                     setCurrentPage(1)
                   }}
-                  className="px-3 py-2 rounded-xl bg-card border border-border text-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-2xs"
+                  className="px-3 py-2.5 rounded-xl bg-card border border-border text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-2xs"
                 >
                   <option value="all">All Class Levels</option>
                   {CLASS_LEVELS.map((level) => (
@@ -278,7 +276,7 @@ export default function BrowseTuitionsPage() {
                     setSelectedBudget(e.target.value)
                     setCurrentPage(1)
                   }}
-                  className="px-3 py-2 rounded-xl bg-card border border-border text-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-2xs"
+                  className="px-3 py-2.5 rounded-xl bg-card border border-border text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-2xs"
                 >
                   {BUDGETS.map((budget) => (
                     <option key={budget.value} value={budget.value}>
@@ -296,7 +294,7 @@ export default function BrowseTuitionsPage() {
                     setSort(e.target.value)
                     setCurrentPage(1)
                   }}
-                  className="px-3 py-2 rounded-xl bg-card border border-border text-foreground text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-2xs"
+                  className="px-3 py-2.5 rounded-xl bg-card border border-border text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer shadow-2xs"
                 >
                   {SORTS.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -311,9 +309,9 @@ export default function BrowseTuitionsPage() {
                 <button
                   type="button"
                   onClick={handleResetFilters}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-destructive/20 text-destructive bg-destructive/10 hover:bg-destructive/15 transition-colors cursor-pointer font-medium"
+                  className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border border-destructive/20 text-destructive bg-destructive/10 hover:bg-destructive/15 transition-colors cursor-pointer font-medium"
                 >
-                  <RotateCcw className="size-3" />
+                  <RotateCcw className="size-3.5" />
                   <span>Reset ({activeFiltersCount})</span>
                 </button>
               )}
@@ -327,9 +325,9 @@ export default function BrowseTuitionsPage() {
       ────────────────────────────────────────────────────────────── */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8">
         {/* Results Metadata Bar */}
-        <div className="flex items-center justify-between pb-4 mb-6 border-b border-border/70 text-xs font-mono text-muted-foreground">
+        <div className="flex items-center justify-between pb-4 mb-6 border-b border-border/70 text-sm font-mono text-muted-foreground">
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="size-3.5 text-primary" />
+            <SlidersHorizontal className="size-4 text-primary" />
             <span>
               {loading && !data ? (
                 "Loading listings…"
@@ -353,14 +351,14 @@ export default function BrowseTuitionsPage() {
             <div className="size-14 rounded-2xl bg-destructive/10 text-destructive flex items-center justify-center mb-4">
               <RefreshCw className="size-6" />
             </div>
-            <h3 className="font-heading text-lg font-bold text-foreground">
+            <h3 className="font-heading text-xl sm:text-2xl font-bold text-foreground">
               Could Not Load The Catalogue
             </h3>
-            <p className="mt-1 text-xs text-muted-foreground max-w-md">{error}</p>
+            <p className="mt-1 text-sm sm:text-base text-muted-foreground max-w-md">{error}</p>
             <button
               type="button"
               onClick={refetch}
-              className="mt-5 px-5 py-2.5 rounded-xl bg-primary hover:bg-[#537363] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              className="mt-5 px-5 py-3 rounded-xl bg-primary hover:bg-[#537363] text-white text-sm sm:text-base font-semibold shadow-xs transition-colors cursor-pointer"
             >
               Try Again
             </button>
@@ -400,16 +398,16 @@ export default function BrowseTuitionsPage() {
             <div className="size-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
               <Compass className="size-8" />
             </div>
-            <h3 className="font-heading text-xl font-bold text-foreground">
+            <h3 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
               No Tuition Batches Match Your Query
             </h3>
-            <p className="mt-1 text-xs text-muted-foreground max-w-md">
+            <p className="mt-2 text-sm sm:text-base text-muted-foreground max-w-md">
               We couldn&apos;t find any approved batches matching the selected filters. Try broadening your criteria or reset the search.
             </p>
             <button
               type="button"
               onClick={handleResetFilters}
-              className="mt-5 px-5 py-2.5 rounded-xl bg-primary hover:bg-[#537363] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              className="mt-5 px-5 py-3 rounded-xl bg-primary hover:bg-[#537363] text-white text-sm sm:text-base font-semibold shadow-xs transition-colors cursor-pointer"
             >
               Reset All Filters
             </button>
@@ -437,35 +435,33 @@ export default function BrowseTuitionsPage() {
                       <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
                       {/* Top Badges */}
-                      <div className="absolute top-3 inset-x-3 flex items-center justify-between">
-                        <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-[#344C43]/90 text-[#EFE7DC] border border-white/20 backdrop-blur-md">
+                      <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2">
+                        <span className="font-mono text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-[#344C43]/90 text-[#EFE7DC] border border-white/20 backdrop-blur-md">
                           {t.subject}
                         </span>
 
                         <span
-                          className={`inline-flex items-center gap-1 font-mono text-[10px] font-semibold px-2 py-1 rounded-md backdrop-blur-md border ${
-                            isOnline
+                          className={`inline-flex items-center gap-1 font-mono text-xs font-semibold px-2 py-1 rounded-md backdrop-blur-md border ${isOnline
                               ? "bg-[#668B78]/90 text-white border-white/20"
                               : "bg-[#B87959]/90 text-white border-white/20"
-                          }`}
+                            }`}
                         >
                           <span
-                            className={`size-1.5 rounded-full ${
-                              isOnline ? "bg-emerald-300 animate-pulse" : "bg-amber-200"
-                            }`}
+                            className={`size-1.5 rounded-full ${isOnline ? "bg-emerald-300 animate-pulse" : "bg-amber-200"
+                              }`}
                           />
                           {t.mode}
                         </span>
                       </div>
 
                       {/* Bottom Banner Stats */}
-                      <div className="absolute bottom-2.5 inset-x-3 flex items-center justify-between text-white text-xs font-mono">
+                      <div className="absolute bottom-2.5 inset-x-3 flex items-center justify-between text-white text-sm font-mono gap-2">
                         <span className="flex items-center gap-1.5">
-                          <CheckCircle2 className="size-3 text-emerald-300" />
+                          <CheckCircle2 className="size-3.5 text-emerald-300" />
                           <span>Board approved</span>
                         </span>
 
-                        <span className="text-[11px] px-2 py-0.5 rounded-md bg-black/60 border border-white/20">
+                        <span className="text-xs sm:text-sm px-2 py-0.5 rounded-md bg-black/60 border border-white/20">
                           {formatDate(t.createdAt)}
                         </span>
                       </div>
@@ -473,30 +469,30 @@ export default function BrowseTuitionsPage() {
 
                     {/* Middle Column: Editorial Content (5 cols) */}
                     <div className="lg:col-span-5 space-y-3">
-                      <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase tracking-wider">
-                        <GraduationCap className="size-3.5 text-primary" />
+                      <div className="flex items-center gap-2 text-sm font-mono text-muted-foreground uppercase tracking-wider">
+                        <GraduationCap className="size-4 text-primary" />
                         <span>{t.classLevel}</span>
                       </div>
 
-                      <h2 className="font-heading text-lg sm:text-xl font-bold text-foreground group-hover:text-primary transition-colors leading-snug">
+                      <h2 className="font-heading text-xl sm:text-2xl font-bold text-foreground group-hover:text-primary transition-colors leading-snug">
                         {t.title}
                       </h2>
 
-                      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                      <p className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-2">
                         {t.description}
                       </p>
 
                       {/* Tutor Lockup */}
-                      <div className="pt-2 flex items-center gap-2.5 text-xs">
-                        <div className="size-8 rounded-full bg-primary/20 text-primary font-mono font-bold flex items-center justify-center border border-primary/30 shrink-0">
+                      <div className="pt-2 flex items-center gap-2.5 text-sm">
+                        <div className="size-10 rounded-full bg-primary/20 text-primary font-mono font-bold flex items-center justify-center border border-primary/30 shrink-0 text-sm">
                           {initials(t.tutorName)}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-foreground truncate flex items-center gap-1.5">
+                          <p className="font-semibold text-foreground truncate flex items-center gap-1.5 text-sm sm:text-base">
                             <span>{t.tutorName}</span>
-                            <CheckCircle2 className="size-3 text-primary inline" />
+                            <CheckCircle2 className="size-3.5 text-primary inline" />
                           </p>
-                          <p className="text-[11px] text-muted-foreground truncate font-mono">
+                          <p className="text-xs sm:text-sm text-muted-foreground truncate font-mono">
                             {weeklyPace(t.daysPerWeek)} · {t.location}
                           </p>
                         </div>
@@ -505,29 +501,29 @@ export default function BrowseTuitionsPage() {
 
                     {/* Right Column: Ledger Fee, Schedule & Action (3 cols) */}
                     <div className="lg:col-span-3 lg:border-l lg:border-border/80 lg:pl-6 space-y-4 pt-4 lg:pt-0 border-t lg:border-t-0 border-border/70 flex flex-col justify-between h-full">
-                      <div className="space-y-2 text-xs text-muted-foreground font-mono">
+                      <div className="space-y-2 text-sm sm:text-base text-muted-foreground font-mono">
                         <div className="flex items-center gap-1.5">
-                          <CalendarDays className="size-3.5 text-primary shrink-0" />
+                          <CalendarDays className="size-4 text-primary shrink-0" />
                           <span>{weeklyPace(t.daysPerWeek)}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <Clock className="size-3.5 text-primary shrink-0" />
+                          <Clock className="size-4 text-primary shrink-0" />
                           <span className="truncate">Listed {formatDate(t.createdAt)}</span>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <MapPin className="size-3.5 text-primary shrink-0" />
+                          <MapPin className="size-4 text-primary shrink-0" />
                           <span className="truncate">{t.location}</span>
                         </div>
                       </div>
 
                       <div className="pt-3 border-t border-border/80">
                         <div className="flex items-baseline justify-between lg:block">
-                          <span className="font-mono text-[10px] text-muted-foreground uppercase block">
+                          <span className="font-mono text-xs sm:text-sm text-muted-foreground uppercase block">
                             Monthly Tuition Fee
                           </span>
-                          <span className="font-mono text-2xl font-bold text-foreground">
+                          <span className="font-mono text-3xl sm:text-4xl font-bold text-foreground">
                             {formatFee(t.monthlyFee)}{" "}
-                            <span className="text-xs font-normal text-muted-foreground">
+                            <span className="text-sm sm:text-base font-normal text-muted-foreground">
                               / mo
                             </span>
                           </span>
@@ -535,7 +531,7 @@ export default function BrowseTuitionsPage() {
 
                         <Link
                           href={`/tuitions/${t._id}`}
-                          className="mt-3 w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-primary hover:bg-[#537363] text-white text-xs font-semibold shadow-xs transition-colors"
+                          className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-primary hover:bg-[#537363] text-white text-sm sm:text-base font-semibold shadow-xs transition-colors"
                         >
                           <span>Inspect Dossier & Apply</span>
                           <ArrowUpRight className="size-4" />
@@ -553,19 +549,19 @@ export default function BrowseTuitionsPage() {
             5. ARCHIVAL PAGINATION RIBBON
         ────────────────────────────────────────────────────────────── */}
         <div className="mt-12 pt-6 border-t border-border/80 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-xs font-mono text-muted-foreground">
+          <div className="text-sm font-mono text-muted-foreground text-center sm:text-left">
             Archive Page <strong className="text-foreground">0{currentPage}</strong> of{" "}
             <strong>0{totalPages}</strong> • Showing {tuitions.length} of {total} listings
           </div>
 
-          <div className="flex items-center gap-1.5 font-mono text-xs">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 font-mono text-sm">
             <button
               type="button"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-              className="flex items-center gap-1 px-3 py-2 rounded-xl border border-border bg-card hover:bg-card/90 text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+              className="flex items-center gap-1 px-3 py-2.5 rounded-xl border border-border bg-card hover:bg-card/90 text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
             >
-              <ChevronLeft className="size-3.5" />
+              <ChevronLeft className="size-4" />
               <span>Previous</span>
             </button>
 
@@ -574,11 +570,10 @@ export default function BrowseTuitionsPage() {
                 key={page}
                 type="button"
                 onClick={() => setCurrentPage(page)}
-                className={`size-9 rounded-xl flex items-center justify-center font-bold transition-all cursor-pointer ${
-                  currentPage === page
+                className={`size-10 rounded-xl flex items-center justify-center font-bold transition-all cursor-pointer ${currentPage === page
                     ? "bg-primary text-white border border-primary shadow-xs"
                     : "bg-card border border-border hover:border-primary/50 text-foreground shadow-2xs"
-                }`}
+                  }`}
               >
                 {String(page).padStart(2, "0")}
               </button>
@@ -588,31 +583,31 @@ export default function BrowseTuitionsPage() {
               type="button"
               disabled={currentPage >= totalPages}
               onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-              className="flex items-center gap-1 px-3 py-2 rounded-xl border border-border bg-card hover:bg-card/90 text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+              className="flex items-center gap-1 px-3 py-2.5 rounded-xl border border-border bg-card hover:bg-card/90 text-foreground transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
             >
               <span>Next</span>
-              <ChevronRight className="size-3.5" />
+              <ChevronRight className="size-4" />
             </button>
           </div>
         </div>
 
         {/* Bottom Editorial Assistance Box */}
         <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-card border border-border shadow-xs flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-          <div className="space-y-1 max-w-xl">
-            <span className="font-mono text-xs uppercase tracking-widest text-[#B87959] font-bold">
+          <div className="space-y-2 max-w-xl">
+            <span className="font-mono text-sm uppercase tracking-widest text-[#B87959] font-bold">
               Need A Customized Batch?
             </span>
-            <h3 className="font-heading text-xl font-bold text-foreground">
+            <h3 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
               Are you seeking 1-on-1 private mentorship for admission tests?
             </h3>
-            <p className="text-xs text-muted-foreground leading-relaxed">
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
               Our registered tutors accommodate personalized schedules. Submit an inquiry through any tutor dossier or contact our academic desk.
             </p>
           </div>
 
           <Link
             href="/sign-up?role=student"
-            className="px-6 py-3 rounded-xl bg-primary hover:bg-[#537363] text-white text-xs font-semibold shadow-xs transition-colors shrink-0"
+            className="px-6 py-3.5 rounded-xl bg-primary hover:bg-[#537363] text-white text-sm sm:text-base font-semibold shadow-xs transition-colors shrink-0"
           >
             Create Student Account
           </Link>
