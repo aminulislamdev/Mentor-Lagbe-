@@ -16,8 +16,7 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-// ─── Static cancellation ledger (UI only — nothing was charged) ───────────────
-// Stripe Cancel URL-এ সাধারণত session_id থাকে না, তাই এখানে জেনেরিক তথ্য দেওয়া হলো।
+// ─── Static cancellation ledger ──────────────────────────────────────────────
 
 const CANCELLATION = {
   plan: "MentorLagbe Pro Membership",
@@ -60,7 +59,7 @@ export default function PaymentCancelPage() {
     <div className="pause-root relative min-h-screen bg-[#F2ECDF] text-[#344C43]">
       <style>{pauseStyles}</style>
 
-      <main className="relative mx-auto max-w-[1180px] overflow-hidden">
+      <main className="relative mx-auto max-w-295 overflow-hidden">
         {/* Soft ambient bloom */}
         <div
           aria-hidden="true"
@@ -72,65 +71,64 @@ export default function PaymentCancelPage() {
           }}
         />
 
-        {/* ══ MASTHEAD — the door stays open ═══════════════════════════════ */}
-        <section className="relative grid gap-10 border-b border-[#344C43]/25 px-4 pb-12 pt-12 sm:px-8 sm:pt-16 lg:grid-cols-12 lg:gap-12">
-          {/* The composition (left) */}
+        {/* ══ MASTHEAD ═══════════════════════════════════════════════════ */}
+        <section className="relative grid gap-10 border-b border-[#344C43]/25 px-5 pb-12 pt-12 sm:px-8 sm:pt-16 lg:grid-cols-12 lg:gap-12">
+          {/* The composition */}
           <div className="relative flex items-center justify-center lg:col-span-5">
-            <div className="pause-breathe relative flex size-52 shrink-0 items-center justify-center rounded-full border border-[#344C43]/20 bg-[#EFE7DC] sm:size-64">
+            <div className="pause-breathe relative flex size-48 shrink-0 items-center justify-center rounded-full border border-[#344C43]/20 bg-[#EFE7DC] sm:size-56 lg:size-64">
               <div className="absolute inset-5 rounded-full border border-dashed border-[#668B78]/55" />
               <div className="flex size-28 flex-col items-center justify-center rounded-full border-2 border-[#10181A] bg-[#344C43] text-[#EFE7DC] shadow-[0_18px_40px_rgba(0,0,0,0.18)] sm:size-32">
                 <Mail className="size-7 text-[#C9A25E] sm:size-9" strokeWidth={1.4} />
-                <span className="mt-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]">
+                <span className="mt-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#D8C9A3] sm:text-[11px]">
                   Unsealed
                 </span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-[#EFE7DC]/50">
+                <span className="font-mono text-[9px] uppercase tracking-[0.15em] text-[#EFE7DC]/50 sm:text-[10px]">
                   No charge was made
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Copy + ledger (right) */}
+          {/* Copy + ledger */}
           <div className="relative lg:col-span-7">
-            <p className="font-mono text-[9px] uppercase tracking-[0.36em] text-[#B87959]">
+            <p className="text-center font-mono text-[10px] uppercase tracking-[0.28em] text-[#B87959] sm:text-left sm:text-[11px]">
               [ Checkout Paused — By You, Not By Us ]
             </p>
             <h1
-              className="pause-rise pause-serif mt-3 font-black leading-[0.95] tracking-[-0.035em] text-[#344C43]"
-              style={{ "--rise-delay": "0s", fontSize: "clamp(2.5rem, 5.6vw, 4.5rem)" } as React.CSSProperties}
+              className="pause-rise pause-serif mt-3 text-center font-black leading-[0.95] tracking-[-0.035em] text-[#344C43] sm:text-left"
+              style={{ "--rise-delay": "0s", fontSize: "clamp(2.4rem, 5.6vw, 4.5rem)" } as React.CSSProperties}
             >
               Your Journey
               <span className="block">
                 <span className="italic text-[#668B78]">Doesn&rsquo;t End</span> Here.
               </span>
             </h1>
-            <p className="pause-rise mt-4 max-w-[52ch] text-sm leading-relaxed text-[#344C43]/80 sm:text-[15px]" style={{ "--rise-delay": "0.1s" } as React.CSSProperties}>
+            <p className="pause-rise mt-4 max-w-[52ch] text-center text-sm leading-relaxed text-[#344C43]/80 sm:text-left sm:text-base" style={{ "--rise-delay": "0.1s" } as React.CSSProperties}>
               The checkout was closed before any payment went through —
               no card was charged, no seat was reserved, and your Free plan
               remains exactly as it was. Everything you were about to unlock
               is still on the shelf, waiting for when you&rsquo;re ready.
             </p>
-            {/* Status strip */}
-            <div className="pause-rise mt-5 inline-flex flex-wrap items-center gap-2 rounded-sm border border-[#B87959]/40 bg-[#B87959]/8 px-3 py-2" style={{ "--rise-delay": "0.18s" } as React.CSSProperties}>
+            <div className="pause-rise mx-auto mt-5 inline-flex flex-wrap items-center gap-2 rounded-sm border border-[#B87959]/40 bg-[#B87959]/8 px-3 py-2 sm:mx-0" style={{ "--rise-delay": "0.18s" } as React.CSSProperties}>
               <span aria-hidden="true" className="size-2 rounded-full bg-[#B87959]" />
-              <span className="font-mono text-[9px] font-bold uppercase leading-snug tracking-[0.22em] text-[#B87959]">
+              <span className="font-mono text-[10px] font-bold uppercase leading-snug tracking-[0.18em] text-[#B87959] sm:text-[11px]">
                 Payment status — Cancelled · Nothing activated
               </span>
             </div>
           </div>
         </section>
 
-        {/* ══ LEDGER — what just happened ══════════════════════════════════ */}
-        <section aria-labelledby="ledger-heading" className="relative border-b border-[#344C43]/25 px-4 py-8 sm:px-8">
-          <h2 id="ledger-heading" className="font-mono text-[10px] font-bold uppercase tracking-[0.32em] text-[#344C43]/55">
+        {/* ══ LEDGER ══════════════════════════════════════════════════════ */}
+        <section aria-labelledby="ledger-heading" className="relative border-b border-[#344C43]/25 px-5 py-8 sm:px-8 sm:py-10">
+          <h2 id="ledger-heading" className="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-[#344C43]/55 sm:text-xs">
             The Ledger — What the Board Recorded
           </h2>
           <dl className="mt-3 overflow-hidden rounded-sm border border-[#344C43]/30 bg-[#EFE7DC] shadow-[6px_7px_0_rgba(52,76,67,0.15)]">
-            <div className="flex items-center justify-between gap-3 border-b border-[#344C43]/15 bg-[#344C43] px-4 py-2.5">
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#D8C9A3]">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#344C43]/15 bg-[#344C43] px-4 py-3">
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-[#D8C9A3] sm:text-xs">
                 Checkout Record
               </span>
-              <span className="rounded-sm border border-[#B87959]/60 bg-[#B87959]/15 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-[0.24em] text-[#C98B6D]">
+              <span className="rounded-sm border border-[#B87959]/60 bg-[#B87959]/15 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#C98B6D] sm:text-[11px]">
                 Cancelled
               </span>
             </div>
@@ -144,19 +142,19 @@ export default function PaymentCancelPage() {
                 ["Activation", "Not activated"],
               ].map(([k, v]) => (
                 <div key={k as string}>
-                  <dt className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.2em] text-[#344C43]/50">{k}</dt>
-                  <dd className="mt-0.5 font-mono text-[10px] font-bold leading-snug tracking-tight text-[#344C43]">{v}</dd>
+                  <dt className="font-mono text-[10px] uppercase leading-relaxed tracking-[0.15em] text-[#344C43]/50 sm:text-[11px]">{k}</dt>
+                  <dd className="mt-0.5 font-mono text-[11px] font-bold leading-snug tracking-tight text-[#344C43] sm:text-xs">{v}</dd>
                 </div>
               ))}
             </div>
-            <p className="border-t border-[#344C43]/15 px-4 py-3 text-[11px] leading-snug text-[#344C43]/75 sm:px-5">
+            <p className="border-t border-[#344C43]/15 px-4 py-3 text-[12px] leading-relaxed text-[#344C43]/75 sm:px-5 sm:text-[13px]">
               {CANCELLATION.note}
             </p>
           </dl>
         </section>
 
-        {/* ══ GOOD TO KNOW — the calm facts ═══════════════════════════════ */}
-        <section aria-labelledby="facts-heading" className="relative border-b border-[#344C43]/25 bg-[#EFE7DC]/60 px-4 py-8 sm:px-8">
+        {/* ══ GOOD TO KNOW ═══════════════════════════════════════════════ */}
+        <section aria-labelledby="facts-heading" className="relative border-b border-[#344C43]/25 bg-[#EFE7DC]/60 px-5 py-8 sm:px-8 sm:py-10">
           <h2 id="facts-heading" className="pause-serif text-2xl font-black tracking-tight text-[#344C43] sm:text-3xl">
             Three facts, <span className="italic text-[#668B78]">zero worry.</span>
           </h2>
@@ -178,24 +176,23 @@ export default function PaymentCancelPage() {
                 body: "Restart checkout whenever it suits you — menus, prices and seats all stay exactly as you left them.",
               },
             ].map(({ Icon, title, body }) => (
-              <li key={title} className="flex flex-col gap-2 border border-[#344C43]/20 bg-[#EFE7DC] p-5 shadow-[4px_5px_0_rgba(52,76,67,0.12)]">
+              <li key={title} className="flex flex-col gap-2.5 border border-[#344C43]/20 bg-[#EFE7DC] p-5 shadow-[4px_5px_0_rgba(52,76,67,0.12)]">
                 <span className="flex size-10 items-center justify-center rounded-sm border border-[#668B78]/35 bg-[#668B78]/10">
                   <Icon aria-hidden="true" className="size-5 text-[#4A695C]" strokeWidth={1.75} />
                 </span>
-                <span className="pause-serif text-base font-black leading-snug tracking-tight text-[#344C43]">{title}</span>
-                <span className="text-[11px] leading-relaxed text-[#344C43]/70">{body}</span>
+                <span className="pause-serif text-base font-black leading-snug tracking-tight text-[#344C43] sm:text-lg">{title}</span>
+                <span className="text-[12px] leading-relaxed text-[#344C43]/70 sm:text-[13px]">{body}</span>
               </li>
             ))}
           </ul>
-          {/* Support strip */}
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border border-[#344C43]/20 bg-[#F2ECDF] px-4 py-3">
-            <p className="flex items-center gap-2.5 text-[12px] font-semibold leading-snug text-[#344C43]/90">
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border border-[#344C43]/20 bg-[#F2ECDF] px-4 py-3.5">
+            <p className="flex items-center gap-2.5 text-[12px] font-semibold leading-snug text-[#344C43]/90 sm:text-[13px]">
               <MessagesSquare aria-hidden="true" className="size-5 shrink-0 text-[#B87959]" strokeWidth={1.75} />
               Hit a snag with the payment itself? The Trust Office answers within one working day.
             </p>
             <a
               href="mailto:support@mentorlagbe.com"
-              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#B87959] underline decoration-[#B87959]/40 underline-offset-4 transition-colors hover:text-[#96603F]"
+              className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#B87959] underline decoration-[#B87959]/40 underline-offset-4 transition-colors hover:text-[#96603F] sm:text-xs"
             >
               <Mail aria-hidden="true" className="size-3.5" strokeWidth={2} />
               support@mentorlagbe.com
@@ -203,12 +200,12 @@ export default function PaymentCancelPage() {
           </div>
         </section>
 
-        {/* ══ WAYS FORWARD — recovery actions ══════════════════════════════ */}
-        <section aria-labelledby="forward-heading" className="relative px-4 py-9 sm:px-8">
-          <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[#B87959]">
+        {/* ══ WAYS FORWARD ═══════════════════════════════════════════════ */}
+        <section aria-labelledby="forward-heading" className="relative px-5 py-9 sm:px-8 sm:py-10">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#B87959] sm:text-[11px]">
             [ Doors Left Open — Pick One ]
           </p>
-          <h2 id="forward-heading" className="pause-serif mt-1.5 text-2xl font-black tracking-tight text-[#344C43] sm:text-3xl">
+          <h2 id="forward-heading" className="pause-serif mt-2 text-2xl font-black tracking-tight text-[#344C43] sm:text-3xl">
             Where would you like to <span className="italic text-[#668B78]">go next?</span>
           </h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -236,9 +233,9 @@ export default function PaymentCancelPage() {
                 )}>
                   <Icon aria-hidden="true" className={cn("size-5", tone === "primary" ? "text-[#1E3A2F]" : "text-[#4A695C]")} strokeWidth={1.75} />
                 </span>
-                <span className="pause-serif mt-3 text-lg font-black leading-snug tracking-tight">{title}</span>
-                <span className="mt-1 text-[11px] leading-snug opacity-80">{desc}</span>
-                <span className="mt-4 inline-flex items-center gap-1.5 border-t border-current/20 pt-3 font-mono text-[9px] font-bold uppercase tracking-[0.22em]">
+                <span className="pause-serif mt-3 text-lg font-black leading-snug tracking-tight sm:text-xl">{title}</span>
+                <span className="mt-1.5 text-[12px] leading-snug opacity-80 sm:text-[13px]">{desc}</span>
+                <span className="mt-4 inline-flex items-center gap-1.5 border-t border-current/20 pt-3 font-mono text-[10px] font-bold uppercase tracking-[0.18em] sm:text-[11px]">
                   {cta}
                   <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.5} />
                 </span>
@@ -248,7 +245,7 @@ export default function PaymentCancelPage() {
         </section>
 
         {/* ══ Colophon ═══════════════════════════════════════════════════ */}
-        <footer className="relative flex flex-col items-start justify-between gap-3 border-t border-[#344C43]/25 px-4 py-4 font-mono text-[10px] uppercase leading-relaxed tracking-[0.24em] text-[#344C43]/50 sm:flex-row sm:items-center sm:px-8 sm:text-[10px]">
+        <footer className="relative flex flex-col items-start justify-between gap-3 border-t border-[#344C43]/25 px-5 py-5 font-mono text-[11px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/50 sm:flex-row sm:items-center sm:px-8 sm:text-xs">
           <Link href="/" className="group inline-flex items-center gap-1.5 font-bold text-[#344C43] transition-colors hover:text-[#B87959]">
             <ArrowLeft aria-hidden="true" className="size-3.5 transition-transform duration-200 group-hover:-translate-x-1" strokeWidth={2.5} />
             Back to the Atelier
