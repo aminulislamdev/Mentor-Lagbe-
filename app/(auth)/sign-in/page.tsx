@@ -58,7 +58,7 @@ export default function SignInPage() {
 
   return (
     <div
-      className="study-root relative overflow-hidden bg-[#16241F] text-[#EFE7DC]"
+      className="study-root relative min-h-screen overflow-hidden bg-[#16241F] text-[#EFE7DC]"
       style={{
         backgroundImage:
           "radial-gradient(ellipse 70% 55% at 72% -10%, rgba(201,139,109,0.22) 0%, transparent 55%), radial-gradient(ellipse 60% 50% at 12% 112%, rgba(102,139,120,0.16) 0%, transparent 55%), radial-gradient(rgba(217,203,181,0.05) 1px, transparent 1.4px)",
@@ -69,7 +69,7 @@ export default function SignInPage() {
 
       <div
         aria-hidden="true"
-        className="study-lamp pointer-events-none absolute -top-40 right-[-10%] size-[36rem] rounded-full"
+        className="study-lamp pointer-events-none absolute -top-32 right-[-15%] size-96 rounded-full sm:-top-40 sm:right-[-10%] sm:size-144"
         style={{
           background:
             "radial-gradient(circle, rgba(226,164,110,0.22) 0%, rgba(201,139,109,0.07) 38%, transparent 70%)",
@@ -94,9 +94,9 @@ export default function SignInPage() {
       ))}
 
       <div className="relative border-b border-[#D9CBB5]/12">
-        <div className="mx-auto flex h-9 max-w-[1500px] items-center justify-between gap-4 px-4 font-mono text-[10px] uppercase tracking-[0.28em] text-[#EFE7DC]/55 sm:px-8 sm:text-[10px]">
-          <span className="flex items-center gap-2 whitespace-nowrap">
-            <MoonStar className="size-3 text-[#C98B6D]" strokeWidth={2} />
+        <div className="mx-auto flex h-10 max-w-375 items-center justify-between gap-2 px-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#EFE7DC]/55 sm:h-9 sm:gap-4 sm:px-8 sm:text-[11px] sm:tracking-[0.28em]">
+          <span className="flex items-center gap-1.5 whitespace-nowrap sm:gap-2">
+            <MoonStar className="size-3 text-[#C98B6D] sm:size-3.5" strokeWidth={2} />
             MentorLagbe · The Night Study
           </span>
           <span className="hidden md:inline">Dhaka — Est. 2026</span>
@@ -104,7 +104,7 @@ export default function SignInPage() {
         </div>
       </div>
 
-      <main className="relative mx-auto max-w-[1500px]">
+      <main className="relative mx-auto max-w-375">
         <div className="relative grid lg:grid-cols-12">
           <NightStudyLeft />
           <CheckInDesk form={form} set={set} onSubmit={handleSubmit} />

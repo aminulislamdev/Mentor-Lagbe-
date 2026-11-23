@@ -38,7 +38,9 @@ export default function RootLayout({
           <Navbar />
         </Suspense>
         <main className="flex-1">{children}</main>
-        <ConditionalFooter />
+        <Suspense fallback={<div className="h-18 border-b border-border/80 bg-background/85" />}>
+          <ConditionalFooter />
+        </Suspense>
         <Toaster richColors position="top-right" />
       </body>
     </html>
