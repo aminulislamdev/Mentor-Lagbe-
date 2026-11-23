@@ -143,13 +143,13 @@ export default function AboutPage() {
       <section className="relative overflow-hidden border-b border-border/80 pt-10 pb-16 sm:pt-14 sm:pb-20">
         <div
           aria-hidden="true"
-          className="absolute inset-0 pointer-events-none opacity-20 [background-image:linear-gradient(to_right,rgba(52,76,67,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(52,76,67,0.15)_1px,transparent_1px)] bg-[size:4rem_4rem]"
+          className="absolute inset-0 pointer-events-none opacity-20 bg-[linear-gradient(to_right,rgba(52,76,67,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(52,76,67,0.15)_1px,transparent_1px)] bg-size-[4rem_4rem]"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/80 text-xs font-mono tracking-wider uppercase shadow-2xs backdrop-blur-sm">
-                <Compass className="size-3.5 text-primary" strokeWidth={2} />
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/80 text-xs sm:text-sm font-mono tracking-wider uppercase shadow-2xs backdrop-blur-sm">
+                <Compass className="size-3.5 sm:size-4 text-primary" strokeWidth={2} />
                 About the Atelier
                 <span aria-hidden="true" className="text-muted-foreground">·</span>
                 <span className="text-[#B87959] font-bold">Est. 2026</span>
@@ -166,7 +166,7 @@ export default function AboutPage() {
                   godfather to find a trigonometry tutor, and a BUET scholar should not
                   beg Facebook groups for a place to teach.
                 </p>
-                <p className="text-sm text-muted-foreground hidden sm:block">
+                <p className="text-sm sm:text-base text-muted-foreground hidden sm:block">
                   We verify educators, moderate every batch, and take nothing from the
                   classroom — so the only thing left to negotiate is the learning itself.
                 </p>
@@ -205,8 +205,8 @@ export default function AboutPage() {
                   MS
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-foreground">Prof. Mahbub Siddiqui</p>
-                  <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                  <p className="font-semibold text-sm sm:text-base text-foreground">Prof. Mahbub Siddiqui</p>
+                  <p className="font-mono text-[11px] sm:text-xs uppercase tracking-wider text-muted-foreground">
                     Founder · Ex-Examiner, Dhaka Education Board
                   </p>
                 </div>
@@ -220,7 +220,7 @@ export default function AboutPage() {
       <section className="py-16 sm:py-20 border-b border-border/80 bg-background/60">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl space-y-2 mb-10">
-            <span className="font-mono text-xs uppercase tracking-widest text-[#B87959] font-semibold">
+            <span className="font-mono text-xs sm:text-sm uppercase tracking-widest text-[#B87959] font-semibold">
               Why We Exist
             </span>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
@@ -236,9 +236,9 @@ export default function AboutPage() {
                   bg
                 )}
               >
-                <Icon aria-hidden="true" className={cn("size-8", tone)} strokeWidth={1.6} />
-                <h3 className="font-heading text-xl font-bold text-foreground">{title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
+                <Icon aria-hidden="true" className={cn("size-8 sm:size-9", tone)} strokeWidth={1.6} />
+                <h3 className="font-heading text-xl sm:text-2xl font-bold text-foreground">{title}</h3>
+                <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">{body}</p>
               </div>
             ))}
           </div>
@@ -249,25 +249,25 @@ export default function AboutPage() {
       <section className="relative py-16 sm:py-20 border-b border-border/80 overflow-hidden">
         <div
           aria-hidden="true"
-          className="absolute inset-0 pointer-events-none opacity-15 [background-image:linear-gradient(to_right,rgba(52,76,67,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(52,76,67,0.15)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem]"
+          className="absolute inset-0 pointer-events-none opacity-15 bg-[linear-gradient(to_right,rgba(52,76,67,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(52,76,67,0.15)_1px,transparent_1px)] bg-size-[3.5rem_3.5rem]"
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div className="max-w-2xl space-y-2">
-              <span className="font-mono text-xs uppercase tracking-widest text-primary font-semibold">
+              <span className="font-mono text-xs sm:text-sm uppercase tracking-widest text-primary font-semibold">
                 The Academic Board
               </span>
               <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
                 A seal is <span className="font-serif italic text-primary">earned</span>, never bought.
               </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                 Every verified mentor on MentorLagbe cleared the same four-gate
                 pipeline. No shortcuts, no paid badges, no exceptions.
               </p>
             </div>
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-1.5 self-start md:self-auto text-xs font-semibold text-primary hover:underline underline-offset-4"
+              className="inline-flex items-center gap-1.5 self-start md:self-auto text-xs sm:text-sm font-semibold text-primary hover:underline underline-offset-4"
             >
               See what Pro unlocks
               <ArrowUpRight className="size-4" />
@@ -281,15 +281,15 @@ export default function AboutPage() {
                 className="relative flex flex-col gap-4 rounded-2xl border border-border bg-card p-6 shadow-2xs hover:border-primary/50 transition-colors"
               >
                 <div className="flex items-center justify-between">
-                  <span aria-hidden="true" className="font-mono text-3xl font-extrabold text-[#344C43]/15 dark:text-[#EFE7DC]/15">
+                  <span aria-hidden="true" className="font-mono text-3xl sm:text-4xl font-extrabold text-[#344C43]/15 dark:text-[#EFE7DC]/15">
                     {step}
                   </span>
                   <div className="flex size-11 items-center justify-center rounded-xl border border-primary/20 bg-primary/10 text-primary">
                     <Icon aria-hidden="true" className="size-5" strokeWidth={1.75} />
                   </div>
                 </div>
-                <h3 className="font-heading text-lg font-bold text-foreground">{title}</h3>
-                <p className="text-xs leading-relaxed text-muted-foreground">{body}</p>
+                <h3 className="font-heading text-lg sm:text-xl font-bold text-foreground">{title}</h3>
+                <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground">{body}</p>
               </li>
             ))}
           </ol>
@@ -300,7 +300,7 @@ export default function AboutPage() {
       <section className="py-16 sm:py-20 border-b border-border/80 bg-background/50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl space-y-2 mb-10">
-            <span className="font-mono text-xs uppercase tracking-widest text-[#B87959] font-semibold">
+            <span className="font-mono text-xs sm:text-sm uppercase tracking-widest text-[#B87959] font-semibold">
               The MentorLagbe Charter
             </span>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
@@ -313,10 +313,10 @@ export default function AboutPage() {
                 key={title}
                 className="flex gap-4 rounded-2xl border border-border bg-card p-5 shadow-2xs"
               >
-                <Icon aria-hidden="true" className="size-6 shrink-0 text-primary mt-0.5" strokeWidth={1.75} />
+                <Icon aria-hidden="true" className="size-6 sm:size-7 shrink-0 text-primary mt-0.5" strokeWidth={1.75} />
                 <div>
-                  <h3 className="font-heading text-base font-bold text-foreground">{title}</h3>
-                  <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{body}</p>
+                  <h3 className="font-heading text-base sm:text-lg font-bold text-foreground">{title}</h3>
+                  <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-muted-foreground">{body}</p>
                 </div>
               </div>
             ))}
@@ -338,7 +338,7 @@ export default function AboutPage() {
                 <span className="font-heading block text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
                   {n}
                 </span>
-                <span className="mt-2 block font-mono text-[9px] sm:text-[10px] uppercase tracking-widest text-muted-foreground">
+                <span className="mt-2 block font-mono text-[11px] sm:text-xs uppercase tracking-widest text-muted-foreground">
                   {label}
                 </span>
               </div>
@@ -351,7 +351,7 @@ export default function AboutPage() {
       <section className="py-16 sm:py-20 border-b border-border/80 bg-background/60">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-2 mb-10">
-            <span className="font-mono text-xs uppercase tracking-widest text-primary font-semibold">
+            <span className="font-mono text-xs sm:text-sm uppercase tracking-widest text-primary font-semibold">
               Field Notes
             </span>
             <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
@@ -369,9 +369,9 @@ export default function AboutPage() {
                     aria-expanded={open}
                     aria-controls={`faq-panel-${idx}`}
                     id={`faq-button-${idx}`}
-                    className="flex w-full items-center justify-between gap-4 px-5 sm:px-6 py-4 text-left transition-colors hover:bg-background/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#668B78]"
+                    className="flex w-full items-center justify-between gap-4 px-5 sm:px-6 py-4 text-left transition-colors hover:bg-background/60 focus-visible:outline focus-visible:outline-[#668B78]"
                   >
-                    <span className="text-sm sm:text-[15px] font-semibold tracking-tight text-foreground">
+                    <span className="text-sm sm:text-base font-semibold tracking-tight text-foreground">
                       {item.q}
                     </span>
                     <ChevronDown
@@ -390,7 +390,7 @@ export default function AboutPage() {
                       aria-labelledby={`faq-button-${idx}`}
                       className="px-5 sm:px-6 pb-5 -mt-1"
                     >
-                      <p className="text-sm leading-relaxed text-muted-foreground border-l-2 border-primary/40 pl-4">
+                      <p className="text-sm sm:text-base leading-relaxed text-muted-foreground border-l-2 border-primary/40 pl-4">
                         {item.a}
                       </p>
                     </div>
@@ -405,27 +405,27 @@ export default function AboutPage() {
       {/* ══ CLOSING CTA ═══════════════════════════════════════════════════ */}
       <section className="py-16 sm:py-20 bg-background/80">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-primary font-semibold">
+          <span className="inline-flex items-center gap-2 font-mono text-xs sm:text-sm uppercase tracking-widest text-primary font-semibold">
             <Sparkles aria-hidden="true" className="size-4" />
             The Room Is Open
           </span>
           <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground max-w-2xl mx-auto">
             Come sit on the right side of the table.
           </h2>
-          <p className="text-sm text-muted-foreground max-w-lg mx-auto">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto">
             Whether you are seeking a mentor or offering one, the ledger is open.
             Two minutes to enrol — a lifetime of rigor.
           </p>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/tuitions"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary hover:bg-[#537363] text-white text-sm font-semibold shadow-sm transition-colors"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary hover:bg-[#537363] text-white text-sm sm:text-base font-semibold shadow-sm transition-colors"
             >
               Browse Approved Tuitions
             </Link>
             <Link
               href="/sign-up?role=tutor"
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-card border border-border hover:border-primary/50 text-foreground text-sm font-semibold transition-colors"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-card border border-border hover:border-primary/50 text-foreground text-sm sm:text-base font-semibold transition-colors"
             >
               Apply as a Mentor
             </Link>
