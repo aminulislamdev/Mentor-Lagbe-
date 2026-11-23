@@ -57,26 +57,26 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-white/10">
           {/* Brand Column (2 cols on lg) */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-2 space-y-5">
             <Link
               href="/"
               className="inline-flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
             >
-              <div className="flex size-10 items-center justify-center rounded-xl bg-white/10 border border-white/15 text-[#EFE7DC] group-hover:bg-[#668B78] transition-colors">
-                <Compass className="size-5" />
+              <div className="flex size-12 items-center justify-center rounded-xl bg-white/10 border border-white/15 text-[#EFE7DC] group-hover:bg-[#668B78] transition-colors">
+                <Compass className="size-6" />
               </div>
               <div className="flex flex-col">
-                <span className="font-heading text-xl font-bold tracking-tight text-[#EFE7DC]">
+                <span className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-[#EFE7DC]">
                   Mentor<span className="text-[#668B78]">Lagbe</span>
                   <span className="text-[#B87959] ml-0.5">.</span>
                 </span>
-                <span className="font-mono text-[9px] uppercase tracking-widest text-[#D9CBB5]/70 -mt-0.5">
+                <span className="font-mono text-xs sm:text-sm uppercase tracking-widest text-[#D9CBB5]/70 -mt-0.5">
                   Academic Atelier
                 </span>
               </div>
             </Link>
 
-            <p className="text-sm text-[#D9CBB5]/80 leading-relaxed max-w-sm">
+            <p className="text-base sm:text-lg text-[#D9CBB5]/80 leading-relaxed max-w-md">
               MentorLagbe is Bangladesh&apos;s smart tuition discovery and 1-on-1 mentorship platform. Connecting verified tutors offering subject-wise batches with students seeking personalized academic guidance.
             </p>
 
@@ -86,37 +86,37 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Follow MentorLagbe on X"
-                className="flex size-9 items-center justify-center rounded-xl bg-white/5 hover:bg-[#668B78] hover:text-white border border-white/10 transition-all duration-200"
+                className="flex size-11 items-center justify-center rounded-xl bg-white/5 hover:bg-[#668B78] hover:text-white border border-white/10 transition-all duration-200"
               >
-                <XIcon className="size-4" />
+                <XIcon className="size-5" />
               </a>
               <a
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Connect on LinkedIn"
-                className="flex size-9 items-center justify-center rounded-xl bg-white/5 hover:bg-[#668B78] hover:text-white border border-white/10 transition-all duration-200"
+                className="flex size-11 items-center justify-center rounded-xl bg-white/5 hover:bg-[#668B78] hover:text-white border border-white/10 transition-all duration-200"
               >
-                <LinkedInIcon className="size-4" />
+                <LinkedInIcon className="size-5" />
               </a>
               <a
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View on GitHub"
-                className="flex size-9 items-center justify-center rounded-xl bg-white/5 hover:bg-[#668B78] hover:text-white border border-white/10 transition-all duration-200"
+                className="flex size-11 items-center justify-center rounded-xl bg-white/5 hover:bg-[#668B78] hover:text-white border border-white/10 transition-all duration-200"
               >
-                <GitHubIcon className="size-4" />
+                <GitHubIcon className="size-5" />
               </a>
             </div>
           </div>
 
           {/* Nav Column 1: Explore */}
-          <div className="space-y-3">
-            <h4 className="font-mono text-xs uppercase tracking-widest text-[#EFE7DC] font-semibold">
+          <div className="space-y-4">
+            <h4 className="font-mono text-sm sm:text-base uppercase tracking-widest text-[#EFE7DC] font-semibold">
               Explore Batches
             </h4>
-            <ul className="space-y-2 text-sm text-[#D9CBB5]/80">
+            <ul className="space-y-3 text-base text-[#D9CBB5]/80">
               <li>
                 <Link
                   href="/tuitions"
@@ -161,11 +161,11 @@ export function Footer() {
           </div>
 
           {/* Nav Column 2: Platform & Pricing */}
-          <div className="space-y-3">
-            <h4 className="font-mono text-xs uppercase tracking-widest text-[#EFE7DC] font-semibold">
+          <div className="space-y-4">
+            <h4 className="font-mono text-sm sm:text-base uppercase tracking-widest text-[#EFE7DC] font-semibold">
               Memberships
             </h4>
-            <ul className="space-y-2 text-sm text-[#D9CBB5]/80">
+            <ul className="space-y-3 text-base text-[#D9CBB5]/80">
               <li>
                 <Link
                   href="/pricing"
@@ -210,25 +210,25 @@ export function Footer() {
           </div>
 
           {/* Nav Column 3: Contact Info */}
-          <div className="space-y-3">
-            <h4 className="font-mono text-xs uppercase tracking-widest text-[#EFE7DC] font-semibold">
+          <div className="space-y-4">
+            <h4 className="font-mono text-sm sm:text-base uppercase tracking-widest text-[#EFE7DC] font-semibold">
               Contact Desk
             </h4>
-            <ul className="space-y-2.5 text-xs text-[#D9CBB5]/80">
-              <li className="flex items-start gap-2">
-                <MapPin className="size-4 text-[#668B78] shrink-0 mt-0.5" />
+            <ul className="space-y-3 text-base text-[#D9CBB5]/80">
+              <li className="flex items-start gap-2.5">
+                <MapPin className="size-5 text-[#668B78] shrink-0 mt-0.5" />
                 <span>Road 27, Dhanmondi R/A, Dhaka 1209, Bangladesh</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Phone className="size-4 text-[#668B78] shrink-0" />
+              <li className="flex items-center gap-2.5">
+                <Phone className="size-5 text-[#668B78] shrink-0" />
                 <span>+880 1700-000000</span>
               </li>
-              <li className="flex items-center gap-2">
-                <Mail className="size-4 text-[#668B78] shrink-0" />
+              <li className="flex items-center gap-2.5 break-all">
+                <Mail className="size-5 text-[#668B78] shrink-0" />
                 <span>support@mentorlagbe.com</span>
               </li>
-              <li className="pt-2 flex items-center gap-1.5 text-[11px] text-[#B87959] font-mono font-medium">
-                <ShieldCheck className="size-3.5" />
+              <li className="pt-2 flex items-center gap-2 text-sm sm:text-base text-[#B87959] font-mono font-medium">
+                <ShieldCheck className="size-4 sm:size-5" />
                 <span>Verified Bangladesh EdTech</span>
               </li>
             </ul>
@@ -236,15 +236,15 @@ export function Footer() {
         </div>
 
         {/* Bottom Terminus Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#D9CBB5]/60">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm sm:text-base text-[#D9CBB5]/60 text-center sm:text-left">
           <p>© 2026 MentorLagbe. All rights reserved.</p>
 
-          <div className="flex items-center gap-4">
-            <span className="inline-flex items-center gap-1">
-              Crafted with <Heart className="size-3 text-[#B87959] fill-[#B87959]" /> for educators
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+            <span className="inline-flex items-center gap-1.5">
+              Crafted with <Heart className="size-3.5 text-[#B87959] fill-[#B87959]" /> for educators
             </span>
-            <span>•</span>
-            <span className="font-mono text-[10px]">Secured by Stripe & BetterAuth</span>
+            <span className="hidden sm:inline">•</span>
+            <span className="font-mono text-xs sm:text-sm">Secured by Stripe & BetterAuth</span>
           </div>
         </div>
       </div>
