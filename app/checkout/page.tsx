@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense, useState } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
+import { useSearchParams} from "next/navigation"
 import Link from "next/link"
 import {
   ArrowLeft,
@@ -32,12 +32,12 @@ const checkoutStyles = `
 
 function CheckoutContent() {
   const searchParams = useSearchParams()
-  const router = useRouter()
+  
   const planType = (searchParams.get("plan") || "student") as "student" | "tutor"
 
   const [loading, setLoading] = useState(false)
 
-  // প্ল্যান অনুযায়ী ডাটা (Pricing page থেকে আসা ডাটা)
+  // প্ল্যান অনুযায়ী ডাটা (Pricing page থেকে আসা ডাটা)
   const planDetails = {
     student: {
       title: "Student Pro",
@@ -90,28 +90,31 @@ function CheckoutContent() {
       {/* ══ MASTHEAD ═══════════════════════════════════════════════════ */}
       <header className="border-b border-[#344C43]/15 bg-[#D9CBB5]/90 backdrop-blur-md sticky top-0 z-10">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href="/pricing" className="group flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#344C43]/70 transition-colors hover:text-[#344C43]">
+          <Link href="/pricing" className="group flex items-center gap-2 font-mono text-[11px] sm:text-xs font-bold uppercase tracking-[0.15em] text-[#344C43]/70 transition-colors hover:text-[#344C43]">
             <ArrowLeft className="size-4 transition-transform duration-200 group-hover:-translate-x-1" strokeWidth={2.5} />
-            Return to Pricing
+            <span className="hidden sm:inline">Return to Pricing</span>
+            <span className="sm:hidden">Back</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Lock className="size-3.5 text-[#668B78]" strokeWidth={2.5} />
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#344C43]/70">Secure Checkout</span>
+            <Lock className="size-4 text-[#668B78]" strokeWidth={2.5} />
+            <span className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.15em] text-[#344C43]/70">
+              Secure Checkout
+            </span>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 pt-12 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-6xl px-4 pt-10 sm:px-6 sm:pt-12 lg:px-8">
 
         {/* ══ HEADER TEXT ══════════════════════════════════════════════════ */}
         <div className="mb-10 text-center sm:text-left">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#B87959]">
+          <p className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#B87959]">
             [ Final Review ]
           </p>
-          <h1 className="checkout-serif mt-2 text-4xl font-black tracking-tight text-[#344C43] sm:text-5xl">
+          <h1 className="checkout-serif mt-3 text-4xl font-black tracking-tight text-[#344C43] sm:text-5xl lg:text-6xl leading-tight">
             Confirm your <span className="italic text-[#668B78]">enrollment.</span>
           </h1>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#344C43]/75">
+          <p className="mt-4 max-w-xl mx-auto sm:mx-0 text-sm sm:text-base leading-relaxed text-[#344C43]/75">
             Review your selected guild seat below. You will be redirected to Stripe to complete the secure transaction.
           </p>
         </div>
@@ -121,29 +124,29 @@ function CheckoutContent() {
 
           {/* LEFT: The Dossier (60%) */}
           <div className="checkout-fade-up space-y-6 lg:col-span-7" style={{ animationDelay: "0.1s" }}>
-            <div className="rounded-2xl border border-[#344C43]/20 bg-[#EFE7DC] p-6 shadow-[4px_6px_0_rgba(52,76,67,0.08)] sm:p-8">
+            <div className="rounded-2xl border border-[#344C43]/20 bg-[#EFE7DC] p-5 sm:p-8 shadow-[4px_6px_0_rgba(52,76,67,0.08)]">
 
-              <div className="flex items-center gap-3 border-b border-[#344C43]/15 pb-5">
-                <div className="flex size-12 items-center justify-center rounded-full bg-[#B87959]/15 text-[#B87959]">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-3 border-b border-[#344C43]/15 pb-5">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#B87959]/15 text-[#B87959]">
                   <FileText className="size-6" strokeWidth={2} />
                 </div>
                 <div>
-                  <h2 className="checkout-serif text-2xl font-bold text-[#344C43]">
+                  <h2 className="checkout-serif text-2xl sm:text-3xl font-bold text-[#344C43]">
                     {currentPlan.title}
                   </h2>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#B87959]">
+                  <p className="font-mono text-[11px] sm:text-xs uppercase tracking-[0.18em] text-[#B87959] mt-1">
                     {currentPlan.subtitle}
                   </p>
                 </div>
               </div>
 
               <div className="mt-6">
-                <h3 className="mb-4 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#344C43]/60">
+                <h3 className="mb-4 font-mono text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#344C43]/60">
                   What is included:
                 </h3>
-                <ul className="grid gap-3 sm:grid-cols-2">
+                <ul className="grid gap-4 sm:gap-3 sm:grid-cols-2">
                   {currentPlan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-[13px] leading-snug text-[#344C43]/85">
+                    <li key={i} className="flex items-start gap-2.5 text-sm sm:text-[15px] leading-snug text-[#344C43]/85">
                       <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-[#668B78]" strokeWidth={2.5} />
                       <span>{feature}</span>
                     </li>
@@ -151,9 +154,9 @@ function CheckoutContent() {
                 </ul>
               </div>
 
-              <div className="mt-8 rounded-xl border border-[#668B78]/30 bg-[#668B78]/5 p-4 flex gap-3 items-start">
-                <ShieldCheck className="size-5 shrink-0 text-[#668B78]" strokeWidth={2} />
-                <p className="text-xs leading-relaxed text-[#344C43]/80">
+              <div className="mt-8 rounded-xl border border-[#668B78]/30 bg-[#668B78]/5 p-4 sm:p-5 flex gap-3 items-start">
+                <ShieldCheck className="size-5 shrink-0 text-[#668B78] mt-0.5" strokeWidth={2} />
+                <p className="text-sm leading-relaxed text-[#344C43]/80">
                   <strong className="font-semibold text-[#344C43]">Instant Activation:</strong> Your Pro features will be unlocked the moment your payment is confirmed by Stripe.
                 </p>
               </div>
@@ -166,14 +169,14 @@ function CheckoutContent() {
 
               {/* Receipt Header */}
               <div className="border-b border-[#344C43]/15 bg-[#344C43]/5 px-6 py-4 sm:px-8">
-                <h3 className="font-mono text-[10px] font-bold uppercase tracking-[0.25em] text-[#344C43]">
+                <h3 className="font-mono text-[11px] sm:text-xs font-bold uppercase tracking-[0.22em] text-[#344C43]">
                   Order Summary
                 </h3>
               </div>
 
               {/* Receipt Body */}
               <div className="px-6 py-6 sm:px-8">
-                <div className="space-y-4 font-mono text-[11px] uppercase tracking-[0.1em] text-[#344C43]">
+                <div className="space-y-4 font-mono text-xs sm:text-sm uppercase tracking-[0.08em] text-[#344C43]">
 
                   <div className="flex justify-between items-center ledger-dashed-line pb-3">
                     <span className="text-[#344C43]/60">Membership</span>
@@ -187,12 +190,12 @@ function CheckoutContent() {
 
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-[#344C43]/60">Total Due Today</span>
-                    <span className="text-lg font-black text-[#B87959]">
+                    <span className="text-xl sm:text-2xl font-black text-[#B87959]">
                       {currentPlan.price}
                     </span>
                   </div>
 
-                  <div className="flex justify-end text-[9px] text-[#344C43]/50 tracking-widest">
+                  <div className="flex justify-end text-[10px] sm:text-[11px] text-[#344C43]/50 tracking-widest">
                     {currentPlan.interval}
                   </div>
                 </div>
@@ -202,7 +205,7 @@ function CheckoutContent() {
                   <button
                     onClick={handleProceedToStripe}
                     disabled={loading}
-                    className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#668B78] py-4 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#537363] hover:shadow-md active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-xl bg-[#668B78] py-4 font-mono text-xs sm:text-sm font-bold uppercase tracking-[0.18em] text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#537363] hover:shadow-md active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {loading ? (
                       <>
@@ -217,8 +220,8 @@ function CheckoutContent() {
                     )}
                   </button>
 
-                  <p className="mt-4 flex items-center justify-center gap-1.5 text-center font-mono text-[9px] uppercase tracking-widest text-[#344C43]/50">
-                    <Lock className="size-3" />
+                  <p className="mt-4 flex items-center justify-center gap-1.5 text-center font-mono text-[10px] sm:text-[11px] uppercase tracking-[0.15em] text-[#344C43]/50">
+                    <Lock className="size-3.5" />
                     Secured by Stripe · 256-bit Encryption
                   </p>
                 </div>
