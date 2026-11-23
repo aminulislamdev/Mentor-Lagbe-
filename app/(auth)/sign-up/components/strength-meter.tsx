@@ -1,4 +1,3 @@
-
 export function StrengthMeter({ password }: { password: string }) {
   const strength = (() => {
     if (!password) return 0
@@ -16,12 +15,12 @@ export function StrengthMeter({ password }: { password: string }) {
   if (!password) return null
 
   return (
-    <div className="mt-2 flex items-center gap-3" aria-live="polite">
-      <div className="flex flex-1 gap-1.5" aria-hidden="true">
+    <div className="mt-3 flex items-center gap-3" aria-live="polite">
+      <div className="flex flex-1 gap-2" aria-hidden="true">
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="h-0.75 flex-1 rounded-full transition-colors duration-300"
+            className="h-1 flex-1 rounded-full transition-colors duration-300"
             style={{
               backgroundColor:
                 i <= strength ? tones[strength] : "rgba(52,76,67,0.14)",
@@ -30,7 +29,7 @@ export function StrengthMeter({ password }: { password: string }) {
         ))}
       </div>
       <span
-        className="font-mono text-[9px] font-medium uppercase tracking-[0.2em]"
+        className="font-mono text-[11px] font-medium uppercase tracking-[0.15em]"
         style={{ color: tones[strength] }}
       >
         {labels[strength]}
