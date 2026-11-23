@@ -32,6 +32,7 @@ import { Panel } from "@/components/common/panel"
 import { apiFetch, uploadImage } from "@/lib/api"
 import { useSession } from "@/lib/auth-client"
 import type { CurrentUser } from "@/lib/api-types"
+import Image from "next/image"
 
 // ─── Scoped identity-desk styles ─────────────────────────────────────────────
 
@@ -99,7 +100,7 @@ function IdentityCard({ user }: { user: CurrentUser }) {
       aria-label={`Identity card — ${user.name}, ${roleLabel}`}
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
-        <div className="identity-sheen absolute top-[-20%] h-[140%] w-1/3 bg-gradient-to-r from-transparent via-[#F2EDDF]/14 to-transparent" />
+        <div className="identity-sheen absolute top-[-20%] h-[140%] w-1/3 bg-linear-to-r from-transparent via-[#F2EDDF]/14 to-transparent" />
       </div>
 
       <div className="relative flex items-center justify-between gap-3 border-b border-[#F2EDDF]/12 pb-3">
@@ -115,7 +116,7 @@ function IdentityCard({ user }: { user: CurrentUser }) {
           className="flex size-20 shrink-0 items-center justify-center rounded-xl border border-[#C98B6D]/60 bg-[#243630] sm:size-24"
         >
           {user.image ? (
-            <img src={user.image} alt="" className="size-full rounded-xl object-cover" />
+            <Image src={user.image} alt="" className="size-full rounded-xl object-cover" />
           ) : (
             <span className="identity-serif text-2xl font-black text-[#C98B6D] sm:text-3xl">
               {initials}
@@ -177,7 +178,7 @@ function IdentityCard({ user }: { user: CurrentUser }) {
   )
 }
 
-// ─── Child Component: The Form (only mounts when user is available) ───────────
+// ─── The Form (remounts whenever server user data changes) ───────────────────
 
 function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Promise<void> }) {
   const [portraitRemoved, setPortraitRemoved] = useState(false)
@@ -187,7 +188,7 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // ✅ সরাসরি প্রপ থেকে state ইনিশিয়ালাইজ করা হচ্ছে, কোনো useEffect নেই
+  // Form state user prop theke initialize hoy. Parent key change hole notun mount hobe.
   const [form, setForm] = useState({
     name: user.name ?? "",
     phone: user.phone ?? "",
@@ -196,25 +197,22 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
   })
 
   const dirty =
-    !!user &&
-    (form.name !== (user.name ?? "") ||
-      form.phone !== (user.phone ?? "") ||
-      form.bio !== (user.bio ?? "") ||
-      form.image !== (user.image ?? "") ||
-      portraitRemoved)
+    form.name !== (user.name ?? "") ||
+    form.phone !== (user.phone ?? "") ||
+    form.bio !== (user.bio ?? "") ||
+    form.image !== (user.image ?? "") ||
+    portraitRemoved
 
   const set = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }))
 
   const handleCancel = () => {
-    if (user) {
-      setForm({
-        name: user.name ?? "",
-        phone: user.phone ?? "",
-        bio: user.bio ?? "",
-        image: user.image ?? "",
-      })
-    }
+    setForm({
+      name: user.name ?? "",
+      phone: user.phone ?? "",
+      bio: user.bio ?? "",
+      image: user.image ?? "",
+    })
     setPortraitRemoved(false)
     setSaveError(null)
   }
@@ -235,12 +233,9 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
       setSavedFlash(true)
       window.setTimeout(() => setSavedFlash(false), 2600)
 
+      // refetch er por parent er key change hobe, tai form notun data niye remount hobe
       await refetch()
-
-      if (portraitRemoved) {
-        setPortraitRemoved(false)
-        setForm((prev) => ({ ...prev, image: "" }))
-      }
+      setPortraitRemoved(false)
     } catch (cause) {
       setSaveError(cause instanceof Error ? cause.message : "Failed to save profile")
     } finally {
@@ -404,7 +399,7 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
                 <Input
                   id="f-location"
                   type="text"
-                  value=""
+                  value={(user as CurrentUser & { location?: string }).location ?? ""}
                   readOnly
                   aria-readonly="true"
                   className="h-11 w-full cursor-not-allowed rounded-sm border border-[#344C43]/20 bg-[#344C43]/5 pl-9 text-[13px] text-[#344C43]/65 outline-none"
@@ -444,7 +439,7 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
                 </div>
               ) : (
                 <div className="flex size-32 items-center justify-center rounded-full border-4 border-[#C98B6D]/60 bg-[#243630] shadow-[0_10px_28px_rgba(0,0,0,0.3)] sm:size-36 overflow-hidden">
-                  <img src={form.image} alt="Portrait" className="size-full object-cover" />
+                  <Image src={form.image} alt="Portrait" className="size-full object-cover" />
                 </div>
               )}
               <span aria-hidden="true" className="absolute -bottom-1 -right-1 flex size-9 items-center justify-center rounded-full border-2 border-[#EFE7DC] bg-[#668B78] text-[#F2EDDF]">
@@ -458,7 +453,7 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
                 role="button"
                 tabIndex={0}
                 aria-label="Upload portrait image"
-                className="flex flex-col items-center justify-center gap-1.5 border-2 border-dashed border-[#344C43]/30 bg-[#F2ECDF] px-4 py-5 text-center transition-colors hover:border-[#668B78]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                className="flex flex-col items-center justify-center gap-1.5 border-2 border-dashed border-[#344C43]/30 bg-[#F2ECDF] px-4 py-5 text-center transition-colors hover:border-[#668B78]/60 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                 onClick={() => fileInputRef.current?.click()}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click() }}
               >
@@ -482,7 +477,7 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#344C43]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+                  className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#344C43]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
                 >
                   <Camera aria-hidden="true" className="size-4" strokeWidth={1.75} />
                   Change Photo
@@ -490,7 +485,7 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
                 <button
                   type="button"
                   onClick={handleRemovePortrait}
-                  className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#A34343]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
+                  className="inline-flex h-9 items-center gap-1.5 rounded-sm border border-[#A34343]/35 px-3 font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#A34343] transition-all hover:bg-[#A34343]/10 focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-[#A34343]"
                 >
                   <ImageOff aria-hidden="true" className="size-4" strokeWidth={1.75} />
                   Remove
@@ -509,7 +504,7 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
                 aria-hidden="true"
                 className="flex size-14 shrink-0 items-center justify-center rounded-full border border-[#C98B6D]/55 bg-[#243630] font-mono text-sm font-bold text-[#C98B6D] overflow-hidden"
               >
-                {portraitRemoved || !form.image ? (form.name ? form.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase() : "—") : <img src={form.image} alt="" className="size-full object-cover" />}
+                {portraitRemoved || !form.image ? (form.name ? form.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase() : "—") : <Image src={form.image} alt="" className="size-full object-cover" />}
               </span>
               <span className="min-w-0">
                 <span className="flex items-center gap-1.5">
@@ -565,7 +560,7 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
             <button
               type="button"
               onClick={handleCancel}
-              className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/30 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
+              className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/30 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343] focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
             >
               <RotateCcw aria-hidden="true" className="size-4" strokeWidth={1.75} />
               Cancel Changes
@@ -576,7 +571,7 @@ function ProfileForm({ user, refetch }: { user: CurrentUser; refetch: () => Prom
             onClick={handleSave}
             disabled={!dirty || saving}
             className={cn(
-              "inline-flex h-12 items-center justify-center gap-2 rounded-sm border px-6 font-mono text-[9px] font-bold uppercase tracking-[0.26em] transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
+              "inline-flex h-12 items-center justify-center gap-2 rounded-sm border px-6 font-mono text-[9px] font-bold uppercase tracking-[0.26em] transition-all duration-200 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
               savedFlash
                 ? "border-[#668B78] bg-[#668B78] text-[#F2EDDF]"
                 : dirty
@@ -617,7 +612,7 @@ export default function ProfilePage() {
     <div className="identity-root relative text-[#344C43]">
       <style>{identityStyles}</style>
 
-      <div className="relative mx-auto max-w-[1280px] px-4 pb-10 pt-5 sm:px-6 sm:pt-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-5 sm:px-6 sm:pt-6 lg:px-8">
         {/* ══ MASTHEAD ═══════════════════════════════════════════════════ */}
         <header className="border-b-2 border-[#344C43] pb-5 sm:pb-6">
           <p className="font-mono text-[9px] uppercase tracking-[0.32em] text-[#B87959] sm:text-[10px]">
@@ -667,7 +662,11 @@ export default function ProfilePage() {
             </div>
           </div>
         ) : (
-          <ProfileForm user={user} refetch={refetch} />
+          <ProfileForm
+            key={`${user.id}-${user.name}-${user.phone ?? ""}-${user.bio ?? ""}-${user.image ?? ""}`}
+            user={user}
+            refetch={refetch}
+          />
         )}
       </div>
     </div>
