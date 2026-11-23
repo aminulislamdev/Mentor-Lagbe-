@@ -25,9 +25,9 @@ export default function AuthCallbackPage() {
   }, [session, isPending, router])
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-[#D9CBB5] text-[#344C43]">
-      <Loader2 className="mb-4 size-10 animate-spin text-[#668B78]" />
-      <p className="font-mono text-xs font-bold uppercase tracking-[0.2em]">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center bg-[#D9CBB5] px-4 text-center text-[#344C43]">
+      <Loader2 className="mb-4 size-8 animate-spin text-[#668B78] sm:size-10" />
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] sm:text-xs">
         Authenticating your account...
       </p>
     </div>
