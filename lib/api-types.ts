@@ -34,6 +34,25 @@ export interface ApiFailure {
   [key: string]: unknown
 }
 
+/**
+ * Persistent user preferences (matches the backend `settings` object on the
+ * users collection). `notifications` keys match `settings.notifications.*`.
+ */
+export interface UserSettings {
+  language: string
+  timezone: string
+  mode: string
+  days: string[]
+  evenings: boolean
+  notifications: {
+    applicant: boolean
+    status: boolean
+    approval: boolean
+    announcements: boolean
+    subscription: boolean
+  }
+}
+
 /** Mirrors the users collection as `/api/auth/me` and the profile route expose it. */
 export interface CurrentUser {
   id: string
@@ -45,6 +64,7 @@ export interface CurrentUser {
   phone?: string | null
   bio?: string | null
   createdAt?: string
+  settings?: UserSettings | null
 }
 
 export interface Application {
