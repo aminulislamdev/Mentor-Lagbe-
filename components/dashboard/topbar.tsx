@@ -56,7 +56,7 @@ export function Topbar({ role, collapsed, onToggleCollapse, onOpenMobile, identi
   }
 
   return (
-    <header className="sticky top-[72px] z-30 flex h-16 items-center gap-3 border-b border-[#344C43]/20 bg-[#F2ECDF]/90 px-3 backdrop-blur-md sm:gap-4 sm:px-5">
+    <header className="sticky top-[72px] z-30 flex h-16 items-center gap-3 border-b border-border bg-card/90 px-3 backdrop-blur-md sm:gap-4 sm:px-5">
       {/* Sidebar toggle — mobile drawer vs desktop rail */}
       <button
         type="button"
