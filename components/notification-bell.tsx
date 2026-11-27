@@ -1,30 +1,19 @@
 "use client"
 
-// Notification bell for the shared navbar.
+// Notification bell for the shared navbar + dashboard topbar.
 //
-// Fetches GET /api/notifications for the currently authenticated user,
-// shows an unread badge, and offers a responsive dropdown. Clicking a
-// notification calls PATCH /api/notifications/:id/read and refreshes.
-// Reuses `useApi` + `apiFetch`; no new API logic is duplicated.
+// Fetches GET /api/notifications via the shared `useNotifications` store
+// (multiple bells share ONE request + unread count). Clicking a notification
+// calls PATCH /api/notifications/:id/read and refreshes shared state. Real
+// data only; no fake notifications; no localStorage. Unauthenticated users
+// render nothing and trigger no request. Role filtering is server-side.
 
 import * as React from "react"
 import { Bell, Check, Inbox, Loader2, TriangleAlert } from "lucide-react"
 import { toast } from "sonner"
-import { useApi } from "@/lib/hooks/use-api"
-import { apiFetch } from "@/lib/api"
 import { useSession } from "@/lib/auth-client"
+import { useNotifications, type Notification } from "@/lib/hooks/use-notifications"
 import { cn } from "@/lib/utils"
-
-// Verified response shape of GET /api/notifications.
-export interface Notification {
-  _id: string
-  title: string
-  message: string
-  targetRole: "all" | "student" | "tutor"
-  isRead: boolean
-  createdAt: string
-  updatedAt: string
-}
 
 function formatDate(iso: string): string {
   const date = new Date(iso)
@@ -36,31 +25,21 @@ export function NotificationBell() {
   const { data: session } = useSession()
   const isAuthenticated = Boolean(session?.user)
 
-  const { data, loading, error, refetch } = useApi<Notification[]>(
-    isAuthenticated ? "/api/notifications" : null
-  )
-
-  const notifications = data ?? []
-  const unreadCount = notifications.reduce((count, n) => (n.isRead ? count : count + 1), 0)
+  const { notifications, loading, error, unreadCount, refresh, markRead } = useNotifications(isAuthenticated)
 
   const [open, setOpen] = React.useState(false)
   const [pendingId, setPendingId] = React.useState<string | null>(null)
-
   const containerRef = React.useRef<HTMLDivElement>(null)
 
-  // Close when clicking outside.
   React.useEffect(() => {
     if (!open) return
     function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-        setOpen(false)
-      }
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) setOpen(false)
     }
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [open])
 
-  // Close on Escape.
   React.useEffect(() => {
     if (!open) return
     function handleKeyDown(event: KeyboardEvent) {
@@ -70,22 +49,17 @@ export function NotificationBell() {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [open])
 
-  const markRead = async (notification: Notification) => {
-    if (pendingId) return // prevent duplicate requests while one is pending
-
+  const onSelect = async (notification: Notification) => {
+    if (pendingId) return
     setPendingId(notification._id)
     try {
-      await apiFetch(`/api/notifications/${notification._id}/read`, { method: "PATCH" })
-      refetch() // refresh list + unread count only after success
-    } catch {
-      // Do not mark read on failure; nothing is updated locally.
-      toast.error("Could not update notification. Please try again.")
+      const ok = await markRead(notification._id)
+      if (!ok) toast.error("Could not update notification. Please try again.")
     } finally {
       setPendingId(null)
     }
   }
 
-  // Notification bell is only relevant for signed-in users.
   if (!isAuthenticated) return null
 
   return (
@@ -114,12 +88,8 @@ export function NotificationBell() {
         <div
           role="dialog"
           aria-label="Notifications"
-          className={cn(
-            "absolute right-0 z-50 mt-2 w-[min(22rem,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border border-border bg-card text-foreground shadow-lg shadow-black/10",
-            "animate-in fade-in zoom-in-95"
-          )}
+          className="absolute right-0 z-50 mt-2 w-[min(22rem,calc(100vw-1.5rem))] overflow-hidden rounded-2xl border border-border bg-card text-foreground shadow-lg shadow-black/10 animate-in fade-in zoom-in-95"
         >
-          {/* Header */}
           <div className="flex items-center justify-between gap-2 border-b border-border/80 px-4 py-3">
             <p className="text-sm font-semibold">Notifications</p>
             {unreadCount > 0 && (
@@ -129,7 +99,6 @@ export function NotificationBell() {
             )}
           </div>
 
-          {/* Body */}
           <div className="max-h-[min(28rem,70vh)] overflow-y-auto">
             {loading ? (
               <NotificationSkeleton />
@@ -138,11 +107,7 @@ export function NotificationBell() {
                 <TriangleAlert className="size-6 text-destructive" aria-hidden="true" />
                 <p className="text-sm font-medium">Couldn’t load notifications</p>
                 <p className="text-xs text-muted-foreground">{error}</p>
-                <button
-                  type="button"
-                  onClick={refetch}
-                  className="mt-1 inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                >
+                <button type="button" onClick={refresh} className="mt-1 inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                   Try again
                 </button>
               </div>
@@ -160,7 +125,7 @@ export function NotificationBell() {
                     <li key={n._id}>
                       <button
                         type="button"
-                        onClick={() => markRead(n)}
+                        onClick={() => onSelect(n)}
                         disabled={isPending}
                         aria-label={`${n.isRead ? "Read" : "Unread"} notification: ${n.title}`}
                         className={cn(
@@ -169,25 +134,19 @@ export function NotificationBell() {
                           isPending && "opacity-60"
                         )}
                       >
-                        {/* unread indicator */}
                         <span className="mt-1.5 flex size-2 shrink-0 items-center justify-center" aria-hidden="true">
                           <span className={cn("size-2 rounded-full", n.isRead ? "bg-transparent" : "bg-primary")} />
                         </span>
-
                         <span className="min-w-0 flex-1">
                           <span className="flex items-start justify-between gap-2">
-                            <span className={cn("truncate text-sm", n.isRead ? "font-medium text-muted-foreground" : "font-semibold text-foreground")}>
-                              {n.title}
-                            </span>
+                            <span className={cn("truncate text-sm", n.isRead ? "font-medium text-muted-foreground" : "font-semibold text-foreground")}>{n.title}</span>
                             {n.isRead && <Check className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />}
                           </span>
                           <span className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{n.message}</span>
                           <span className="mt-1 block font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70">
-                            {formatDate(n.createdAt)}
-                            {isPending ? " · saving…" : n.isRead ? " · read" : " · unread"}
+                            {formatDate(n.createdAt)}{isPending ? " · saving…" : n.isRead ? " · read" : " · unread"}
                           </span>
                         </span>
-
                         {isPending && <Loader2 className="mt-1 size-3.5 shrink-0 animate-spin text-muted-foreground" aria-hidden="true" />}
                       </button>
                     </li>
