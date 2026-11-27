@@ -34,12 +34,26 @@ export interface ApiFailure {
   [key: string]: unknown
 }
 
+export const SUPPORTED_LANGUAGES = ["en-US", "bn-BD"] as const
+export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number]
+
+export const LANGUAGE_LABELS: Record<SupportedLanguage, string> = {
+  "en-US": "English (US)",
+  "bn-BD": "বাংলা (Bangla)",
+}
+
+export function normalizeLanguage(value: unknown): SupportedLanguage {
+  if (value === "en-US" || value === "English (US)") return "en-US"
+  if (value === "bn-BD" || value === "বাংলা (Bangla)") return "bn-BD"
+  return "en-US"
+}
+
 /**
  * Persistent user preferences (matches the backend `settings` object on the
  * users collection). `notifications` keys match `settings.notifications.*`.
  */
 export interface UserSettings {
-  language: string
+  language: SupportedLanguage
   timezone: string
   mode: string
   days: string[]
