@@ -6,13 +6,13 @@ import { usePathname } from "next/navigation"
 import {
   PanelLeft,
   Search,
-  Bell,
   ChevronRight,
   ChevronDown,
   User,
   LogOut,
 } from "lucide-react"
 import { ROLE_CONFIG, getRouteMeta, type DashboardIdentity, type DashboardRole } from "@/components/dashboard/nav-config"
+import { NotificationBell } from "@/components/notification-bell"
 import { cn } from "@/lib/utils"
 
 interface TopbarProps {
@@ -29,7 +29,6 @@ export function Topbar({ role, collapsed, onToggleCollapse, onOpenMobile, identi
   const cfg = ROLE_CONFIG[role]
 
   const [menuOpen, setMenuOpen] = React.useState(false)
-  const [bellPinged, setBellPinged] = React.useState(false)
   const menuRef = React.useRef<HTMLDivElement>(null)
 
   // Close the profile menu on outside click / Escape
@@ -137,22 +136,8 @@ export function Topbar({ role, collapsed, onToggleCollapse, onOpenMobile, identi
           </kbd>
         </label>
 
-        {/* Notifications — UI only */}
-        <button
-          type="button"
-          onClick={() => setBellPinged((v) => !v)}
-          aria-label="3 unread notifications"
-          aria-pressed={bellPinged}
-          className="relative flex size-10 items-center justify-center rounded-sm border border-[#344C43]/25 bg-[#EFE7DC]/70 text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
-        >
-          <Bell className="size-5" strokeWidth={1.75} />
-          <span
-            aria-hidden="true"
-            className="absolute right-1.5 top-1.5 flex size-4 items-center justify-center rounded-full bg-[#B87959] font-mono text-[10px] font-bold leading-none text-[#EFE7DC]"
-          >
-            3
-          </span>
-        </button>
+        {/* Notifications — dynamic (GET /api/notifications + PATCH read; role-filtered server-side) */}
+        <NotificationBell />
 
         {/* Avatar + dropdown — UI only */}
         <div className="relative" ref={menuRef}>
