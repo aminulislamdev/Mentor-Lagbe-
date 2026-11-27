@@ -18,6 +18,7 @@ import {
 } from "lucide-react"
 import { useSession, signOut } from "@/lib/auth-client"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { NotificationBell } from "@/components/notification-bell"
 
 interface NavItem {
   label: string
@@ -243,6 +244,9 @@ export function Navbar() {
 
         {/* Right: Theme Toggle & Authentication Controls */}
         <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Notifications */}
+          <NotificationBell />
+
           {/* Visual Theme Toggle */}
           <ThemeToggle />
 
