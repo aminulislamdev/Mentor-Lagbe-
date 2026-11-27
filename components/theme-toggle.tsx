@@ -55,22 +55,18 @@ export function ThemeToggle() {
       "(prefers-color-scheme: dark)"
     ).matches
 
-    if (storedTheme === "dark" || (!storedTheme && systemPrefersDark)) {
-      document.documentElement.classList.add("dark")
-    } else if (storedTheme === "light") {
-      document.documentElement.classList.remove("dark")
-    }
+    const isDark = storedTheme === "dark" || (!storedTheme && systemPrefersDark)
+    // `.dark` is applied pre-paint by the inline script in app/layout; keep in sync.
+    document.documentElement.classList.toggle("dark", isDark)
+    document.documentElement.style.colorScheme = isDark ? "dark" : "light"
   }, [])
 
   const toggleTheme = () => {
     const nextIsDark = !document.documentElement.classList.contains("dark")
-    if (nextIsDark) {
-      document.documentElement.classList.add("dark")
-      localStorage.setItem("theme", "dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-      localStorage.setItem("theme", "light")
-    }
+    document.documentElement.classList.toggle("dark", nextIsDark)
+    document.documentElement.style.colorScheme = nextIsDark ? "dark" : "light"
+    localStorage.setItem("theme", nextIsDark ? "dark" : "light")
+    // existing MutationObserver + `storage` listeners pick up the change; no extra re-render state
   }
 
   if (!isMounted) {
