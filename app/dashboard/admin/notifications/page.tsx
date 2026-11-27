@@ -1,19 +1,22 @@
 "use client"
 
 import { useState, type FormEvent } from "react"
+import { toast } from "sonner"
 import { Megaphone, Send, Radio, Stamp, ScrollText, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { apiFetch, ApiError } from "@/lib/api"
 import { cn } from "@/lib/utils"
 
-type Audience = "all" | "students" | "tutors"
+// Backend `targetRole` enum: "all" | "student" | "tutor" (see Notification model).
+type Audience = "all" | "student" | "tutor"
 
 const AUDIENCE_OPTIONS: Array<{ value: Audience; label: string; registry: string }> = [
   { value: "all", label: "All", registry: "Student + Tutor" },
-  { value: "students", label: "Students", registry: "Student Registry" },
-  { value: "tutors", label: "Tutors", registry: "Tutor Registry" },
+  { value: "student", label: "Students", registry: "Student Registry" },
+  { value: "tutor", label: "Tutors", registry: "Tutor Registry" },
 ]
 
 const DISPATCH_REF = "ML-DSP-2026-0042"
@@ -62,13 +65,14 @@ export default function AdminNotificationsPage() {
   const [sent, setSent] = useState(false)
   const [error, setError] = useState("")
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (loading) return
+    if (loading) return // prevent duplicate submissions
 
     const trimmedTitle = title.trim()
     const trimmedMessage = message.trim()
 
+    // preserve validation
     if (!trimmedTitle || !trimmedMessage) {
       setSent(false)
       setError("A notice needs both a title and a message before it can be sealed.")
@@ -79,14 +83,28 @@ export default function AdminNotificationsPage() {
     setSent(false)
     setLoading(true)
 
-    // Simulated dispatch — no API call.
-    window.setTimeout(() => {
-      setLoading(false)
+    try {
+      // Backend expects { title, message, targetRole }. Auth is attached by apiFetch;
+      // the server enforces Admin-only access. targetRole: all | student | tutor.
+      await apiFetch("/api/admin/notifications", {
+        method: "POST",
+        body: { title: trimmedTitle, message: trimmedMessage, targetRole: audience },
+      })
+
+      toast.success("Notification sent successfully.")
+      // reset form only after successful submission
       setTitle("")
       setMessage("")
       setAudience("all")
       setSent(true)
-    }, 2000)
+    } catch (cause) {
+      const message =
+        cause instanceof ApiError ? cause.message : "Could not send notification. Please try again."
+      toast.error(message)
+      setError(message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
