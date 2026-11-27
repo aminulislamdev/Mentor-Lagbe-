@@ -11,6 +11,7 @@ import { DashboardSection } from "@/components/common/dashboard-section"
 import { Panel } from "@/components/common/panel"
 import { Colophon } from "@/components/dashboard/shared"
 import { useUserSettings, type UserSettingsPatch } from "@/lib/hooks/use-user-settings"
+import { applyTheme, useTheme } from "@/lib/theme"
 import type { UserSettings } from "@/lib/api-types"
 
 // ─── Types & Registry ────────────────────────────────────────────────────────
@@ -38,7 +39,6 @@ const NOTIF_ITEMS: Array<{ id: string; title: string; desc: string; on: boolean;
 ]
 
 const DEFAULTS = {
-  theme: "system" as "light" | "dark" | "system",
   maintenanceMode: false,
   registrationOpen: true,
 }
@@ -155,6 +155,7 @@ function ThemePreview({ value, selected, onSelect }: { value: "light" | "dark" |
 export default function AdminSettingsPage() {
   // ── Backend-backed personal settings (reusable hook) ──
   const { settings, loading, saving, error, updateSettings, clearError } = useUserSettings()
+  const { mode: themeMode } = useTheme()
 
   const baseline = normalizeSettings(settings)
 
@@ -165,7 +166,6 @@ export default function AdminSettingsPage() {
 
   // unsupported/admin-specific local state (NOT sent to /api/users/me; NOT a verified admin API)
   const [active, setActive] = useState<SectionKey>("general")
-  const [theme, setTheme] = useState(DEFAULTS.theme)
   const [maintenanceMode, setMaintenanceMode] = useState(DEFAULTS.maintenanceMode)
   const [registrationOpen, setRegistrationOpen] = useState(DEFAULTS.registrationOpen)
 
@@ -219,7 +219,7 @@ export default function AdminSettingsPage() {
     // restore last loaded/saved backend values; no backend call
     setOverrides({}); setSaveError(null); clearError(); setSavedFlash(false)
     setLocalNotifications(LOCAL_NOTIF_DEFAULTS)
-    setTheme(DEFAULTS.theme); setMaintenanceMode(DEFAULTS.maintenanceMode); setRegistrationOpen(DEFAULTS.registrationOpen)
+    setMaintenanceMode(DEFAULTS.maintenanceMode); setRegistrationOpen(DEFAULTS.registrationOpen)
   }
 
   const selectWrap = (id: string, value: string, onChange: (v: string) => void, options: readonly string[], label: string) => (
@@ -304,9 +304,9 @@ export default function AdminSettingsPage() {
                 <DashboardSection id="panel-appearance" numeral="02" title="Appearance" subtitle="The studio light" variant="settings" />
                 <p className="mt-4 max-w-lg text-sm leading-relaxed text-[#344C43]/75">Pick your board. The choice syncs across the atelier.</p>
                 <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                  <ThemePreview value="light" selected={theme === "light"} onSelect={() => setTheme("light")} />
-                  <ThemePreview value="dark" selected={theme === "dark"} onSelect={() => setTheme("dark")} />
-                  <ThemePreview value="system" selected={theme === "system"} onSelect={() => setTheme("system")} />
+                  <ThemePreview value="light" selected={themeMode === "light"} onSelect={() => applyTheme("light")} />
+                  <ThemePreview value="dark" selected={themeMode === "dark"} onSelect={() => applyTheme("dark")} />
+                  <ThemePreview value="system" selected={themeMode === "system"} onSelect={() => applyTheme("system")} />
                 </div>
               </Panel>
             )}
