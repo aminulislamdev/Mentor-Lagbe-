@@ -13,7 +13,7 @@ export default function AdminDashboardLayout({
   const { data: session, isPending } = useSession()
   const router = useRouter()
 
-  // ✅ Redirect logic moved to useEffect to prevent "Dropped Segment" error
+  // Redirect source of truth (kept as-is).
   useEffect(() => {
     if (!isPending) {
       if (!session?.user) {
@@ -28,10 +28,30 @@ export default function AdminDashboardLayout({
     }
   }, [isPending, session, router])
 
-  // ✅ Children are always rendered so Next.js can validate them
-  return (
-    <DashboardShell role="admin">
-      {children}
-    </DashboardShell>
-  )
+  const isAdmin = !!session?.user && (session.user as { role?: string }).role === "admin"
+  const isAuthorized = !isPending && isAdmin
+
+  // While the session is loading, render a simple loading indicator — not children.
+  if (isPending) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
+        Loading…
+      </div>
+    )
+  }
+
+  // Not signed in, or not an admin: render nothing (redirect handled by useEffect).
+  if (!isAdmin) {
+    return null
+  }
+
+  if (isAuthorized) {
+    return (
+      <DashboardShell role="admin">
+        {children}
+      </DashboardShell>
+    )
+  }
+
+  return null
 }
