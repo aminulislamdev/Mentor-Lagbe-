@@ -35,7 +35,7 @@ import { Panel } from "@/components/common/panel"
 import { Colophon } from "@/components/dashboard/shared"
 import { useUserSettings, type UserSettingsPatch } from "@/lib/hooks/use-user-settings"
 import { applyTheme, useTheme } from "@/lib/theme"
-import type { UserSettings } from "@/lib/api-types"
+import { LANGUAGE_LABELS, SUPPORTED_LANGUAGES, normalizeLanguage, type UserSettings } from "@/lib/api-types"
 
 // ─── Section registry ────────────────────────────────────────────────────────
 
@@ -51,7 +51,7 @@ const SECTIONS: Array<{ key: SectionKey; numeral: string; label: string; hint: s
 
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const
 
-const LANGUAGES = ["English (US)", "বাংলা (Bangla)", "हिन्दी (Hindi)"] as const
+const LANGUAGES = SUPPORTED_LANGUAGES
 const TIMEZONES = ["Dhaka — UTC+6 (Asia/Dhaka)", "Kolkata — UTC+5:30 (Asia/Kolkata)", "Colombo — UTC+5:30 (Asia/Colombo)", "Singapore — UTC+8 (Asia/Singapore)", "London — UTC+0 (Europe/London)"] as const
 const MODES = ["Offline", "Online", "Hybrid"] as const
 
@@ -95,7 +95,7 @@ const FALLBACK_USER_SETTINGS: UserSettings = {
 function normalizeSettings(settings: UserSettings | null | undefined): UserSettings {
   if (!settings) return FALLBACK_USER_SETTINGS
   return {
-    language: settings.language ?? FALLBACK_USER_SETTINGS.language,
+    language: normalizeLanguage(settings.language),
     timezone: settings.timezone ?? FALLBACK_USER_SETTINGS.timezone,
     mode: settings.mode ?? FALLBACK_USER_SETTINGS.mode,
     days: Array.isArray(settings.days) ? [...settings.days] : [...FALLBACK_USER_SETTINGS.days],
@@ -351,7 +351,10 @@ export default function TutorSettingsPage() {
   const canSave = dirty && !controlsDisabled
 
   const setScalar = <K extends "language" | "timezone" | "mode">(key: K, value: string) =>
-    setOverrides((prev) => ({ ...prev, [key]: value }))
+    setOverrides((prev) => ({
+      ...prev,
+      [key]: key === "language" ? normalizeLanguage(value) : value,
+    }))
 
   const toggleDay = (d: string) => {
     const next = draft.days.includes(d) ? draft.days.filter((x) => x !== d) : [...draft.days, d]
@@ -406,13 +409,14 @@ export default function TutorSettingsPage() {
     value: string,
     onChange: (v: string) => void,
     options: readonly string[],
-    label: string
+    label: string,
+    optionLabels?: Record<string, string>
   ) => (
     <div>
       <label htmlFor={id} className={cn(fieldLabel, "mb-1.5 block")}>{label}</label>
       <div className="relative">
         <select id={id} value={value} onChange={(e) => onChange(e.target.value)} disabled={controlsDisabled} className={cn(wellField, controlsDisabled && "cursor-not-allowed opacity-60")}>
-          {options.map((o) => <option key={o} value={o}>{o}</option>)}
+          {options.map((o) => <option key={o} value={o}>{optionLabels?.[o] ?? o}</option>)}
         </select>
         <ChevronRight aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 rotate-90 text-[#344C43]/55" strokeWidth={2} />
       </div>
@@ -531,7 +535,7 @@ export default function TutorSettingsPage() {
               <Panel aria-labelledby="panel-general" className="sm:p-6">
                 <DashboardSection id="panel-general" numeral="01" title="General Preferences" subtitle="Desk defaults" variant="settings" />
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                  {selectWrap("f-language", language, (v) => setScalar("language", v), LANGUAGES, "Language")}
+                  {selectWrap("f-language", language, (v) => setScalar("language", v), LANGUAGES, "Language", LANGUAGE_LABELS)}
                   {selectWrap("f-timezone", timezone, (v) => setScalar("timezone", v), TIMEZONES, "Time Zone")}
                 </div>
 
