@@ -311,3 +311,57 @@
 - **Dead-link resolution (cebd44b)**: student Settings nav item removed (never in spec; topbar dropdown also hardcoded it). Admin Transactions (in spec, unbuilt) renders as a disabled soon-marked row with a SOON chip - no more 404 navigation from the sidebar.
 - **Final state**: 20 local commits, zero pushes. TSC exit 0, eslint clean. All 22 routes verified live with zero console errors and no horizontal overflow at 876px desktop. In-app browser cannot emulate 375/768px; ribbon overflow fix applied in code (folios hidden below sm). Mobile QA with real emulation still recommended.
 - **Intentionally uncommitted**: implementation.md (this file), app/layout.tsx (pre-existing Suspense-around-Navbar fix), components/ui/separator.tsx (unused; contains a working-but-unreferenced Separator primitive - remove or wire in a future page).
+
+### 25. Connect Notification APIs to Frontend (frontend-only; no backend changes; no commits)
+
+Integrated the existing backend notification contract with the Admin notification form and a new Navbar notification bell. **No backend source, endpoint, schema, env, or `.env` changes.** No tokens/credentials printed. No new dependencies. No unrelated files changed.
+
+**Design research / verified contract (not guessed):**
+- `lib/api.ts` -> `apiFetch<T>(path,{method,body,auth})`, attaches `Authorization: Bearer`, attaches `Content-Type: application/json`, auto **401 -> clear cache + retry once**, unwraps envelope `{success,data,message}` -> `{data,pagination,message}`, throws `ApiError(message,status,details)`. `API_URL = NEXT_PUBLIC_API_URL || http://localhost:8000`.
+- `lib/hooks/use-api.ts` -> `useApi<T>(path|null)`, returns `{data,pagination,loading,error,refetch}`; `path=null` -> no request; `loading=Boolean(path)&&current===null`; safe active-flag cleanup; no `setState`-in-effect; `refetch()` bumps nonce.
+- Auth: `useSession()` from `@/lib/auth-client` (`{data:session,isPending}`; `session.user`). Existing admin route protection + shadcn `DashboardShell`. `sonner` `toast` (`toast.success`/`toast.error`), already wrapped by `<Toaster>`.
+- shadcn/ui reused: `Button`, `Input`, `Textarea`, `Label`. `cn()` from `@/lib/utils`. Tailwind v4 tokens (`bg-card`, `border-border`, `text-foreground`, `text-muted-foreground`, `text-primary`, `ring-primary`, `bg-primary/15`, `text-primary-foreground`, `text-destructive`, `animate-pulse`, `animate-spin`, `animate-in fade-in zoom-in-95`).
+- **Verified API contract** (read-only inspect of backend repo; not modified; **not re-deployed/tested live this turn**): `models/notification.model.js` + `routes/notification.routes.js`.
+  - `POST /api/admin/notifications` (admin `verifyToken`+`verifyAdmin`; body `{title,message,targetRole}`; `targetRole:"all"|"student"|"tutor"`; 400 missing/invalid; **201** `{success,message,data}`).
+  - `GET /api/notifications` (auth; `targetRole` `all` + own role; `createdAt:-1`; `{success:true,data:[{_id,title,message,targetRole,isRead,createdAt,updatedAt}]}`; `readBy` NOT exposed; 401 unauthenticated).
+  - `PATCH /api/notifications/:id/read` (auth; `isObjectId` 400; 404; `$addToSet readBy`; `{success,message,data}`; `req.dbUser._id`, never `req.body`).
+- Inspected (read-only): `app/dashboard/admin/notifications/page.tsx`, `components/navbar.tsx`, `components/ui/{button,input,textarea,label}.tsx`, `components/dashboard/shared.tsx`, `app/dashboard/admin/layout.tsx`, `components/dashboard/nav-config.ts`, `lib/api.ts`, `lib/hooks/use-api.ts`, `app/layout.tsx`, `app/globals.css`, `.gitignore`. `.env`/`node_modules`/`.next`/ignored NOT inspected. Backend (`MentorLagbe-Server`) read-only, unmodified.
+
+**Files created:** `components/notification-bell.tsx`.
+**Files modified:** `app/dashboard/admin/notifications/page.tsx`; `components/navbar.tsx`.
+**No new component duplication; no new API; no backend changes; no `.env`.**
+
+**API endpoints integrated (existing; unchanged):**
+- `POST /api/admin/notifications`
+- `GET /api/notifications`
+- `PATCH /api/notifications/:id/read`
+
+### 25a. Admin Notification Form (`app/dashboard/admin/notifications/page.tsx`)
+- Kept the entire premium "Trust Office Dispatch Desk" UI (shadcn Button/Input/Textarea/Label, torn-edge slip, dot-matrix, champagne/ink, stamps, lined paper). Only `handleSubmit` + audience contract changed.
+- **Bug fixed:** audience values were `all|students|tutors`; corrected to backend `targetRole` `"all"|"student"|"tutor"` (labels still "All/Students/Tutors"). (Otherwise `requireOneOf` -> 400.)
+- `handleSubmit` -> `async`: `e.preventDefault()`; `if (loading) return` **prevent duplicate submissions**; trim; **preserve validation** (title + message required); `setError`; `setLoading(true)`.
+- `await apiFetch("/api/admin/notifications", { method:"POST", body:{ title, message, targetRole: audience } })`. Auth attached by `apiFetch`; **server enforces Admin-only**; no client role/user-id sent; no secret exposed.
+- **`toast.success("Notification sent successfully.")`** on success; **reset form only after success** (`title=""`, `message=""`, `targetRole->all`, clear error, `sent`); **`toast.error(message)`** + inline `role="alert"` on failure (`ApiError.message`, fallback "Could not send notification. Please try again."); `setLoading(false)` in `finally`.
+- Button: `disabled={loading}`, `aria-disabled`, label `"Dispatching..."`/`"Seal & Dispatch"`. Unauthorized blocked by existing auth + backend `verifyAdmin`. No API change. `window.setTimeout` simulation removed; **no API in UI-only mode anymore; real `apiFetch` used.**
+
+### 25b. Navbar Notification Bell (`components/notification-bell.tsx`, wired into `components/navbar.tsx`)
+- Added `<NotificationBell />` to the navbar right cluster before `<ThemeToggle />`; **no redesign of unrelated navbar**; no other navbar behavior changed; no duplicate `Escape`/outside-click logic conflicts.
+- **Fetch:** `useApi<Notification[]>(isAuthenticated ? "/api/notifications" : null)`. Only authenticated users (`useSession().user`); `null` -> no request. `refetch()` on success to refresh. Handles **loading / error / empty / success**; hides bell when unauthenticated; no unauthenticated request. `Notification` TS interface matches verified server shape; `unknown`/no `any`.
+- **Unread badge:** `unreadCount = filter(!isRead)`; hidden at 0; **`9+`** above 9; `aria-label` includes count; **updated immediately after read** (via `refetch()` after `PATCH` success).
+- **Dropdown:** open/close on Bell; closes on **outside click** (`mousedown` + `containerRef`) + **Escape**; `role="dialog"`, `aria-expanded`, `aria-haspopup`, `aria-label`. Premium responsive: `w-[min(22rem,calc(100vw-1.5rem))]`, `max-h-[min(28rem,70vh)] overflow-y-auto`, `right-0`, `animate-in`, hover/focus, dark-theme tokens; works desktop + mobile; skeleton `NotificationSkeleton`, error + **Try again** (`refetch`), empty `Inbox`.
+- Each notification shows **title, message, date/time (`toLocaleString`, `createdAt`), read/unread**; unread dot + `unread`/`read`, `Check`; `line-clamp-2`, `truncate`; **distinguish unread** (`bg-primary/[0.04]`, bold, dot); `aria-label`.
+- **Mark read:** `PATCH /api/notifications/:id/read` (`apiFetch`, `method:"PATCH"`); real id `_id`; `pendingId` **prevent duplicate** while pending + `disabled`; `refetch()` + count update **only on success**; **not marked read on failure**; **`toast.error("Could not update notification. Please try again.")`**; `setPendingId(null)` `finally`. No user id sent. No memory leaks (`active` cleanup; listeners removed; `pendingId` reset). No race-prone double submit. No `setState`-in-effect.
+- Light + dark supported; reduced-motion-friendly classes; focus states; keyboard. No new dependency.
+
+### 25c. Validation (this turn)
+- **TypeScript** `npx tsc --noEmit` -> **PASS (0 errors)**.
+- **ESLint** `npx eslint app/dashboard/admin/notifications/page.tsx components/navbar.tsx components/notification-bell.tsx` -> **PASS (0 issues)**.
+- **Production build** `npm run build` (`next build`, Next 16.4.6 Turbopack) -> **SUCCESS** (30 pages; `/dashboard/admin/notifications` still generated; no type/lint errors; not `.next`-inspected).
+- No `any`; `unknown` narrowed (`ApiError`); no `@ts-ignore`; no error suppression. No API-call regressions in navbar.
+- **Live end-to-end not run this turn** (frontend-only change; no backend restart/deploy; no real notifications sent; nothing written to DB). Prior session honestly reported live backend `/api/notifications` **404 not deployed** + no credentials; backend code itself was validated separately (`node --check` + `npm test` 8/8) but is unchanged here.
+
+### 25d. Remaining issues
+- **No frontend feature gaps in this scope.** Admin form + bell use existing endpoints; behavior verified at compile/lint/build level, **not re-tested live** against a running backend + authorized admin/student/tutor this turn (no live server/auth; backend must have notification routes deployed — separate concern; not verified this turn).
+- Unread reflects server `isRead`; no optimistic update (safer, matches "don't mark read on failure"); slight refetch latency.
+- `targetRole` admin gets only `all` (server contract); UI exposes admin targets All/Students/Tutors only. No read-receipt list, no pagination, no mark-all-read (not requested).
+- `implementation.md` not committed; **no Git commits/pushes** per task.
