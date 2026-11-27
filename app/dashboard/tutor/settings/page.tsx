@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import {
   Settings2,
@@ -33,6 +33,8 @@ import { cn } from "@/lib/utils"
 import { DashboardSection } from "@/components/common/dashboard-section"
 import { Panel } from "@/components/common/panel"
 import { Colophon } from "@/components/dashboard/shared"
+import { useUserSettings, type UserSettingsPatch } from "@/lib/hooks/use-user-settings"
+import type { UserSettings } from "@/lib/api-types"
 
 // ─── Section registry ────────────────────────────────────────────────────────
 
@@ -52,7 +54,11 @@ const LANGUAGES = ["English (US)", "বাংলা (Bangla)", "हिन्द�
 const TIMEZONES = ["Dhaka — UTC+6 (Asia/Dhaka)", "Kolkata — UTC+5:30 (Asia/Kolkata)", "Colombo — UTC+5:30 (Asia/Colombo)", "Singapore — UTC+8 (Asia/Singapore)", "London — UTC+0 (Europe/London)"] as const
 const MODES = ["Offline", "Online", "Hybrid"] as const
 
-const NOTIF_ITEMS: Array<{ id: string; title: string; desc: string; on: boolean }> = [
+type NotificationKey = keyof UserSettings["notifications"]
+
+const NOTIFICATION_KEYS: NotificationKey[] = ["applicant", "status", "approval", "announcements", "subscription"]
+
+const NOTIF_ITEMS: Array<{ id: NotificationKey; title: string; desc: string; on: boolean }> = [
   { id: "applicant", title: "New applicant letters", desc: "The moment a scholar applies to your batch", on: true },
   { id: "status", title: "Application status updates", desc: "When a scholar's application advances a stage", on: true },
   { id: "approval", title: "Tuition approval notifications", desc: "The board's verdict on your pending listings", on: true },
@@ -63,16 +69,79 @@ const NOTIF_ITEMS: Array<{ id: string; title: string; desc: string; on: boolean 
 // ─── Defaults & scoped styles ────────────────────────────────────────────────
 
 const DEFAULTS = {
-  language: LANGUAGES[0],
-  timezone: TIMEZONES[0],
-  mode: MODES[0] as (typeof MODES)[number],
-  days: new Set<string>(["Fri", "Sat"]),
-  evenings: true,
   theme: "system" as "light" | "dark" | "system",
-  notifications: Object.fromEntries(NOTIF_ITEMS.map((n) => [n.id, n.on])) as Record<string, boolean>,
   profileVisibility: "Applicants only",
   emailVisibility: "Applicants only",
   sessionTimeout: "30 days",
+}
+
+// UI-only fallback used ONLY when the backend returns no `settings`.
+// These are clearly-defined defaults, NOT claims of saved user preferences.
+const FALLBACK_USER_SETTINGS: UserSettings = {
+  language: LANGUAGES[0],
+  timezone: TIMEZONES[0],
+  mode: MODES[0],
+  days: ["Fri", "Sat"],
+  evenings: true,
+  notifications: {
+    applicant: true,
+    status: true,
+    approval: true,
+    announcements: false,
+    subscription: true,
+  },
+}
+
+function normalizeSettings(settings: UserSettings | null | undefined): UserSettings {
+  if (!settings) return FALLBACK_USER_SETTINGS
+  return {
+    language: settings.language ?? FALLBACK_USER_SETTINGS.language,
+    timezone: settings.timezone ?? FALLBACK_USER_SETTINGS.timezone,
+    mode: settings.mode ?? FALLBACK_USER_SETTINGS.mode,
+    days: Array.isArray(settings.days) ? [...settings.days] : [...FALLBACK_USER_SETTINGS.days],
+    evenings: settings.evenings ?? FALLBACK_USER_SETTINGS.evenings,
+    notifications: { ...FALLBACK_USER_SETTINGS.notifications, ...(settings.notifications ?? {}) },
+  }
+}
+
+function daysEqual(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false
+  const sa = [...a].sort()
+  const sb = [...b].sort()
+  return sa.every((v, i) => v === sb[i])
+}
+
+function notificationsEqual(a: UserSettings["notifications"], b: UserSettings["notifications"]): boolean {
+  return NOTIFICATION_KEYS.every((k) => a[k] === b[k])
+}
+
+function settingsEqual(a: UserSettings, b: UserSettings): boolean {
+  return (
+    a.language === b.language &&
+    a.timezone === b.timezone &&
+    a.mode === b.mode &&
+    a.evenings === b.evenings &&
+    daysEqual(a.days, b.days) &&
+    notificationsEqual(a.notifications, b.notifications)
+  )
+}
+
+// Build a partial patch containing ONLY changed fields vs. the saved baseline.
+function buildPatch(draft: UserSettings, baseline: UserSettings): UserSettingsPatch {
+  const patch: UserSettingsPatch = {}
+  if (draft.language !== baseline.language) patch.language = draft.language
+  if (draft.timezone !== baseline.timezone) patch.timezone = draft.timezone
+  if (draft.mode !== baseline.mode) patch.mode = draft.mode
+  if (!daysEqual(draft.days, baseline.days)) patch.days = [...draft.days]
+  if (draft.evenings !== baseline.evenings) patch.evenings = draft.evenings
+
+  const notifications: Partial<UserSettings["notifications"]> = {}
+  for (const key of NOTIFICATION_KEYS) {
+    if (draft.notifications[key] !== baseline.notifications[key]) notifications[key] = draft.notifications[key]
+  }
+  if (Object.keys(notifications).length > 0) patch.notifications = notifications
+
+  return patch
 }
 
 const settingsStyles = `
@@ -106,12 +175,14 @@ function Toggle({
   id,
   label,
   desc,
+  disabled,
 }: {
   checked: boolean
   onChange: (v: boolean) => void
   id: string
   label: string
   desc: string
+  disabled?: boolean
 }) {
   return (
     <div className="flex items-center justify-between gap-4 border-b border-[#344C43]/15 py-3.5 last:border-b-0">
@@ -129,6 +200,7 @@ function Toggle({
         role="switch"
         aria-checked={checked}
         aria-label={label}
+        disabled={disabled}
         onClick={() => onChange(!checked)}
         className={cn(
           "relative h-7 w-12 shrink-0 rounded-full border transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
@@ -241,51 +313,91 @@ function ThemePreview({
 // ─── Main page ───────────────────────────────────────────────────────────────
 
 export default function TutorSettingsPage() {
+  // ── Backend-backed settings (reusable hook) ──
+  const { settings, loading, saving, error, updateSettings, clearError } = useUserSettings()
+
+  const baseline = normalizeSettings(settings)
+
+  // Local draft edits layered on the saved baseline; no PATCH per click.
+  const [overrides, setOverrides] = useState<UserSettingsPatch>({})
+
+  // Non-backend UI prefs stay local (unchanged behavior).
   const [active, setActive] = useState<SectionKey>("general")
-  const [language, setLanguage] = useState<string>(DEFAULTS.language)
-  const [timezone, setTimezone] = useState<string>(DEFAULTS.timezone)
-  const [mode, setMode] = useState(DEFAULTS.mode)
-  const [days, setDays] = useState<Set<string>>(new Set(DEFAULTS.days))
-  const [evenings, setEvenings] = useState(DEFAULTS.evenings)
   const [theme, setTheme] = useState(DEFAULTS.theme)
-  const [notifications, setNotifications] = useState(DEFAULTS.notifications)
   const [profileVisibility, setProfileVisibility] = useState(DEFAULTS.profileVisibility)
   const [emailVisibility, setEmailVisibility] = useState(DEFAULTS.emailVisibility)
+
   const [savedFlash, setSavedFlash] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const savedTimer = useRef<number | null>(null)
 
-  const dirty = useMemo(() => {
-    if (language !== DEFAULTS.language) return true
-    if (timezone !== DEFAULTS.timezone) return true
-    if (mode !== DEFAULTS.mode) return true
-    if (evenings !== DEFAULTS.evenings) return true
-    if (theme !== DEFAULTS.theme) return true
-    if (profileVisibility !== DEFAULTS.profileVisibility) return true
-    if (emailVisibility !== DEFAULTS.emailVisibility) return true
-    if ([...days].join() !== [...DEFAULTS.days].join()) return true
-    return NOTIF_ITEMS.some((n) => notifications[n.id] !== DEFAULTS.notifications[n.id])
-  }, [language, timezone, mode, days, evenings, theme, notifications, profileVisibility, emailVisibility])
+  useEffect(() => () => { if (savedTimer.current !== null) window.clearTimeout(savedTimer.current) }, [])
 
-  const toggleDay = (d: string) =>
-    setDays((prev) => {
-      const next = new Set(prev)
-      if (next.has(d)) next.delete(d)
-      else next.add(d)
-      return next
-    })
+  const draft: UserSettings = {
+    ...baseline,
+    ...(overrides.language !== undefined ? { language: overrides.language } : {}),
+    ...(overrides.timezone !== undefined ? { timezone: overrides.timezone } : {}),
+    ...(overrides.mode !== undefined ? { mode: overrides.mode } : {}),
+    ...(overrides.days !== undefined ? { days: [...overrides.days] } : {}),
+    ...(overrides.evenings !== undefined ? { evenings: overrides.evenings } : {}),
+    notifications: { ...baseline.notifications, ...(overrides.notifications ?? {}) },
+  }
 
-  const handleSave = () => {
-    setSavedFlash(true)
-    window.setTimeout(() => setSavedFlash(false), 2600)
+  const { language, timezone, mode, days, evenings, notifications } = draft
+
+  // dirty = draft differs from last loaded/saved baseline; blocked while loading/saving
+  const dirty = !settingsEqual(draft, baseline)
+  const controlsDisabled = loading || saving
+  const canSave = dirty && !controlsDisabled
+
+  const setScalar = <K extends "language" | "timezone" | "mode">(key: K, value: string) =>
+    setOverrides((prev) => ({ ...prev, [key]: value }))
+
+  const toggleDay = (d: string) => {
+    const next = draft.days.includes(d) ? draft.days.filter((x) => x !== d) : [...draft.days, d]
+    setOverrides((prev) => ({ ...prev, days: next }))
+  }
+
+  const setEvenings = (v: boolean) => setOverrides((prev) => ({ ...prev, evenings: v }))
+
+  const setNotification = (key: NotificationKey, v: boolean) =>
+    setOverrides((prev) => ({ ...prev, notifications: { ...prev.notifications, [key]: v } }))
+
+  const handleSave = async () => {
+    if (!canSave) return // preserve draft; no duplicate submissions
+    setSaveError(null)
+    clearError()
+
+    const patch = buildPatch(draft, baseline)
+    if (Object.keys(patch).length === 0) return
+
+    const next = await updateSettings(patch)
+
+    // NOTE: `updateSettings` returns updated settings on success, but on failure
+    // returns the *unchanged* current settings (not null). Success = it returns a
+    // value that differs from the pre-save baseline (patch is non-empty).
+    const saved = Boolean(next) && !settingsEqual(normalizeSettings(next), baseline)
+
+    if (saved) {
+      // success only after backend confirms; update saved baseline + clear dirty
+      setOverrides({})
+      setSavedFlash(true)
+      if (savedTimer.current !== null) window.clearTimeout(savedTimer.current)
+      savedTimer.current = window.setTimeout(() => setSavedFlash(false), 2600)
+    } else {
+      // failed save: keep the user's draft; show understandable error
+      setSaveError("Could not save settings. Your changes are preserved.")
+    }
   }
 
   const handleReset = () => {
-    setLanguage(DEFAULTS.language)
-    setTimezone(DEFAULTS.timezone)
-    setMode(DEFAULTS.mode)
-    setDays(new Set(DEFAULTS.days))
-    setEvenings(DEFAULTS.evenings)
+    // restore last loaded/saved values; no backend call
+    setOverrides({})
+    setSaveError(null)
+    clearError()
+    setSavedFlash(false)
+    // preserve original local resets for non-backend prefs
     setTheme(DEFAULTS.theme)
-    setNotifications(DEFAULTS.notifications)
     setProfileVisibility(DEFAULTS.profileVisibility)
     setEmailVisibility(DEFAULTS.emailVisibility)
   }
@@ -300,7 +412,7 @@ export default function TutorSettingsPage() {
     <div>
       <label htmlFor={id} className={cn(fieldLabel, "mb-1.5 block")}>{label}</label>
       <div className="relative">
-        <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className={wellField}>
+        <select id={id} value={value} onChange={(e) => onChange(e.target.value)} disabled={controlsDisabled} className={cn(wellField, controlsDisabled && "cursor-not-allowed opacity-60")}>
           {options.map((o) => <option key={o} value={o}>{o}</option>)}
         </select>
         <ChevronRight aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 rotate-90 text-[#344C43]/55" strokeWidth={2} />
@@ -420,8 +532,8 @@ export default function TutorSettingsPage() {
               <Panel aria-labelledby="panel-general" className="sm:p-6">
                 <DashboardSection id="panel-general" numeral="01" title="General Preferences" subtitle="Desk defaults" variant="settings" />
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                  {selectWrap("f-language", language, setLanguage, LANGUAGES, "Language")}
-                  {selectWrap("f-timezone", timezone, setTimezone, TIMEZONES, "Time Zone")}
+                  {selectWrap("f-language", language, (v) => setScalar("language", v), LANGUAGES, "Language")}
+                  {selectWrap("f-timezone", timezone, (v) => setScalar("timezone", v), TIMEZONES, "Time Zone")}
                 </div>
 
                 <fieldset className="mt-5">
@@ -434,7 +546,8 @@ export default function TutorSettingsPage() {
                           key={m}
                           type="button"
                           aria-pressed={on}
-                          onClick={() => setMode(m)}
+                          disabled={controlsDisabled}
+                          onClick={() => setScalar("mode", m)}
                           className={cn(
                             "flex h-11 items-center justify-center gap-1.5 border font-mono text-[10px] font-bold uppercase tracking-[0.2em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
                             on
@@ -454,12 +567,13 @@ export default function TutorSettingsPage() {
                   <legend className={cn(fieldLabel, "mb-1.5")}>Weekly Availability</legend>
                   <div role="group" aria-label="Days you teach" className="flex flex-wrap gap-1.5">
                     {DAYS.map((d) => {
-                      const on = days.has(d)
+                      const on = days.includes(d)
                       return (
                         <button
                           key={d}
                           type="button"
                           aria-pressed={on}
+                          disabled={controlsDisabled}
                           onClick={() => toggleDay(d)}
                           className={cn(
                             "flex h-10 w-12 items-center justify-center border font-mono text-[9px] font-bold uppercase tracking-[0.14em] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] sm:w-14",
@@ -483,7 +597,8 @@ export default function TutorSettingsPage() {
                       role="switch"
                       aria-checked={evenings}
                       aria-label="Prefer evening batches"
-                      onClick={() => setEvenings((v) => !v)}
+                      disabled={controlsDisabled}
+                      onClick={() => setEvenings(!evenings)}
                       className={cn(
                         "relative h-7 w-12 shrink-0 rounded-full border transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
                         evenings ? "border-[#4A695C] bg-[#668B78]" : "border-[#344C43]/35 bg-[#344C43]/10"
@@ -528,7 +643,8 @@ export default function TutorSettingsPage() {
                       label={item.title}
                       desc={item.desc}
                       checked={notifications[item.id]}
-                      onChange={(v) => setNotifications((prev) => ({ ...prev, [item.id]: v }))}
+                      onChange={(v) => setNotification(item.id, v)}
+                      disabled={controlsDisabled}
                     />
                   ))}
                 </div>
@@ -721,11 +837,24 @@ export default function TutorSettingsPage() {
               </Panel>
             )}
 
+            {/* ── Loading / saving / error feedback ── */}
+            {loading && (
+              <p role="status" className="mt-5 border border-[#344C43]/20 bg-[#F2ECDF]/60 px-4 py-2.5 font-mono text-[9px] uppercase tracking-[0.18em] text-[#344C43]/60">
+                Loading saved preferences…
+              </p>
+            )}
+            {(saveError || error) && !saving && (
+              <p role="alert" className="mt-5 border-l-2 border-[#A34343] bg-[#A34343]/8 px-4 py-2.5 font-mono text-xs text-[#732626]">
+                {saveError ?? error}
+              </p>
+            )}
+
             {/* ── Save / Reset action bar ── */}
             <div className="mt-5 flex flex-col-reverse gap-2.5 border border-[#344C43]/25 bg-[#F2ECDF]/60 p-4 sm:flex-row sm:items-center sm:justify-between">
               <button
                 type="button"
                 onClick={handleReset}
+                disabled={controlsDisabled}
                 className="inline-flex h-11 items-center justify-center gap-2 rounded-sm border border-[#344C43]/30 px-4 font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]"
               >
                 <RotateCcw aria-hidden="true" className="size-4" strokeWidth={1.75} />
@@ -734,12 +863,13 @@ export default function TutorSettingsPage() {
               <button
                 type="button"
                 onClick={handleSave}
-                disabled={!dirty && !savedFlash}
+                disabled={!canSave}
+                aria-busy={saving}
                 className={cn(
                   "inline-flex h-12 items-center justify-center gap-2 rounded-sm border px-6 font-mono text-[9px] font-bold uppercase tracking-[0.26em] transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]",
                   savedFlash
                     ? "border-[#668B78] bg-[#668B78] text-[#F2ECDF]"
-                    : dirty
+                    : canSave
                       ? "border-[#A6683F]/60 bg-[#B87959] text-[#1E3A2F] shadow-[4px_4px_0_#344C43] hover:-translate-y-0.5 hover:bg-[#C98B6D]"
                       : "cursor-not-allowed border-[#344C43]/15 bg-[#344C43]/5 text-[#344C43]/35"
                 )}
@@ -748,6 +878,11 @@ export default function TutorSettingsPage() {
                   <>
                     <CheckCircle2 aria-hidden="true" className="size-4" strokeWidth={2} />
                     Saved to Your Desk
+                  </>
+                ) : saving ? (
+                  <>
+                    <Save aria-hidden="true" className="size-4 animate-pulse" strokeWidth={1.75} />
+                    Saving...
                   </>
                 ) : (
                   <>
