@@ -12,6 +12,7 @@ import {
   Landmark,
   Home,
   UsersRound,
+  Megaphone,
 } from "lucide-react"
 
 export type DashboardRole = "student" | "tutor" | "admin"
@@ -98,6 +99,7 @@ export const ROLE_CONFIG: Record<DashboardRole, RoleConfig> = {
       { label: "Manage Tuitions", href: "/dashboard/admin/tuitions", icon: ShieldCheck },
       { label: "My Profile", href: "/dashboard/profile", icon: User },
       { label: "Transactions", href: "/dashboard/admin/transactions", icon: Landmark },
+      { label: "Notifications", href: "/dashboard/admin/notifications", icon: Megaphone },
       { label: "Settings", href: "/dashboard/admin/settings", icon: Settings },
       { label: "Back to Website", href: "/", icon: Home },
     ],
