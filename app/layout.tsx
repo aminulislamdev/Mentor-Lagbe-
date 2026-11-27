@@ -1,9 +1,10 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Noto_Sans_Bengali } from "next/font/google"
 import "./globals.css"
 import { Suspense } from "react"
 import { Navbar } from "@/components/navbar"
 import { ConditionalFooter } from "@/components/conditional-footer"
+import { HtmlLangSync } from "@/components/html-lang-sync"
 import { Toaster } from "sonner"
 
 const geistSans = Geist({
@@ -14,6 +15,11 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+})
+
+const notoSansBengali = Noto_Sans_Bengali({
+  variable: "--font-noto-bengali",
+  subsets: ["bengali"],
 })
 
 export const metadata: Metadata = {
@@ -30,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${notoSansBengali.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -43,6 +49,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-200">
+        <HtmlLangSync />
         <Suspense fallback={<div className="h-18 border-b border-border/80 bg-background/85" />}>
           <Navbar />
         </Suspense>

@@ -11,6 +11,8 @@ import { DashboardSection } from "@/components/common/dashboard-section"
 import { Panel } from "@/components/common/panel"
 import { Colophon } from "@/components/dashboard/shared"
 import { useUserSettings, type UserSettingsPatch } from "@/lib/hooks/use-user-settings"
+import { useLocale } from "@/lib/i18n/use-locale"
+import type { TranslationKey } from "@/lib/i18n/types"
 import { applyTheme, useTheme } from "@/lib/theme"
 import { LANGUAGE_LABELS, SUPPORTED_LANGUAGES, normalizeLanguage, type UserSettings } from "@/lib/api-types"
 
@@ -18,12 +20,12 @@ import { LANGUAGE_LABELS, SUPPORTED_LANGUAGES, normalizeLanguage, type UserSetti
 
 type SectionKey = "general" | "appearance" | "notifications" | "privacy" | "platform"
 
-const SECTIONS: Array<{ key: SectionKey; numeral: string; label: string; hint: string; Icon: typeof Settings2 }> = [
-  { key: "general", numeral: "01", label: "General Preferences", hint: "Language & zone", Icon: Settings2 },
-  { key: "appearance", numeral: "02", label: "Appearance", hint: "Light, dark & system", Icon: Sun },
-  { key: "notifications", numeral: "03", label: "Notifications", hint: "What reaches your desk", Icon: Bell },
-  { key: "privacy", numeral: "04", label: "Privacy & Security", hint: "Visibility & the vault", Icon: ShieldCheck },
-  { key: "platform", numeral: "05", label: "Platform Control", hint: "Master switches", Icon: Server },
+const SECTIONS: Array<{ key: SectionKey; numeral: string; labelKey: TranslationKey; hintKey: TranslationKey; Icon: typeof Settings2 }> = [
+  { key: "general", numeral: "01", labelKey: "settings.general.title", hintKey: "settings.general.hint", Icon: Settings2 },
+  { key: "appearance", numeral: "02", labelKey: "settings.appearance.title", hintKey: "settings.appearance.hint", Icon: Sun },
+  { key: "notifications", numeral: "03", labelKey: "settings.notifications.title", hintKey: "settings.notifications.hint", Icon: Bell },
+  { key: "privacy", numeral: "04", labelKey: "settings.privacy.title", hintKey: "settings.privacy.hint", Icon: ShieldCheck },
+  { key: "platform", numeral: "05", labelKey: "settings.platform.title", hintKey: "settings.platform.hint", Icon: Server },
 ]
 
 const LANGUAGES = SUPPORTED_LANGUAGES
@@ -31,11 +33,11 @@ const TIMEZONES = ["Dhaka — UTC+6 (Asia/Dhaka)", "Kolkata — UTC+5:30 (Asia/K
 
 // `backend` = maps to a real `UserSettings.notifications.*` field.
 // `registration` / `system` have NO backend field: UI-only, never sent to PATCH.
-const NOTIF_ITEMS: Array<{ id: string; title: string; desc: string; on: boolean; backend?: keyof UserSettings["notifications"] }> = [
-  { id: "approval", title: "Board decisions", desc: "When the board approves or rejects a listing", on: true, backend: "approval" },
-  { id: "registration", title: "New user registrations", desc: "When a student or tutor joins the platform", on: true },
-  { id: "system", title: "System alerts", desc: "Server health, API errors & downtime warnings", on: true },
-  { id: "announcements", title: "Platform announcements", desc: "Policy updates and feature drops", on: false, backend: "announcements" },
+const NOTIF_ITEMS: Array<{ id: string; titleKey: TranslationKey; descKey: TranslationKey; on: boolean; backend?: keyof UserSettings["notifications"] }> = [
+  { id: "approval", titleKey: "settings.notifications.approvalTitle", descKey: "settings.notifications.approvalDesc", on: true, backend: "approval" },
+  { id: "registration", titleKey: "settings.notifications.registrationTitle", descKey: "settings.notifications.registrationDesc", on: true },
+  { id: "system", titleKey: "settings.notifications.systemTitle", descKey: "settings.notifications.systemDesc", on: true },
+  { id: "announcements", titleKey: "settings.notifications.announcementsTitle", descKey: "settings.notifications.announcementsDesc", on: false, backend: "announcements" },
 ]
 
 const DEFAULTS = {
@@ -124,15 +126,11 @@ function Toggle({ checked, onChange, id, label, desc, disabled }: { checked: boo
   )
 }
 
-function ThemePreview({ value, selected, onSelect }: { value: "light" | "dark" | "system"; selected: boolean; onSelect: () => void; }) {
-  const meta = {
-    light: { Icon: Sun, title: "Daylight Ledger", sub: "Warm oatmeal paper" },
-    dark: { Icon: Moon, title: "Chalkboard Night", sub: "Deep pine board" },
-    system: { Icon: Monitor, title: "Follow The Room", sub: "Syncs with your device" },
-  }[value]
+function ThemePreview({ value, selected, onSelect, title, sub, ariaLabel }: { value: "light" | "dark" | "system"; selected: boolean; onSelect: () => void; title: string; sub: string; ariaLabel: string; }) {
+  const Icon = { light: Sun, dark: Moon, system: Monitor }[value]
 
   return (
-    <button type="button" onClick={onSelect} aria-pressed={selected} aria-label={`Use ${meta.title} theme`}
+    <button type="button" onClick={onSelect} aria-pressed={selected} aria-label={ariaLabel}
       className={cn("group relative flex flex-col border p-3 text-left transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43]", selected ? "border-[#344C43] bg-[#EFE7DC] shadow-[4px_5px_0_#B87959]" : "border-[#344C43]/25 bg-[#EFE7DC]/60 hover:border-[#344C43]/55")}>
       <span aria-hidden="true" className="block overflow-hidden rounded-[4px] border border-black/20">
         {value === "light" && (<span className="block bg-[#F2ECDF] p-2"><span className="mb-1 block h-1.5 w-2/3 rounded-sm bg-[#344C43]/70" /><span className="block h-1 w-full rounded-sm bg-[#344C43]/15" /><span className="mt-1 block h-1 w-4/5 rounded-sm bg-[#344C43]/15" /><span className="mt-1.5 block h-2 w-1/3 rounded-sm bg-[#B87959]" /></span>)}
@@ -141,10 +139,10 @@ function ThemePreview({ value, selected, onSelect }: { value: "light" | "dark" |
       </span>
       <span className="mt-3 flex items-center justify-between gap-2">
         <span>
-          <span className="flex items-center gap-1.5 text-sm font-bold leading-tight tracking-tight text-[#344C43]"><meta.Icon aria-hidden="true" className="size-4 text-[#668B78]" strokeWidth={2} />{meta.title}</span>
-          <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.2em] text-[#344C43]/50">{meta.sub}</span>
+          <span className="flex items-center gap-1.5 text-sm font-bold leading-tight tracking-tight text-[#344C43]"><Icon aria-hidden="true" className="size-4 shrink-0 text-[#668B78]" strokeWidth={2} />{title}</span>
+          <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.2em] text-[#344C43]/50">{sub}</span>
         </span>
-        <span aria-hidden="true" className={cn("flex size-5 items-center justify-center rounded-full border transition-all", selected ? "border-[#344C43] bg-[#344C43] text-[#EFE7DC]" : "border-[#344C43]/35 text-transparent")}><Check className="size-3" strokeWidth={3} /></span>
+        <span aria-hidden="true" className={cn("flex size-5 shrink-0 items-center justify-center rounded-full border transition-all", selected ? "border-[#344C43] bg-[#344C43] text-[#EFE7DC]" : "border-[#344C43]/35 text-transparent")}><Check className="size-3" strokeWidth={3} /></span>
       </span>
     </button>
   )
@@ -155,6 +153,7 @@ function ThemePreview({ value, selected, onSelect }: { value: "light" | "dark" |
 export default function AdminSettingsPage() {
   // ── Backend-backed personal settings (reusable hook) ──
   const { settings, loading, saving, error, updateSettings, clearError } = useUserSettings()
+  const { t } = useLocale()
   const { mode: themeMode } = useTheme()
 
   const baseline = normalizeSettings(settings)
@@ -214,7 +213,7 @@ export default function AdminSettingsPage() {
       if (savedTimer.current !== null) window.clearTimeout(savedTimer.current)
       savedTimer.current = window.setTimeout(() => setSavedFlash(false), 2600)
     } else {
-      setSaveError("Could not save settings. Your changes are preserved.")
+      setSaveError(t("common.saveError"))
     }
   }
 
@@ -245,20 +244,20 @@ export default function AdminSettingsPage() {
         {/* MASTHEAD */}
         <header className="border-b-2 border-[#344C43] pb-5 sm:pb-6">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-[#B87959] sm:text-xs">
-            [ Platform Command — Workspace Configuration ]
+            {t("settings.eyebrow")}
           </p>
           <div className="mt-3 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
             <h1 className="settings-rise settings-serif font-black leading-[0.9] tracking-[-0.035em] text-[#344C43]" style={{ "--rise-delay": "0s", fontSize: "clamp(2.5rem, 5.8vw, 4.25rem)" } as React.CSSProperties}>
-              Admin<span className="block"><span className="italic text-[#668B78]">Preferences.</span><span aria-hidden="true" className="text-[#B87959]">.</span></span>
+              {t("settings.titlePrefix")}<span className="block"><span className="italic text-[#668B78]">{t("settings.titleHighlight")}.</span><span aria-hidden="true" className="text-[#B87959]">.</span></span>
             </h1>
             <div className="flex max-w-[40ch] flex-col items-start gap-2">
-              <p className="text-base leading-relaxed text-[#344C43]/80">The master control panel for the platform.</p>
+              <p className="text-base leading-relaxed text-[#344C43]/80">{t("settings.subtitle")}</p>
               {dirty && !savedFlash ? (
-                <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#B87959]/50 bg-[#B87959]/10 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-[#B87959]"><span aria-hidden="true" className="settings-ping size-2 rounded-full bg-[#B87959]" />Unsaved changes</span>
+                <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#B87959]/50 bg-[#B87959]/10 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-[#B87959]"><span aria-hidden="true" className="settings-ping size-2 rounded-full bg-[#B87959]" />{t("common.unsavedChanges")}</span>
               ) : savedFlash ? (
-                <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#668B78]/50 bg-[#668B78]/10 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-[#4A695C]"><CheckCircle2 aria-hidden="true" className="size-4" strokeWidth={2} />Saved</span>
+                <span role="status" className="inline-flex items-center gap-2 rounded-sm border border-[#668B78]/50 bg-[#668B78]/10 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.22em] text-[#4A695C]"><CheckCircle2 aria-hidden="true" className="size-4" strokeWidth={2} />{t("common.saved")}</span>
               ) : (
-                <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#344C43]/45">Everything as the board left it</span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#344C43]/45">{t("settings.everything")}</span>
               )}
             </div>
           </div>
@@ -267,10 +266,10 @@ export default function AdminSettingsPage() {
         <div className="mt-6 grid gap-6 lg:grid-cols-12 lg:items-start">
 
           {/* NAVIGATION */}
-          <nav aria-label="Settings sections" className="min-w-0 lg:col-span-4 xl:col-span-3">
-            <p className="px-1 font-mono text-[11px] uppercase tracking-[0.34em] text-[#344C43]/45">The Preferences Index</p>
+          <nav aria-label={t("settings.navAria")} className="min-w-0 lg:col-span-4 xl:col-span-3">
+            <p className="px-1 font-mono text-[11px] uppercase tracking-[0.34em] text-[#344C43]/45">{t("settings.indexTitle")}</p>
             <ul className="mt-3 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin] lg:flex-col lg:gap-2 lg:overflow-visible lg:pb-0">
-              {SECTIONS.map(({ key, numeral, label, hint, Icon }) => {
+              {SECTIONS.map(({ key, numeral, labelKey, hintKey, Icon }) => {
                 const isActive = active === key
                 return (
                   <li key={key} className="shrink-0 lg:shrink">
@@ -278,8 +277,8 @@ export default function AdminSettingsPage() {
                       className={cn("group flex w-full items-center gap-3 rounded-sm border border-transparent px-3 py-3 text-left transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#344C43] lg:h-auto", isActive ? "border-[#344C43] bg-[#344C43] text-[#EFE7DC] shadow-[4px_4px_0_#B87959]" : "text-[#344C43]/65 hover:border-[#344C43]/25 hover:bg-[#EFE7DC]")}>
                       <span aria-hidden="true" className={cn("hidden size-9 shrink-0 flex-col items-center justify-center border sm:flex", isActive ? "border-[#C98B6D]/45 text-[#C98B6D]" : "border-[#344C43]/20 text-[#668B78]")}><Icon className="size-4" strokeWidth={1.75} /></span>
                       <span className="min-w-0">
-                        <span className={cn("block whitespace-nowrap font-mono text-xs font-bold uppercase tracking-[0.2em]", isActive ? "text-[#EFE7DC]" : "text-[#344C43]")}><span className="mr-1.5 text-[#B87959]">{numeral}</span>{label}</span>
-                        <span className={cn("mt-1 hidden font-mono text-[11px] uppercase tracking-[0.18em] lg:block", isActive ? "text-[#EFE7DC]/55" : "text-[#344C43]/45")}>{hint}</span>
+                        <span className={cn("block whitespace-nowrap font-mono text-xs font-bold uppercase tracking-[0.2em] lg:whitespace-normal", isActive ? "text-[#EFE7DC]" : "text-[#344C43]")}><span className="mr-1.5 text-[#B87959]">{numeral}</span>{t(labelKey)}</span>
+                        <span className={cn("mt-1 hidden font-mono text-[11px] uppercase tracking-[0.18em] lg:block", isActive ? "text-[#EFE7DC]/55" : "text-[#344C43]/45")}>{t(hintKey)}</span>
                       </span>
                       <ChevronRight aria-hidden="true" className={cn("ml-auto hidden size-4 shrink-0 transition-transform duration-200 lg:block", isActive ? "translate-x-0.5 text-[#C98B6D]" : "text-[#344C43]/30 group-hover:translate-x-0.5")} strokeWidth={2} />
                     </button>
@@ -294,29 +293,29 @@ export default function AdminSettingsPage() {
 
             {active === "general" && (
               <Panel aria-labelledby="panel-general" className="sm:p-6">
-                <DashboardSection id="panel-general" numeral="01" title="General Preferences" subtitle="Admin defaults" variant="settings" />
+                <DashboardSection id="panel-general" numeral="01" title={t("settings.general.title")} subtitle={t("settings.general.subtitle")} variant="settings" />
                 <div className="mt-6 grid gap-6 sm:grid-cols-2">
-                  {selectWrap("f-language", language, (v) => setScalar("language", v), LANGUAGES, "Language", LANGUAGE_LABELS)}
-                  {selectWrap("f-timezone", timezone, (v) => setScalar("timezone", v), TIMEZONES, "Time Zone")}
+                  {selectWrap("f-language", language, (v) => setScalar("language", v), LANGUAGES, t("settings.general.languageLabel"), LANGUAGE_LABELS)}
+                  {selectWrap("f-timezone", timezone, (v) => setScalar("timezone", v), TIMEZONES, t("settings.general.timezoneLabel"))}
                 </div>
               </Panel>
             )}
 
             {active === "appearance" && (
               <Panel aria-labelledby="panel-appearance" className="sm:p-6">
-                <DashboardSection id="panel-appearance" numeral="02" title="Appearance" subtitle="The studio light" variant="settings" />
-                <p className="mt-4 max-w-lg text-sm leading-relaxed text-[#344C43]/75">Pick your board. The choice syncs across the atelier.</p>
+                <DashboardSection id="panel-appearance" numeral="02" title={t("settings.appearance.title")} subtitle={t("settings.appearance.subtitle")} variant="settings" />
+                <p className="mt-4 max-w-lg text-sm leading-relaxed text-[#344C43]/75">{t("settings.appearance.description")}</p>
                 <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                  <ThemePreview value="light" selected={themeMode === "light"} onSelect={() => applyTheme("light")} />
-                  <ThemePreview value="dark" selected={themeMode === "dark"} onSelect={() => applyTheme("dark")} />
-                  <ThemePreview value="system" selected={themeMode === "system"} onSelect={() => applyTheme("system")} />
+                  <ThemePreview value="light" selected={themeMode === "light"} onSelect={() => applyTheme("light")} title={t("settings.appearance.light.title")} sub={t("settings.appearance.light.sub")} ariaLabel={t("settings.appearance.light.aria")} />
+                  <ThemePreview value="dark" selected={themeMode === "dark"} onSelect={() => applyTheme("dark")} title={t("settings.appearance.dark.title")} sub={t("settings.appearance.dark.sub")} ariaLabel={t("settings.appearance.dark.aria")} />
+                  <ThemePreview value="system" selected={themeMode === "system"} onSelect={() => applyTheme("system")} title={t("settings.appearance.system.title")} sub={t("settings.appearance.system.sub")} ariaLabel={t("settings.appearance.system.aria")} />
                 </div>
               </Panel>
             )}
 
             {active === "notifications" && (
               <Panel aria-labelledby="panel-notifications" className="sm:p-6">
-                <DashboardSection id="panel-notifications" numeral="03" title="Notifications" subtitle="The desk bell" variant="settings" />
+                <DashboardSection id="panel-notifications" numeral="03" title={t("settings.notifications.title")} subtitle={t("settings.notifications.subtitle")} variant="settings" />
                 <div className="mt-4">
                   {NOTIF_ITEMS.map((item) => {
                     const isBackend = !!item.backend
@@ -325,8 +324,8 @@ export default function AdminSettingsPage() {
                       <Toggle
                         key={item.id}
                         id={`notif-${item.id}`}
-                        label={item.title}
-                        desc={item.desc}
+                        label={t(item.titleKey)}
+                        desc={t(item.descKey)}
                         checked={checked}
                         disabled={controlsDisabled && isBackend}
                         onChange={(v) => {
@@ -338,33 +337,33 @@ export default function AdminSettingsPage() {
                   })}
                 </div>
                 <p className="mt-3 border-t border-[#344C43]/15 pt-3 font-mono text-[11px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/55">
-                  Backend-persisted: Board decisions + Announcements. “New user registrations” and “System alerts” are UI-only and are not saved to the database.
+                  {t("settings.notifications.note")}
                 </p>
               </Panel>
             )}
 
             {active === "privacy" && (
               <Panel aria-labelledby="panel-privacy" className="sm:p-6">
-                <DashboardSection id="panel-privacy" numeral="04" title="Privacy & Security" subtitle="The vault" variant="settings" />
+                <DashboardSection id="panel-privacy" numeral="04" title={t("settings.privacy.title")} subtitle={t("settings.privacy.subtitle")} variant="settings" />
                 <fieldset className="mt-6 border border-[#344C43]/20 bg-[#F2ECDF] p-5">
-                  <legend className="px-2 font-mono text-xs font-bold uppercase tracking-[0.28em] text-[#B87959]">Password Management</legend>
+                  <legend className="px-2 font-mono text-xs font-bold uppercase tracking-[0.28em] text-[#B87959]">{t("settings.privacy.passwordLegend")}</legend>
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <div>
                       <p className="flex items-center gap-2 font-mono text-sm font-bold tracking-[0.24em] text-[#344C43]"><KeyRound aria-hidden="true" className="size-4 text-[#668B78]" strokeWidth={1.75} />••••••••••••••<EyeOff aria-hidden="true" className="size-4 text-[#344C43]/45" strokeWidth={1.75} /></p>
-                      <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-[#344C43]/55">Last changed 12 Oct ’26 · 2-factor seal armed</p>
+                      <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-[#344C43]/55">{t("settings.privacy.passwordMeta")}</p>
                     </div>
-                    <button className="inline-flex h-11 items-center gap-2 rounded-sm border border-[#344C43]/35 px-4 font-mono text-xs font-bold uppercase tracking-[0.22em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C]">Change Password<ArrowRight aria-hidden="true" className="size-4" strokeWidth={2.25} /></button>
+                    <button className="inline-flex min-h-11 items-center gap-2 rounded-sm border border-[#344C43]/35 px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.22em] text-[#344C43] transition-all hover:border-[#668B78] hover:text-[#4A695C]">{t("settings.privacy.changePassword")}<ArrowRight aria-hidden="true" className="size-4 shrink-0" strokeWidth={2.25} /></button>
                   </div>
                 </fieldset>
 
                 <div className="mt-6">
-                  <p className="font-mono text-[11px] font-bold uppercase tracking-[0.24em] text-[#344C43]/60 mb-3">Active Sessions</p>
+                  <p className="font-mono text-[11px] font-bold uppercase tracking-[0.24em] text-[#344C43]/60 mb-3">{t("settings.privacy.activeSessions")}</p>
                   <ul className="divide-y divide-[#344C43]/15 border border-[#344C43]/20">
-                    {[{ Icon: Laptop, device: "Windows · Chrome", place: "Dhaka, BD", now: true, label: "This device" }].map(({ Icon, device, place, now, label }) => (
+                    {[{ Icon: Laptop, device: t("settings.privacy.sessionDevice"), place: t("settings.privacy.sessionPlace"), now: true, label: t("settings.privacy.thisDevice") }].map(({ Icon, device, place, now, label }) => (
                       <li key={device} className="flex items-center gap-3 px-4 py-4">
                         <Icon aria-hidden="true" className="size-5 shrink-0 text-[#668B78]" strokeWidth={1.75} />
-                        <span className="min-w-0 flex-1"><span className="block text-sm font-semibold tracking-tight text-[#344C43]">{device}</span><span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#344C43]/55">{place}{now ? " · Active now" : ` · ${label}`}</span></span>
-                        {now && <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#668B78]/55 bg-[#668B78]/10 px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#4A695C]"><span aria-hidden="true" className="size-1.5 rounded-full bg-[#668B78]" />Live</span>}
+                        <span className="min-w-0 flex-1"><span className="block text-sm font-semibold tracking-tight text-[#344C43]">{device}</span><span className="font-mono text-[11px] uppercase tracking-[0.18em] text-[#344C43]/55">{place}{now ? ` · ${t("settings.privacy.activeNow")}` : ` · ${label}`}</span></span>
+                        {now && <span className="inline-flex items-center gap-1.5 rounded-sm border border-[#668B78]/55 bg-[#668B78]/10 px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#4A695C]"><span aria-hidden="true" className="size-1.5 rounded-full bg-[#668B78]" />{t("settings.privacy.live")}</span>}
                       </li>
                     ))}
                   </ul>
@@ -375,24 +374,24 @@ export default function AdminSettingsPage() {
             {/* Platform Control (Admin Only) */}
             {active === "platform" && (
               <Panel aria-labelledby="panel-platform" className="sm:p-6">
-                <DashboardSection id="panel-platform" numeral="05" title="Platform Control" subtitle="Master switches" variant="settings" />
+                <DashboardSection id="panel-platform" numeral="05" title={t("settings.platform.title")} subtitle={t("settings.platform.subtitle")} variant="settings" />
                 <div className="mt-4">
-                  <Toggle id="maintenance" label="Maintenance Mode" desc="Put the entire platform into read-only mode for updates" checked={maintenanceMode} onChange={setMaintenanceMode} />
-                  <Toggle id="registration" label="Registration Open" desc="Allow new students and tutors to sign up" checked={registrationOpen} onChange={setRegistrationOpen} />
+                  <Toggle id="maintenance" label={t("settings.platform.maintenanceLabel")} desc={t("settings.platform.maintenanceDesc")} checked={maintenanceMode} onChange={setMaintenanceMode} />
+                  <Toggle id="registration" label={t("settings.platform.registrationLabel")} desc={t("settings.platform.registrationDesc")} checked={registrationOpen} onChange={setRegistrationOpen} />
                 </div>
                 <p className="mt-3 font-mono text-[11px] uppercase leading-relaxed tracking-[0.16em] text-[#344C43]/55">
-                  Not persisted: no verified Admin API / database field for Maintenance Mode or Registration Open. Local UI only; not sent to `/api/users/me` and not saved.
+                  {t("settings.platform.note")}
                 </p>
                 <div className="mt-5 rounded-sm border border-[#B87959]/40 bg-[#B87959]/10 p-5">
-                  <p className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.28em] text-[#B87959]"><ShieldAlert className="size-4" /> Danger Zone</p>
-                  <p className="mt-2 text-sm text-[#344C43]/85">These actions will affect all users on the platform immediately.</p>
+                  <p className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.28em] text-[#B87959]"><ShieldAlert className="size-4 shrink-0" /> {t("settings.platform.dangerTitle")}</p>
+                  <p className="mt-2 text-sm text-[#344C43]/85">{t("settings.platform.dangerDesc")}</p>
                 </div>
               </Panel>
             )}
 
             {/* Loading / saving / error feedback */}
             {loading && (
-              <p role="status" className="mt-6 border border-[#344C43]/20 bg-[#F2ECDF]/60 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[#344C43]/60">Loading saved preferences…</p>
+              <p role="status" className="mt-6 border border-[#344C43]/20 bg-[#F2ECDF]/60 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[#344C43]/60">{t("common.loadingPreferences")}</p>
             )}
             {(saveError || error) && !saving && (
               <p role="alert" className="mt-6 border-l-2 border-[#A34343] bg-[#A34343]/8 px-4 py-3 font-mono text-sm text-[#732626]">{saveError ?? error}</p>
@@ -400,21 +399,21 @@ export default function AdminSettingsPage() {
 
             {/* Action Bar */}
             <div className="mt-6 flex flex-col-reverse gap-3 border border-[#344C43]/25 bg-[#F2ECDF]/60 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-              <button type="button" onClick={handleReset} disabled={controlsDisabled} className="inline-flex h-12 items-center justify-center gap-2 rounded-sm border border-[#344C43]/30 px-5 font-mono text-xs font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343]">
-                <RotateCcw aria-hidden="true" className="size-4" strokeWidth={1.75} /> Reset Preferences
+              <button type="button" onClick={handleReset} disabled={controlsDisabled} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-[#344C43]/30 px-5 py-2 font-mono text-xs font-bold uppercase tracking-[0.22em] text-[#344C43]/65 transition-all hover:border-[#A34343] hover:text-[#A34343]">
+                <RotateCcw aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.75} /> {t("common.resetPreferences")}
               </button>
               <button type="button" onClick={handleSave} disabled={!canSave} aria-busy={saving}
-                className={cn("inline-flex h-12 items-center justify-center gap-2 rounded-sm border px-6 font-mono text-xs font-bold uppercase tracking-[0.26em] transition-all duration-200",
+                className={cn("inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border px-6 py-2 font-mono text-xs font-bold uppercase tracking-[0.26em] transition-all duration-200",
                   savedFlash ? "border-[#668B78] bg-[#668B78] text-[#F2ECDF]" : canSave ? "border-[#A6683F]/60 bg-[#B87959] text-[#1E3A2F] shadow-[4px_4px_0_#344C43] hover:-translate-y-0.5 hover:bg-[#C98B6D]" : "cursor-not-allowed border-[#344C43]/15 bg-[#344C43]/5 text-[#344C43]/35")}>
-                {savedFlash ? <><CheckCircle2 aria-hidden="true" className="size-4" strokeWidth={2} />Saved to Your Desk</> : saving ? <><Save aria-hidden="true" className="size-4 animate-pulse" strokeWidth={1.75} />Saving...</> : <><Save aria-hidden="true" className="size-4" strokeWidth={1.75} />Save Changes</>}
+                {savedFlash ? <><CheckCircle2 aria-hidden="true" className="size-4 shrink-0" strokeWidth={2} />{t("common.savedToDesk")}</> : saving ? <><Save aria-hidden="true" className="size-4 shrink-0 animate-pulse" strokeWidth={1.75} />{t("common.saving")}</> : <><Save aria-hidden="true" className="size-4 shrink-0" strokeWidth={1.75} />{t("common.save")}</>}
               </button>
             </div>
 
           </div>
         </div>
 
-        <Colophon backHref="/dashboard/admin" backLabel="Back to Command Center">
-          <span className="inline-flex items-center gap-1.5 text-sm"><Globe2 aria-hidden="true" className="size-4 text-[#668B78]" strokeWidth={2} />Dhaka · UTC+6 — The desk never sleeps</span>
+        <Colophon backHref="/dashboard/admin" backLabel={t("settings.backToCommandCenter")}>
+          <span className="inline-flex items-center gap-1.5 text-sm"><Globe2 aria-hidden="true" className="size-4 shrink-0 text-[#668B78]" strokeWidth={2} />{t("settings.colophonText")}</span>
         </Colophon>
       </div>
     </div>
