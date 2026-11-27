@@ -2,72 +2,20 @@
 
 import * as React from "react"
 import { Sun, Moon } from "lucide-react"
-
-function themeSubscribe(callback: () => void) {
-  if (typeof window === "undefined") return () => { }
-
-  window.addEventListener("storage", callback)
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      if (mutation.attributeName === "class") {
-        callback()
-      }
-    }
-  })
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["class"],
-  })
-
-  return () => {
-    window.removeEventListener("storage", callback)
-    observer.disconnect()
-  }
-}
-
-function getThemeSnapshot() {
-  if (typeof document === "undefined") return false
-  return document.documentElement.classList.contains("dark")
-}
-
-function getServerSnapshot() {
-  return false
-}
+import { applyTheme, readStoredTheme, themeSubscribe, getDarkSnapshot } from "@/lib/theme"
 
 const emptySubscribe = () => () => { }
 
 export function ThemeToggle() {
-  const isMounted = React.useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  )
-
-  const isDark = React.useSyncExternalStore(
-    themeSubscribe,
-    getThemeSnapshot,
-    getServerSnapshot
-  )
+  const isMounted = React.useSyncExternalStore(emptySubscribe, () => true, () => false)
+  const isDark = React.useSyncExternalStore(themeSubscribe, getDarkSnapshot, () => false)
 
   React.useEffect(() => {
-    const storedTheme = localStorage.getItem("theme")
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches
-
-    const isDark = storedTheme === "dark" || (!storedTheme && systemPrefersDark)
     // `.dark` is applied pre-paint by the inline script in app/layout; keep in sync.
-    document.documentElement.classList.toggle("dark", isDark)
-    document.documentElement.style.colorScheme = isDark ? "dark" : "light"
+    applyTheme(readStoredTheme())
   }, [])
 
-  const toggleTheme = () => {
-    const nextIsDark = !document.documentElement.classList.contains("dark")
-    document.documentElement.classList.toggle("dark", nextIsDark)
-    document.documentElement.style.colorScheme = nextIsDark ? "dark" : "light"
-    localStorage.setItem("theme", nextIsDark ? "dark" : "light")
-    // existing MutationObserver + `storage` listeners pick up the change; no extra re-render state
-  }
+  const toggleTheme = () => applyTheme(isDark ? "light" : "dark")
 
   if (!isMounted) {
     return (
