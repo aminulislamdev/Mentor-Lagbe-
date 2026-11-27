@@ -17,7 +17,7 @@
 
 import * as React from "react"
 import { apiFetch, getCurrentUser, ApiError } from "@/lib/api"
-import type { CurrentUser, UserSettings } from "@/lib/api-types"
+import type { CurrentUser, SupportedLanguage, UserSettings } from "@/lib/api-types"
 
 type NotificationPrefs = UserSettings["notifications"]
 type NotificationKey = keyof NotificationPrefs
@@ -34,7 +34,7 @@ const SCALAR_KEYS = ["language", "timezone", "mode", "days", "evenings"] as cons
 
 /** Partial settings; nested `notifications` may itself be partial. */
 export type UserSettingsPatch = {
-  language?: string
+  language?: SupportedLanguage
   timezone?: string
   mode?: string
   days?: string[]
