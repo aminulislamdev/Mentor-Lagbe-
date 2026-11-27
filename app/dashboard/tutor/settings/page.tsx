@@ -34,6 +34,7 @@ import { DashboardSection } from "@/components/common/dashboard-section"
 import { Panel } from "@/components/common/panel"
 import { Colophon } from "@/components/dashboard/shared"
 import { useUserSettings, type UserSettingsPatch } from "@/lib/hooks/use-user-settings"
+import { applyTheme, useTheme } from "@/lib/theme"
 import type { UserSettings } from "@/lib/api-types"
 
 // ─── Section registry ────────────────────────────────────────────────────────
@@ -69,7 +70,6 @@ const NOTIF_ITEMS: Array<{ id: NotificationKey; title: string; desc: string; on:
 // ─── Defaults & scoped styles ────────────────────────────────────────────────
 
 const DEFAULTS = {
-  theme: "system" as "light" | "dark" | "system",
   profileVisibility: "Applicants only",
   emailVisibility: "Applicants only",
   sessionTimeout: "30 days",
@@ -315,6 +315,7 @@ function ThemePreview({
 export default function TutorSettingsPage() {
   // ── Backend-backed settings (reusable hook) ──
   const { settings, loading, saving, error, updateSettings, clearError } = useUserSettings()
+  const { mode: themeMode } = useTheme()
 
   const baseline = normalizeSettings(settings)
 
@@ -323,7 +324,6 @@ export default function TutorSettingsPage() {
 
   // Non-backend UI prefs stay local (unchanged behavior).
   const [active, setActive] = useState<SectionKey>("general")
-  const [theme, setTheme] = useState(DEFAULTS.theme)
   const [profileVisibility, setProfileVisibility] = useState(DEFAULTS.profileVisibility)
   const [emailVisibility, setEmailVisibility] = useState(DEFAULTS.emailVisibility)
 
@@ -397,7 +397,6 @@ export default function TutorSettingsPage() {
     clearError()
     setSavedFlash(false)
     // preserve original local resets for non-backend prefs
-    setTheme(DEFAULTS.theme)
     setProfileVisibility(DEFAULTS.profileVisibility)
     setEmailVisibility(DEFAULTS.emailVisibility)
   }
@@ -620,9 +619,9 @@ export default function TutorSettingsPage() {
                   register, ledger and proof sheet follows.
                 </p>
                 <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <ThemePreview value="light" selected={theme === "light"} onSelect={() => setTheme("light")} />
-                  <ThemePreview value="dark" selected={theme === "dark"} onSelect={() => setTheme("dark")} />
-                  <ThemePreview value="system" selected={theme === "system"} onSelect={() => setTheme("system")} />
+                  <ThemePreview value="light" selected={themeMode === "light"} onSelect={() => applyTheme("light")} />
+                  <ThemePreview value="dark" selected={themeMode === "dark"} onSelect={() => applyTheme("dark")} />
+                  <ThemePreview value="system" selected={themeMode === "system"} onSelect={() => applyTheme("system")} />
                 </div>
                 <p className="mt-4 flex items-center gap-2 border-t border-[#344C43]/15 pt-3 font-mono text-[9px] uppercase leading-relaxed tracking-[0.18em] text-[#344C43]/55">
                   <Sparkles aria-hidden="true" className="size-3.5 text-[#B87959]" strokeWidth={2} />
